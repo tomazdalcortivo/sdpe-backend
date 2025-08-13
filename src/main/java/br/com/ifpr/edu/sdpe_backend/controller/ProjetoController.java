@@ -11,39 +11,38 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/projeto")
+@RequestMapping("/api/projetos")
 public class ProjetoController {
 
     private final ProjetoService projetoService;
 
+    @PostMapping
+    public ResponseEntity<Projeto> salvar(@RequestBody Projeto projeto) {
+        Projeto projetoCriado = this.projetoService.salvar(projeto);
+        return new ResponseEntity<>(projeto, HttpStatus.CREATED);
+    }
+
     @GetMapping("{id}")
-    public ResponseEntity<Projeto> getProjeto(@PathVariable Long id) {
-        Projeto projeto = projetoService.getById(id);
+    public ResponseEntity<Projeto> buscarPorId(@PathVariable Long id) {
+        Projeto projeto = this.projetoService.buscarPorId(id);
         return ResponseEntity.ok(projeto);
     }
 
     @GetMapping
-    public ResponseEntity<List<Projeto>> getProjetos() {
-        List<Projeto> projetos = projetoService.getAll();
+    public ResponseEntity<List<Projeto>> buscarTodos() {
+        List<Projeto> projetos = this.projetoService.buscarTodos();
         return ResponseEntity.ok(projetos);
     }
 
-    @PostMapping
-    public ResponseEntity<Projeto> create(@RequestBody Projeto projeto) {
-        projetoService.saveProjeto(projeto);
-        return new ResponseEntity<>(projeto, HttpStatus.CREATED);
-    }
-
-
     @PutMapping("{id}")
-    public ResponseEntity<Projeto> update(@RequestBody Projeto projeto, @PathVariable Long id) {
-        projetoService.updateProjeto(projeto, id);
+    public ResponseEntity<Projeto> atualizar(@RequestBody Projeto projeto, @PathVariable Long id) {
+        this.projetoService.atualizar(projeto, id);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        projetoService.deleteById(id);
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+        this.projetoService.excluir(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,5 +1,6 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
+import br.com.ifpr.edu.sdpe_backend.domain.enums.TypeFormato;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,7 +28,6 @@ public class Projeto {
 
     private String cargaHoraria;
 
-    private boolean formato;
-
+    private TypeFormato formato;
 
 }

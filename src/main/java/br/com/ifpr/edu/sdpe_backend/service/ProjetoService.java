@@ -1,30 +1,50 @@
 package br.com.ifpr.edu.sdpe_backend.service;
 
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
+import br.com.ifpr.edu.sdpe_backend.exception.EntityNotFoundException;
+import br.com.ifpr.edu.sdpe_backend.repository.ProjetoRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProjetoService {
 
-    public Projeto getById(Long id) {
-        return null;
+    private final ProjetoRepository projetoRepository;
+
+    public Projeto salvar(Projeto projeto) {
+        return this.projetoRepository.save(projeto);
     }
 
-    public void saveProjeto(Projeto projeto) {
-
+    public List<Projeto> buscarTodos() {
+        return this.projetoRepository.findAll();
     }
 
-    public void updateProjeto(Projeto projeto, Long id) {
+    public Projeto atualizar(Projeto projeto, Long id) {
+        Projeto existente = this.projetoRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Projeto a ser atualizado não encontrado"));
 
+        existente.setNome(projeto.getNome());
+        existente.setImagem(projeto.getImagem());
+        existente.setDescricao(projeto.getDescricao());
+        existente.setContato(projeto.getContato());
+        existente.setCoordenador(projeto.getCoordenador());
+        existente.setCargaHoraria(projeto.getCargaHoraria());
+        existente.setFormato(projeto.getFormato());
+
+        this.projetoRepository.save(existente);
+        return existente;
     }
 
-    public List<Projeto> getAll() {
-        return null;
+    public void excluir(Long id) {
+        Projeto projeto = this.buscarPorId(id);
+        this.projetoRepository.delete(projeto);
     }
 
-    public void deleteById(Long id) {
-
+    public Projeto buscarPorId(Long id) {
+        return this.projetoRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Projeto não encontrado"));
     }
 }
