@@ -29,7 +29,7 @@ public class ProjetoService {
         existente.setNome(projeto.getNome());
         existente.setImagem(projeto.getImagem());
         existente.setDescricao(projeto.getDescricao());
-        existente.setContato(projeto.getContato());
+//        existente.setContato(projeto.getContato());
         existente.setCoordenador(projeto.getCoordenador());
         existente.setCargaHoraria(projeto.getCargaHoraria());
         existente.setFormato(projeto.getFormato());

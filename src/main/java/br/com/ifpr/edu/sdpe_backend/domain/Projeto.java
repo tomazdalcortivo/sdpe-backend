@@ -4,11 +4,9 @@ import br.com.ifpr.edu.sdpe_backend.domain.enums.TypeFormato;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
+import java.util.List;
+
+@Data
 @Entity
 public class Projeto {
 
@@ -22,12 +20,15 @@ public class Projeto {
 
     private String descricao;
 
-    private String contato;
-
-    private String coordenador;
-
     private String cargaHoraria;
 
     private TypeFormato formato;
 
+//    private String contato;
+
+    @OneToOne
+    private Professor coordenador;
+
+    @ManyToMany
+    private List<Aluno> alunos;
 }
