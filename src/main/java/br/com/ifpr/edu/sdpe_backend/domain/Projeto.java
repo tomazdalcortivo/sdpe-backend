@@ -27,8 +27,8 @@ public class Projeto {
 //    private String contato;
 
     @OneToOne
-    private Professor coordenador;
+    private Coordenador coordenador;
 
     @ManyToMany
-    private List<Aluno> alunos;
+    private List<Participante> participantes;
 }

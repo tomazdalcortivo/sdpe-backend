@@ -2,8 +2,9 @@ package br.com.ifpr.edu.sdpe_backend.domain.enums;
 
 public enum AccountRole {
 
-    CORDENADOR("ROLE_CORDENADOR"),
-    ALUNO("ROLE_ALUNO");
+    ADMIN("ROLE_ADMIN"),
+    COORDENADOR("ROLE_COORDENADOR"),
+    PARTICIPANTE("ROLE_PARTICIPANTE");
 
     private String role;
 

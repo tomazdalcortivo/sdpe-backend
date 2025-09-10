@@ -7,11 +7,16 @@ import java.util.List;
 
 @Data
 @Entity
-public class Professor {
+public class Coordenador {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "id")
+    private Conta conta;
 
     private String nome;
 

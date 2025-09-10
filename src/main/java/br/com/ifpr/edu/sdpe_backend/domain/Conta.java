@@ -29,6 +29,12 @@ public class Conta implements UserDetails {
 
     private AccountRole role;
 
+    @OneToOne(mappedBy = "conta", cascade = CascadeType.ALL)
+    private Coordenador coordenador;
+
+    @OneToOne(mappedBy = "conta", cascade = CascadeType.ALL)
+    private Participante participante;
+
     public Conta(String login, String senha, AccountRole role) {
         this.login = login;
         this.role = role;
@@ -37,8 +43,14 @@ public class Conta implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.role == AccountRole.CORDENADOR) return List.of(new SimpleGrantedAuthority("ROLE_CORDENADOR"));
-        else return List.of(new SimpleGrantedAuthority("ALUNO"));
+        if (this.role == AccountRole.ADMIN) {
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_ADMIN"),
+                    new SimpleGrantedAuthority("ROLE_COORDENADOR"),
+                    new SimpleGrantedAuthority("ROLE_PARTICIPANTE")
+            );
+        } else if (this.role == AccountRole.COORDENADOR) return List.of(new SimpleGrantedAuthority("ROLE_COORDENADOR"));
+        else return List.of(new SimpleGrantedAuthority("ROLE_PARTICIPANTE"));
     }
 
     @Override

@@ -4,7 +4,7 @@ import br.com.ifpr.edu.sdpe_backend.domain.Conta;
 import br.com.ifpr.edu.sdpe_backend.domain.DTO.AuthDTO;
 import br.com.ifpr.edu.sdpe_backend.domain.DTO.RegisterDTO;
 import br.com.ifpr.edu.sdpe_backend.infra.security.TokenService;
-import br.com.ifpr.edu.sdpe_backend.repository.UserRepository;
+import br.com.ifpr.edu.sdpe_backend.repository.ContaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,7 +21,7 @@ public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
 
-    private final UserRepository repository;
+    private final ContaRepository repository;
 
     private final TokenService tokenService;
 

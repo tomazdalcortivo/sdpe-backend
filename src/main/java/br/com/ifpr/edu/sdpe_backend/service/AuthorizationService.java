@@ -1,6 +1,6 @@
 package br.com.ifpr.edu.sdpe_backend.service;
 
-import br.com.ifpr.edu.sdpe_backend.repository.UserRepository;
+import br.com.ifpr.edu.sdpe_backend.repository.ContaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthorizationService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final ContaRepository contaRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByLogin(username);
+        return contaRepository.findByLogin(username);
     }
 }

@@ -4,7 +4,7 @@ import br.com.ifpr.edu.sdpe_backend.domain.Conta;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public interface UserRepository extends JpaRepository<Conta, Long > {
+public interface ContaRepository extends JpaRepository<Conta, Long > {
 
     UserDetails findByLogin(String login);
 
