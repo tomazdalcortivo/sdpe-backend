@@ -1,6 +1,6 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
-import br.com.ifpr.edu.sdpe_backend.domain.enums.AccountRole;
+import br.com.ifpr.edu.sdpe_backend.domain.enums.PerfilConta;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,7 +27,7 @@ public class Conta implements UserDetails {
 
     private String senha;
 
-    private AccountRole role;
+    private PerfilConta perfil;
 
     @OneToOne(mappedBy = "conta", cascade = CascadeType.ALL)
     private Coordenador coordenador;
@@ -35,22 +35,22 @@ public class Conta implements UserDetails {
     @OneToOne(mappedBy = "conta", cascade = CascadeType.ALL)
     private Participante participante;
 
-    public Conta(String login, String senha, AccountRole role) {
+    public Conta(String login, String senha, PerfilConta perfil) {
         this.login = login;
-        this.role = role;
+        this.perfil = perfil;
         this.senha = senha;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.role == AccountRole.ADMIN) {
+        if (this.perfil == PerfilConta.ADMIN) {
             return List.of(
-                    new SimpleGrantedAuthority("ROLE_ADMIN"),
-                    new SimpleGrantedAuthority("ROLE_COORDENADOR"),
-                    new SimpleGrantedAuthority("ROLE_PARTICIPANTE")
+                    new SimpleGrantedAuthority("PERFIL_ADMIN"),
+                    new SimpleGrantedAuthority("PERFIL_COORDENADOR"),
+                    new SimpleGrantedAuthority("PERFIL_PARTICIPANTE")
             );
-        } else if (this.role == AccountRole.COORDENADOR) return List.of(new SimpleGrantedAuthority("ROLE_COORDENADOR"));
-        else return List.of(new SimpleGrantedAuthority("ROLE_PARTICIPANTE"));
+        } else if (this.perfil == PerfilConta.COORDENADOR) return List.of(new SimpleGrantedAuthority("PERFIL_COORDENADOR"));
+        else return List.of(new SimpleGrantedAuthority("PERFIL_PARTICIPANTE"));
     }
 
     @Override

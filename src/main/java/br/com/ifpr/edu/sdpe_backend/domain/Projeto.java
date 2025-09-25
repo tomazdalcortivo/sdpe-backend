@@ -1,6 +1,6 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
-import br.com.ifpr.edu.sdpe_backend.domain.enums.TypeFormato;
+import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoFormato;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,9 +22,7 @@ public class Projeto {
 
     private String cargaHoraria;
 
-    private TypeFormato formato;
-
-//    private String contato;
+    private TipoFormato formato;
 
     @OneToOne
     private Coordenador coordenador;
