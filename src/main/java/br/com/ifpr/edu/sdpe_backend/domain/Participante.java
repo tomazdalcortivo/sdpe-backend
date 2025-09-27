@@ -1,12 +1,17 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Entity
+@Table(name = "tb_participante")
 public class Participante {
 
     @Id
@@ -24,8 +29,7 @@ public class Participante {
 
     private String telefone;
 
-    private String email;
-
     @ManyToMany
     private List<Projeto> projeto;
+
 }

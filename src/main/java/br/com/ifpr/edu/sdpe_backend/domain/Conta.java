@@ -30,9 +30,6 @@ public class Conta implements UserDetails {
     private PerfilConta perfil;
 
     @OneToOne(mappedBy = "conta", cascade = CascadeType.ALL)
-    private Coordenador coordenador;
-
-    @OneToOne(mappedBy = "conta", cascade = CascadeType.ALL)
     private Participante participante;
 
     public Conta(String login, String senha, PerfilConta perfil) {
