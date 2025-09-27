@@ -27,11 +27,17 @@ public class ProjetoService {
                 () -> new EntityNotFoundException("Projeto a ser atualizado não encontrado"));
 
         existente.setNome(projeto.getNome());
-        existente.setImagem(projeto.getImagem());
         existente.setDescricao(projeto.getDescricao());
         existente.setCoordenador(projeto.getCoordenador());
         existente.setCargaHoraria(projeto.getCargaHoraria());
         existente.setFormato(projeto.getFormato());
+
+        Projeto.builder()
+                .nome(projeto.getNome())
+                .descricao(projeto.getDescricao())
+                .coordenador(projeto.getCoordenador())
+                .cargaHoraria(projeto.getCargaHoraria())
+                .build();
 
         this.projetoRepository.save(existente);
         return existente;

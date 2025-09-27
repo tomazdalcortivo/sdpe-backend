@@ -1,47 +1,32 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
+import br.com.ifpr.edu.sdpe_backend.domain.enums.FuncaoCoordenador;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "tb_coordenador")
-public class Coordenador {
+public class Coordenador extends Participante {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String cargoInstituicao;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "id")
-    private Conta conta;
-
-    private String nome;
-
-    private String contato;
-
-    private String telefone;
-
-    private String email;
-
-    @ManyToMany
-    private List<Projeto> projeto;
+    @Enumerated(EnumType.STRING)
+    private FuncaoCoordenador funcao;
 
 }

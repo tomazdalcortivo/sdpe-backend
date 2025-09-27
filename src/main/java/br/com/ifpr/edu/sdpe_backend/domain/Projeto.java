@@ -9,11 +9,9 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,9 +19,25 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "tb_projeto")
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
 public class Projeto {
+
+    public Projeto() {
+        area = " ";
+        cargaHoraria = 0.0;
+        coordenador = new Coordenador();
+        dataFim = new Date();
+        dataInicio = new Date();
+        descricao = "";
+        feedbacks = new ArrayList<>();
+        formato = TipoFormato.PRESENCIAL;
+        instituicaoVinculada = new InstituicaoEnsino();
+        nome = " ";
+        participantes = new ArrayList<>();
+        planejamento = " ";
+        status = false;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

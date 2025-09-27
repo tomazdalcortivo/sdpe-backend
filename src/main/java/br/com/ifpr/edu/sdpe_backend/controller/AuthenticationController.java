@@ -56,7 +56,6 @@ public class AuthenticationController {
             coordenador.setNome(data.nome());
             coordenador.setContato(data.contato());
             coordenador.setTelefone(data.telefone());
-            coordenador.setEmail(data.login());
             coordenador.setConta(newConta);
             this.coordenadorService.salvar(coordenador);
         } else if (data.perfil() == PerfilConta.PARTICIPANTE) {
@@ -64,7 +63,6 @@ public class AuthenticationController {
             participante.setNome(data.nome());
             participante.setContato(data.contato());
             participante.setTelefone(data.telefone());
-            participante.setEmail(data.login());
             participante.setConta(newConta);
             this.participanteService.salvar(participante);
         }
