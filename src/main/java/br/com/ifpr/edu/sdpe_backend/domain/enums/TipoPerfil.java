@@ -1,6 +1,6 @@
 package br.com.ifpr.edu.sdpe_backend.domain.enums;
 
-public enum PerfilConta {
+public enum TipoPerfil {
 
     ADMIN("PERFIL_ADMIN"),
     COORDENADOR("PERFIL_COORDENADOR"),
@@ -8,7 +8,7 @@ public enum PerfilConta {
 
     private String perfil;
 
-    PerfilConta(String perfil) {
+    TipoPerfil(String perfil) {
         this.perfil = perfil;
     }
 

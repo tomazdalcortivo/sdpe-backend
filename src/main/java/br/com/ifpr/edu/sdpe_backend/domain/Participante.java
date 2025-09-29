@@ -1,28 +1,19 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Getter
 @Setter
 @SuperBuilder
-@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "tb_participante")
@@ -33,18 +24,36 @@ public class Participante {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String nome;
+
+    private Date dataNascimento;
+
+    //@CPF (validar depois!!)
+    private String cpf;
+
+    private String cidade;
+
+    private Boolean vinculoInstitucional;
+
+    @ManyToMany(mappedBy = "participantes")
+    private List<Projeto> projetos;
+
     @OneToOne
     @MapsId
     @JoinColumn(name = "id")
     private Conta conta;
 
-    private String nome;
+    @OneToMany(mappedBy = "participantes")
+    private List<Notificacao> notificacoes;
 
-    private String contato;
-
-    private String telefone;
-
-    @ManyToMany
-    private List<Projeto> projetos;
+    public Participante() {
+        nome = " ";
+        dataNascimento = new Date();
+        cpf = " ";
+        cidade = " ";
+        vinculoInstitucional = true;
+        projetos = new ArrayList();
+        conta = new Conta();
+    }
 
 }

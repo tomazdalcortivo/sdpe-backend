@@ -5,7 +5,7 @@ import br.com.ifpr.edu.sdpe_backend.domain.Coordenador;
 import br.com.ifpr.edu.sdpe_backend.domain.DTO.AuthDTO;
 import br.com.ifpr.edu.sdpe_backend.domain.DTO.RegisterDTO;
 import br.com.ifpr.edu.sdpe_backend.domain.Participante;
-import br.com.ifpr.edu.sdpe_backend.domain.enums.PerfilConta;
+import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoPerfil;
 import br.com.ifpr.edu.sdpe_backend.infra.security.TokenService;
 import br.com.ifpr.edu.sdpe_backend.repository.ContaRepository;
 import br.com.ifpr.edu.sdpe_backend.service.CoordenadorService;
@@ -51,14 +51,14 @@ public class AuthenticationController {
 
         this.repository.save(newConta);
 
-        if (data.perfil() == PerfilConta.COORDENADOR) {
+        if (data.perfil() == TipoPerfil.COORDENADOR) {
             Coordenador coordenador = new Coordenador();
             coordenador.setNome(data.nome());
             coordenador.setContato(data.contato());
             coordenador.setTelefone(data.telefone());
             coordenador.setConta(newConta);
             this.coordenadorService.salvar(coordenador);
-        } else if (data.perfil() == PerfilConta.PARTICIPANTE) {
+        } else if (data.perfil() == TipoPerfil.PARTICIPANTE) {
             Participante participante = new Participante();
             participante.setNome(data.nome());
             participante.setContato(data.contato());

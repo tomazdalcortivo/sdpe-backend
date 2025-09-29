@@ -13,7 +13,7 @@ public class Visualizacoes extends Relatorio{
 
     private Integer quantVisualizacoes;
 
-    @Override
-    public void getRelatorioTipo() {}
+//    @Override
+//    public void getRelatorioTipo() {}
 
 }

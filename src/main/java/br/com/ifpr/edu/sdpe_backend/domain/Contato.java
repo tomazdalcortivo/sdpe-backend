@@ -1,12 +1,7 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
 import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoContato;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -30,7 +25,15 @@ public class Contato {
     @CreationTimestamp
     private Instant dataEnvio;
 
-    @Transient
+    @ManyToOne
+    @JoinColumn(name = "projeto_id")
     private Projeto projeto;
+
+    public Contato() {
+        mensagem = " ";
+        tipoContato = TipoContato.CHAMADO;
+        dataEnvio = Instant.now();
+        projeto = new Projeto();
+    }
 
 }

@@ -1,19 +1,18 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
-@Table(name = "tb_instituicao_ensino")
+@Table(name = "tb_instituicaoEnsino")
 @AllArgsConstructor
 @NoArgsConstructor
 public class InstituicaoEnsino {
@@ -27,5 +26,15 @@ public class InstituicaoEnsino {
     private String cidade;
 
     private String descricao;
+
+    @OneToMany(mappedBy = "instituicaoEnsino")
+    private List<Projeto> projetos;
+
+    public InstituicaoEnsino(){
+        nome = " ";
+        cidade = " ";
+        descricao = " ";
+        projetos = new ArrayList<>();
+    }
 
 }

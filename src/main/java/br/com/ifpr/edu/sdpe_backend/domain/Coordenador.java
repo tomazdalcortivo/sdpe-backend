@@ -1,14 +1,7 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
 import br.com.ifpr.edu.sdpe_backend.domain.enums.FuncaoCoordenador;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,14 +12,26 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "tb_coordenador")
 public class Coordenador extends Participante {
 
     private String cargoInstituicao;
 
+    private String contato;
+
+    @ManyToOne
+    @JoinColumn(name = "projeto_id")
+    private Projeto projeto;
+
     @Enumerated(EnumType.STRING)
     private FuncaoCoordenador funcao;
+
+    public Coordenador(){
+        cargoInstituicao = " ";
+        contato = " ";
+        projeto = null;
+        funcao = FuncaoCoordenador.COORDENADOR_GERAL;
+    }
 
 }

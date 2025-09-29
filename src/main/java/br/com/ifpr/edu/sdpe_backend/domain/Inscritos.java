@@ -13,7 +13,7 @@ public class Inscritos extends Relatorio{
 
     private Integer quantParticipantes;
 
-    @Override
-    public void getRelatorioTipo() {}
+//    @Override
+//    public void getRelatorioTipo() {}
 
 }

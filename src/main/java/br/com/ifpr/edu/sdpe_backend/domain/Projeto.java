@@ -1,16 +1,8 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
 import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoFormato;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,22 +14,6 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class Projeto {
-
-    public Projeto() {
-        area = " ";
-        cargaHoraria = 0.0;
-        coordenador = new Coordenador();
-        dataFim = new Date();
-        dataInicio = new Date();
-        descricao = "";
-        feedbacks = new ArrayList<>();
-        formato = TipoFormato.PRESENCIAL;
-        instituicaoVinculada = new InstituicaoEnsino();
-        nome = " ";
-        participantes = new ArrayList<>();
-        planejamento = " ";
-        status = false;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,20 +33,41 @@ public class Projeto {
 
     private Double cargaHoraria;
 
-    @Transient
+    @ManyToOne
+    @JoinColumn(name = "instituicao_id")
     private InstituicaoEnsino instituicaoVinculada;
-
-    private String planejamento;
 
     private TipoFormato formato;
 
-    @OneToOne
-    private Coordenador coordenador;
+    @OneToMany(mappedBy = "projeto")
+    private List<Coordenador> coordenadores;
+
+    @OneToMany(mappedBy = "projeto")
+    private List<Relatorio> relatorios;
 
     @ManyToMany
+    @JoinTable(
+            name = "projeto_participante",
+            joinColumns = @JoinColumn(name = "projeto_id"),
+            inverseJoinColumns = @JoinColumn(name = "participante_id")
+    )
     private List<Participante> participantes;
 
-    @Transient
-    private List<Contato> feedbacks;
+    @OneToMany(mappedBy = "projeto")
+    private List<Contato> contatos;
 
+    public Projeto() {
+        nome = " ";
+        descricao = "";
+        area = " ";
+        status = false;
+        dataInicio = new Date();
+        dataFim = new Date();
+        cargaHoraria = 0.0;
+        instituicaoVinculada = new InstituicaoEnsino();
+        formato = TipoFormato.PRESENCIAL;
+        coordenadores = new ArrayList();
+        participantes = new ArrayList<>();
+        contatos = new ArrayList<>();
+    }
 }

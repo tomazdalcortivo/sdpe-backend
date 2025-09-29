@@ -1,10 +1,10 @@
 package br.com.ifpr.edu.sdpe_backend.domain.DTO;
 
-import br.com.ifpr.edu.sdpe_backend.domain.enums.PerfilConta;
+import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoPerfil;
 
 public record RegisterDTO(String login,
                           String senha,
-                          PerfilConta perfil,
+                          TipoPerfil perfil,
                           String nome,
                           String contato,
                           String telefone) {

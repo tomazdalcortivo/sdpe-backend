@@ -9,6 +9,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED) // porque é abstrata
 @Table(name = "tb_relatorio")
 public abstract class Relatorio {
 
@@ -22,6 +23,16 @@ public abstract class Relatorio {
 
     private Date semestre;
 
-    abstract void getRelatorioTipo();
+    @ManyToOne
+    @JoinColumn(name = "projeto_id")
+    private Projeto projeto;
+
+    public Relatorio() {
+        nome =  " ";
+        descricao = " ";
+        semestre = new Date();
+    }
+
+   // abstract void getRelatorioTipo();
 
 }
