@@ -17,11 +17,11 @@ public class ContatoService {
         return contatoRepository.save(contato);
     }
 
-    public Contato atualizar(Contato contato, Long id) {
-        Contato existente = this.contatoRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Projeto a ser atualizado não encontrado"));
-
-    }
+//    public Contato atualizar(Contato contato, Long id) {
+//        Contato existente = this.contatoRepository.findById(id).orElseThrow(
+//                () -> new EntityNotFoundException("Projeto a ser atualizado não encontrado"));
+//
+//    }
 
     public void excluir(Long id) {
         Contato contato = this.buscarPorId(id);
