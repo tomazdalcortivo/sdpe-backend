@@ -35,7 +35,7 @@ public class Projeto {
 
     @ManyToOne
     @JoinColumn(name = "instituicao_id")
-    private InstituicaoEnsino instituicaoVinculada;
+    private InstituicaoEnsino instituicaoEnsino;
 
     private TipoFormato formato;
 
@@ -64,7 +64,7 @@ public class Projeto {
         dataInicio = new Date();
         dataFim = new Date();
         cargaHoraria = 0.0;
-        instituicaoVinculada = new InstituicaoEnsino();
+        instituicaoEnsino = new InstituicaoEnsino();
         formato = TipoFormato.PRESENCIAL;
         coordenadores = new ArrayList();
         participantes = new ArrayList<>();

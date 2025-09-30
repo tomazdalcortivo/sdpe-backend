@@ -1,17 +1,16 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "tb_notificacao")
 public class Notificacao {
 
