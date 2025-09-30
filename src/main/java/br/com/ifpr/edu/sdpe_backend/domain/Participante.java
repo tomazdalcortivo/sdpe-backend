@@ -1,10 +1,7 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
@@ -16,12 +13,14 @@ import java.util.List;
 @SuperBuilder
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "tb_participante")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Participante {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "participante_seq")
+    @SequenceGenerator(name = "participante_seq", sequenceName = "participante_seq", allocationSize = 1)
     private Long id;
 
     private String nome;
@@ -39,11 +38,10 @@ public class Participante {
     private List<Projeto> projetos;
 
     @OneToOne
-    @MapsId
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "conta_id")
     private Conta conta;
 
-    @OneToMany(mappedBy = "participantes")
+    @OneToMany(mappedBy = "participante")
     private List<Notificacao> notificacoes;
 
     public Participante() {
@@ -53,7 +51,7 @@ public class Participante {
         cidade = " ";
         vinculoInstitucional = true;
         projetos = new ArrayList();
-        conta = new Conta();
+        //conta = new Conta();
     }
 
 }

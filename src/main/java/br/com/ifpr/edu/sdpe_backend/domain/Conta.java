@@ -17,6 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@Builder
 @Table(name = "tb_conta")
 public class Conta implements UserDetails {
 
@@ -39,7 +40,7 @@ public class Conta implements UserDetails {
     @Enumerated(EnumType.STRING)
     private TipoPerfil perfil;
 
-    @OneToOne(mappedBy = "conta", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "conta")
     private Participante participante;
 
     public Conta(){
@@ -48,7 +49,7 @@ public class Conta implements UserDetails {
         ativo = true;
         dataCriacao =  Instant.now();
         perfil = TipoPerfil.ADMIN;
-        participante = new Participante();
+        //participante = new Participante();
     }
 
     public Conta(String login, String senha, TipoPerfil perfil) {

@@ -23,50 +23,50 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthenticationController {
 
-    private final AuthenticationManager authenticationManager;
-
-    private final ContaRepository repository;
-
-    private final TokenService tokenService;
-
-    private final CoordenadorService coordenadorService;
-    private final ParticipanteService participanteService;
-
-    @PostMapping("/login")
-    public ResponseEntity login(@RequestBody AuthDTO data) {
-        UsernamePasswordAuthenticationToken usuarioSenha = new UsernamePasswordAuthenticationToken(data.login(), data.senha());
-        Authentication auth = this.authenticationManager.authenticate(usuarioSenha);
-
-        String token = tokenService.generateToken((Conta) auth.getPrincipal());
-
-        return ResponseEntity.ok(token);
-    }
-
-    @PostMapping("/registrar")
-    public ResponseEntity registrar(@RequestBody RegisterDTO data) {
-        if (this.repository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
-
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.senha());
-        Conta newConta = new Conta(data.login(), encryptedPassword, data.perfil());
-
-        this.repository.save(newConta);
-
-        if (data.perfil() == TipoPerfil.COORDENADOR) {
-            Coordenador coordenador = new Coordenador();
-            coordenador.setNome(data.nome());
-            coordenador.setContato(data.contato());
-            coordenador.setTelefone(data.telefone());
-            coordenador.setConta(newConta);
-            this.coordenadorService.salvar(coordenador);
-        } else if (data.perfil() == TipoPerfil.PARTICIPANTE) {
-            Participante participante = new Participante();
-            participante.setNome(data.nome());
-            participante.setContato(data.contato());
-            participante.setTelefone(data.telefone());
-            participante.setConta(newConta);
-            this.participanteService.salvar(participante);
-        }
-
-        return ResponseEntity.ok().build();
-    }
+//    private final AuthenticationManager authenticationManager;
+//
+//    private final ContaRepository repository;
+//
+//    private final TokenService tokenService;
+//
+//    private final CoordenadorService coordenadorService;
+//    private final ParticipanteService participanteService;
+//
+//    @PostMapping("/login")
+//    public ResponseEntity login(@RequestBody AuthDTO data) {
+//        UsernamePasswordAuthenticationToken usuarioSenha = new UsernamePasswordAuthenticationToken(data.login(), data.senha());
+//        Authentication auth = this.authenticationManager.authenticate(usuarioSenha);
+//
+//        String token = tokenService.generateToken((Conta) auth.getPrincipal());
+//
+//        return ResponseEntity.ok(token);
+//    }
+//
+//    @PostMapping("/registrar")
+//    public ResponseEntity registrar(@RequestBody RegisterDTO data) {
+//        if (this.repository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
+//
+//        String encryptedPassword = new BCryptPasswordEncoder().encode(data.senha());
+//        Conta newConta = new Conta(data.login(), encryptedPassword, data.perfil());
+//
+//        this.repository.save(newConta);
+//
+//        if (data.perfil() == TipoPerfil.COORDENADOR) {
+//            Coordenador coordenador = new Coordenador();
+//            coordenador.setNome(data.nome());
+//            coordenador.setContato(data.contato());
+//
+//            coordenador.setConta(newConta);
+//            this.coordenadorService.salvar(coordenador);
+//        } else if (data.perfil() == TipoPerfil.PARTICIPANTE) {
+//            Participante participante = new Participante();
+//            participante.setNome(data.nome());
+//            participante.setContato(data.contato());
+//            participante.setTelefone(data.telefone());
+//            participante.setConta(newConta);
+//            this.participanteService.salvar(participante);
+//        }
+//
+//        return ResponseEntity.ok().build();
+//    }
 }

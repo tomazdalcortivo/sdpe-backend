@@ -1,10 +1,7 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +11,7 @@ import java.util.List;
 @Setter
 @Table(name = "tb_instituicaoEnsino")
 @AllArgsConstructor
-@NoArgsConstructor
+@Builder
 public class InstituicaoEnsino {
 
     @Id
