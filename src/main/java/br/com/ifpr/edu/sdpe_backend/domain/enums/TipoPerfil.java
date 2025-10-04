@@ -2,9 +2,9 @@ package br.com.ifpr.edu.sdpe_backend.domain.enums;
 
 public enum TipoPerfil {
 
-    ADMIN("PERFIL_ADMIN"),
-    COORDENADOR("PERFIL_COORDENADOR"),
-    PARTICIPANTE("PERFIL_PARTICIPANTE");
+    ADMIN("ROLE_ADMIN"),
+    COORDENADOR("ROLE_COORDENADOR"),
+    PARTICIPANTE("ROLE_PARTICIPANTE");
 
     private String perfil;
 

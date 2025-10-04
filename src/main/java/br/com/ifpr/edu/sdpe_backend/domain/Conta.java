@@ -10,14 +10,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
-@Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @Builder
+@Entity
 @Table(name = "tb_conta")
 public class Conta implements UserDetails {
 
@@ -30,30 +29,27 @@ public class Conta implements UserDetails {
 
     private String senha;
 
-    private String login;
-
-    private boolean ativo;
-
-    @CreationTimestamp
-    private Instant dataCriacao;
-
     @Enumerated(EnumType.STRING)
     private TipoPerfil perfil;
 
     @OneToOne(mappedBy = "conta")
     private Participante participante;
 
+    @CreationTimestamp
+    private Instant dataCriacao;
+
+    private Boolean ativo;
+
     public Conta(){
         email  = " ";
         senha = " ";
         ativo = true;
         dataCriacao =  Instant.now();
-        perfil = TipoPerfil.ADMIN;
-        //participante = new Participante();
+        perfil = TipoPerfil.PARTICIPANTE;
     }
 
-    public Conta(String login, String senha, TipoPerfil perfil) {
-        this.login = login;
+    public Conta(String email, String senha, TipoPerfil perfil) {
+        this.email = email;
         this.perfil = perfil;
         this.senha = senha;
     }
@@ -62,12 +58,12 @@ public class Conta implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (this.perfil == TipoPerfil.ADMIN) {
             return List.of(
-                    new SimpleGrantedAuthority("PERFIL_ADMIN"),
-                    new SimpleGrantedAuthority("PERFIL_COORDENADOR"),
-                    new SimpleGrantedAuthority("PERFIL_PARTICIPANTE")
+                    new SimpleGrantedAuthority("ROLE_ADMIN"),
+                    new SimpleGrantedAuthority("ROLE_COORDENADOR"),
+                    new SimpleGrantedAuthority("ROLE_PARTICIPANTE")
             );
-        } else if (this.perfil == TipoPerfil.COORDENADOR) return List.of(new SimpleGrantedAuthority("PERFIL_COORDENADOR"));
-        else return List.of(new SimpleGrantedAuthority("PERFIL_PARTICIPANTE"));
+        } else if (this.perfil == TipoPerfil.COORDENADOR) return List.of(new SimpleGrantedAuthority("ROLE_COORDENADOR"));
+        else return List.of(new SimpleGrantedAuthority("ROLE_PARTICIPANTE"));
     }
 
     @Override
@@ -77,7 +73,7 @@ public class Conta implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.login;
+        return this.email;
     }
 
     @Override

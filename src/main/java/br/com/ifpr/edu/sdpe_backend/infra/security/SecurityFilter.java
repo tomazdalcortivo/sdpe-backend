@@ -24,12 +24,14 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = this.recoverToken(request);
+
         if (token != null) {
-            String login = tokenService.validateToken(token);
-            UserDetails user = contaRepository.findByLogin(login);
+            String email = tokenService.validateToken(token);
+            UserDetails user = contaRepository.findByEmail(email);
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
         }
         filterChain.doFilter(request, response);
     }

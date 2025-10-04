@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public interface ContaRepository extends JpaRepository<Conta, Long > {
 
-    UserDetails findByLogin(String login);
+    UserDetails findByEmail(String email);
 
-    String login(String login);
 }
