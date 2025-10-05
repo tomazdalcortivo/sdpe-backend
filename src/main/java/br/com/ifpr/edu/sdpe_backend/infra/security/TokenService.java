@@ -23,7 +23,7 @@ public class TokenService {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             String token = JWT.create()
                     .withIssuer("sdpebackend")
-                    .withSubject(conta.getLogin())
+                    .withSubject(conta.getEmail())
                     .withExpiresAt(getExpiration())
                     .sign(algorithm);
             return token;

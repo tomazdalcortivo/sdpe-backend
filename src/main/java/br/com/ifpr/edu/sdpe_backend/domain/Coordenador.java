@@ -10,7 +10,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @Entity
-@Builder
 @Table(name = "tb_coordenador")
 public class Coordenador extends Participante {
 

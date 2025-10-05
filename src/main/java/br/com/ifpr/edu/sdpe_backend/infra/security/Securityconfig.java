@@ -31,8 +31,8 @@ public class Securityconfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/registrar").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
+//                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/projetos").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/projetos").hasRole("COORDENADOR")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")

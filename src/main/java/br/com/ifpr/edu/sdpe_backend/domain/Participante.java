@@ -13,7 +13,6 @@ import java.util.List;
 @SuperBuilder
 @AllArgsConstructor
 @Entity
-@Builder
 @Table(name = "tb_participante")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Participante {
