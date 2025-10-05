@@ -29,7 +29,7 @@ public class Notificacao {
 
     public Notificacao(){
         participante = new Participante();
-        mensagem = "";
+        mensagem = " ";
         dataEnvio = Instant.now();
     }
 

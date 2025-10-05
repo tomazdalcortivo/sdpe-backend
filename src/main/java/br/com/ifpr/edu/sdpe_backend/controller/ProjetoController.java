@@ -2,11 +2,16 @@ package br.com.ifpr.edu.sdpe_backend.controller;
 
 import br.com.ifpr.edu.sdpe_backend.domain.Participante;
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
+import br.com.ifpr.edu.sdpe_backend.repository.ParticipanteRepository;
+import br.com.ifpr.edu.sdpe_backend.repository.ProjetoRepository;
 import br.com.ifpr.edu.sdpe_backend.service.ProjetoService;
+import br.com.ifpr.edu.sdpe_backend.util.UploadUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -15,6 +20,28 @@ import java.util.List;
 @RequestMapping("/api/projetos")
 public class ProjetoController {
 
+    ProjetoRepository projetoRepository;
+
+    @PostMapping("/cadastro-projeto")
+    public ModelAndView cadastrarProjeto(@ModelAttribute Projeto projeto, @RequestParam("file") MultipartFile imagem) {
+        ModelAndView mv = new ModelAndView("projeto/cadastro");
+        mv.addObject("projeto", projeto);
+
+        try {
+            if(UploadUtil.fazerUploadImagem(imagem)){
+                projeto.setImagem(imagem.getOriginalFilename());
+            }
+            projetoRepository.save(projeto);
+            System.out.println("Salvo com sucesso");
+            return new ModelAndView("redirect:/home");
+
+        } catch (Exception e) {
+            mv.addObject("Erro", e.getMessage());
+            System.out.println("Erro ao salvar" + e.getMessage());
+            return mv;
+        }
+    }
+}
 //    private final ProjetoService projetoService;
 //
 //    @PostMapping
@@ -45,6 +72,5 @@ public class ProjetoController {
 //    public ResponseEntity<Void> excluir(@PathVariable Long id) {
 //        this.projetoService.excluir(id);
 //        return ResponseEntity.noContent().build();
-//    }
+//}
 
-}

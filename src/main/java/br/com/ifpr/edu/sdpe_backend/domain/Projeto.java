@@ -33,6 +33,8 @@ public class Projeto {
 
     private Double cargaHoraria;
 
+    private String imagem;
+
     @ManyToOne
     @JoinColumn(name = "instituicao_id")
     private InstituicaoEnsino instituicaoEnsino;
@@ -69,5 +71,7 @@ public class Projeto {
         coordenadores = new ArrayList();
         participantes = new ArrayList<>();
         contatos = new ArrayList<>();
+        imagem = " ";
+
     }
 }
