@@ -32,10 +32,12 @@ public class Securityconfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
-//                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/projetos").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/projetos").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/projetos").hasRole("COORDENADOR")
+                        .requestMatchers(HttpMethod.POST, "/api/images/upload").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/projetos/**", "/**").permitAll() // Temporário!
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

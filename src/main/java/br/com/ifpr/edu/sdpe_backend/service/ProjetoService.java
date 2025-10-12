@@ -6,6 +6,7 @@ import br.com.ifpr.edu.sdpe_backend.repository.ProjetoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.List;
 
 @Service
