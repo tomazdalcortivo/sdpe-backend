@@ -2,6 +2,8 @@ package br.com.ifpr.edu.sdpe_backend.domain;
 
 import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoPerfil;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,8 +27,15 @@ public class Conta implements UserDetails {
     @Column(nullable = false)
     private Long id;
 
+    @Email(message = "Digite um email valido")
+    @NotBlank(message = "email não pode ser vazio")
     private String email;
 
+//    @Pattern(
+//            regexp = "/^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$/\n",
+//            message = "A senha deve ter no mínimo 8 caracteres, incluindo letra maiúscula, minúscula, número e caractere especial"
+//    )
+    @NotBlank(message = "Senha não pode ser vazia")
     private String senha;
 
     @Enumerated(EnumType.STRING)

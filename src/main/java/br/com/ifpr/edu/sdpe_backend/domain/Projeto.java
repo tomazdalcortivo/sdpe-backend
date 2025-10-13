@@ -2,6 +2,10 @@ package br.com.ifpr.edu.sdpe_backend.domain;
 
 import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoFormato;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,8 +31,10 @@ public class Projeto {
 
     private Boolean status;
 
+    @PastOrPresent(message = "A data de início não pode ser futura")
     private Date dataInicio;
 
+    @FutureOrPresent(message = "A data de fim não pode ser anterior à data atual")
     private Date dataFim;
 
     private Double cargaHoraria;

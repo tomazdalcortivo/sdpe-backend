@@ -10,6 +10,7 @@ import br.com.ifpr.edu.sdpe_backend.infra.security.TokenService;
 import br.com.ifpr.edu.sdpe_backend.repository.ContaRepository;
 import br.com.ifpr.edu.sdpe_backend.service.CoordenadorService;
 import br.com.ifpr.edu.sdpe_backend.service.ParticipanteService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,7 +38,7 @@ public class AuthenticationController {
     private final CoordenadorService coordenadorService;
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody AuthDTO data) {
+    public ResponseEntity login(@RequestBody @Valid AuthDTO data) {
         UsernamePasswordAuthenticationToken usuarioSenha = new UsernamePasswordAuthenticationToken(data.email(), data.senha());
         Authentication auth = this.authenticationManager.authenticate(usuarioSenha);
 
@@ -46,7 +47,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/registrar")
-    public ResponseEntity registrar(@RequestBody RegisterDTO data) {
+    public ResponseEntity registrar(@RequestBody @Valid RegisterDTO data) {
         if (this.repository.findByEmail(data.email()) != null) return ResponseEntity.badRequest().build();
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.senha());

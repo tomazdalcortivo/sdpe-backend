@@ -1,8 +1,13 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.validator.constraints.br.CPF;
+
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,11 +27,17 @@ public class Participante {
     @SequenceGenerator(name = "participante_seq", sequenceName = "participante_seq", allocationSize = 1)
     private Long id;
 
+    @Pattern(
+            regexp = "^[A-Za-zÀ-ÖØ-öø-ÿ]+( [A-Za-zÀ-ÖØ-öø-ÿ]+)+$",
+            message = "Digite o nome completo (nome e sobrenome)"
+    )
+    @NotBlank(message = "O nome não pode ser vazio")
     private String nome;
 
+    @PastOrPresent(message = "A data não pode ser maior que hoje")
     private Date dataNascimento;
 
-    //@CPF (validar depois!!)
+    @CPF(message = "Informe um cpf valido")
     private String cpf;
 
     private String cidade;
