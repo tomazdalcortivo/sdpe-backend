@@ -4,6 +4,9 @@ import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
 import br.com.ifpr.edu.sdpe_backend.exception.EntityNotFoundException;
 import br.com.ifpr.edu.sdpe_backend.repository.ProjetoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
@@ -19,8 +22,9 @@ public class ProjetoService {
         return this.projetoRepository.save(projeto);
     }
 
-    public List<Projeto> buscarTodos() {
-        return this.projetoRepository.findAll();
+    public Page<Projeto> buscarTodos(int numPag, int tamPag) {
+        Pageable pageable = PageRequest.of(numPag, tamPag);
+        return this.projetoRepository.findAll(pageable);
     }
 
     public Projeto atualizar(Projeto projeto, Long id) {
