@@ -1,31 +1,34 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
+import br.com.ifpr.edu.sdpe_backend.domain.enums.FuncaoCoordenador;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-import java.util.List;
-
-@Data
+@Getter
+@Setter
+@SuperBuilder
+@AllArgsConstructor
 @Entity
-public class Coordenador {
+@Table(name = "tb_coordenador")
+public class Coordenador extends Participante {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "id")
-    private Conta conta;
-
-    private String nome;
+    private String cargoInstituicao;
 
     private String contato;
 
-    private String telefone;
+    @ManyToOne
+    @JoinColumn(name = "projeto_id")
+    private Projeto projeto;
 
-    private String email;
+    @Enumerated(EnumType.STRING)
+    private FuncaoCoordenador funcao;
 
-    @ManyToMany
-    private List<Projeto> projeto;
+    public Coordenador(){
+        cargoInstituicao = " ";
+        contato = " ";
+        projeto = null;
+        funcao = FuncaoCoordenador.COORDENADOR_GERAL;
+    }
+
 }

@@ -1,18 +1,18 @@
 package br.com.ifpr.edu.sdpe_backend.domain.enums;
 
-public enum AccountRole {
+public enum TipoPerfil {
 
     ADMIN("ROLE_ADMIN"),
     COORDENADOR("ROLE_COORDENADOR"),
     PARTICIPANTE("ROLE_PARTICIPANTE");
 
-    private String role;
+    private String perfil;
 
-    AccountRole(String role) {
-        this.role = role;
+    TipoPerfil(String perfil) {
+        this.perfil = perfil;
     }
 
-    public String getRole() {
-        return role;
+    public String getPerfil() {
+        return perfil;
     }
 }

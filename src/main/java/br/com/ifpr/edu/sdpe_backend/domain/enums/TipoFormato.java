@@ -1,6 +1,6 @@
 package br.com.ifpr.edu.sdpe_backend.domain.enums;
 
-public enum TypeFormato {
+public enum TipoFormato {
     PRESENCIAL,
     REMOTO,
     HIBRIDO

@@ -1,20 +1,24 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
-import br.com.ifpr.edu.sdpe_backend.domain.enums.AccountRole;
+import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoPerfil;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 
-@Entity
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
+@Builder
+@Entity
 @Table(name = "tb_conta")
 public class Conta implements UserDetails {
 
@@ -23,33 +27,51 @@ public class Conta implements UserDetails {
     @Column(nullable = false)
     private Long id;
 
-    private String login;
+    @Email(message = "Digite um email valido")
+    @NotBlank(message = "email não pode ser vazio")
+    private String email;
 
+//    @Pattern(
+//            regexp = "/^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$/\n",
+//            message = "A senha deve ter no mínimo 8 caracteres, incluindo letra maiúscula, minúscula, número e caractere especial"
+//    )
+    @NotBlank(message = "Senha não pode ser vazia")
     private String senha;
 
-    private AccountRole role;
+    @Enumerated(EnumType.STRING)
+    private TipoPerfil perfil;
 
-    @OneToOne(mappedBy = "conta", cascade = CascadeType.ALL)
-    private Coordenador coordenador;
-
-    @OneToOne(mappedBy = "conta", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "conta")
     private Participante participante;
 
-    public Conta(String login, String senha, AccountRole role) {
-        this.login = login;
-        this.role = role;
+    @CreationTimestamp
+    private Instant dataCriacao;
+
+    private Boolean ativo;
+
+    public Conta(){
+        email  = " ";
+        senha = " ";
+        ativo = true;
+        dataCriacao =  Instant.now();
+        perfil = TipoPerfil.PARTICIPANTE;
+    }
+
+    public Conta(String email, String senha, TipoPerfil perfil) {
+        this.email = email;
+        this.perfil = perfil;
         this.senha = senha;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.role == AccountRole.ADMIN) {
+        if (this.perfil == TipoPerfil.ADMIN) {
             return List.of(
                     new SimpleGrantedAuthority("ROLE_ADMIN"),
                     new SimpleGrantedAuthority("ROLE_COORDENADOR"),
                     new SimpleGrantedAuthority("ROLE_PARTICIPANTE")
             );
-        } else if (this.role == AccountRole.COORDENADOR) return List.of(new SimpleGrantedAuthority("ROLE_COORDENADOR"));
+        } else if (this.perfil == TipoPerfil.COORDENADOR) return List.of(new SimpleGrantedAuthority("ROLE_COORDENADOR"));
         else return List.of(new SimpleGrantedAuthority("ROLE_PARTICIPANTE"));
     }
 
@@ -60,7 +82,7 @@ public class Conta implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.login;
+        return this.email;
     }
 
     @Override
