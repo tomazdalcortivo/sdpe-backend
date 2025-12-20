@@ -38,7 +38,7 @@ Este é o backend do sistema **SDPE**, desenvolvido para gerenciar e divulgar pr
 ## 📄 Documentação Completa
 
 O projeto conta com uma documentação acadêmica detalhando requisitos e modelagem:
-[**➡ Clique aqui para acessar o PDF do Sistema (SDPE)**](./Sistema%20para%20Divulgação%20de%20Projetos%20de%20Extensão%20(SDPE).pdf)
+[**➡ Clique aqui para acessar o PDF do Sistema (SDPE)**](https://github.com/tomazdalcortivo/sdpe-backend/blob/refactor/diagrama-classes/Sistema%20para%20Divulga%C3%A7%C3%A3o%20de%20Projetos%20de%20Extens%C3%A3o%20(SDPE).pdf)
 
 ## 📋 Pré-requisitos
 
