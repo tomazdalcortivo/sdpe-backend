@@ -54,7 +54,7 @@ Este é o backend do sistema **SDPE**, desenvolvido para gerenciar e divulgar pr
 
 1.  Clone o repositório:
     ```bash
-    git clone [https://github.com/seu-usuario/sdpe-backend.git](https://github.com/seu-usuario/sdpe-backend.git)
+    git clone https://github.com/tomazdalcortivo/sdpe-backend.git
     ```
 2.  Navegue até a pasta do projeto e execute:
     ```bash
