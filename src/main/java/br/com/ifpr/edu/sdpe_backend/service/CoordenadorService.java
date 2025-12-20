@@ -1,10 +1,9 @@
 package br.com.ifpr.edu.sdpe_backend.service;
 
 import br.com.ifpr.edu.sdpe_backend.domain.Coordenador;
-import br.com.ifpr.edu.sdpe_backend.domain.Participante;
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
 import br.com.ifpr.edu.sdpe_backend.exception.EntityNotFoundException;
-import br.com.ifpr.edu.sdpe_backend.repository.CoordenadorRepository; // Repositório específico para Coordenador
+import br.com.ifpr.edu.sdpe_backend.repository.CoordenadorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
@@ -33,6 +32,11 @@ public class CoordenadorService {
 
     public Coordenador buscarPorContato(String contato) {
         return this.coordenadorRepository.findByContato(contato).orElseThrow(
+                () -> new EntityNotFoundException("Coordenador não encontrado"));
+    }
+
+    public Coordenador buscarPorId(Long id) {
+        return this.coordenadorRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Coordenador não encontrado"));
     }
 

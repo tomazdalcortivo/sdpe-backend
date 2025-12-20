@@ -21,6 +21,11 @@ public class ParticipanteService {
         return this.participanteRepository.save(participante);
     }
 
+    public Participante buscarPorId(Long id) {
+        return this.participanteRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Participante não encontrado"));
+    }
+
     public Participante buscarPorNome(String nome) {
         return this.participanteRepository.findByNome(nome).orElseThrow(
                 () -> new EntityNotFoundException("Participante não encontrado"));
