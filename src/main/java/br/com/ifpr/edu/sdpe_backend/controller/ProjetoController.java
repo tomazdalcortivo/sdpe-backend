@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -96,4 +98,8 @@ public class ProjetoController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/data-inicio/{dataInicio}")
+    public ResponseEntity<List<Projeto>> buscarPorPeriodo(@PathVariable Date dataInicio, Date dataFim) {
+        return ResponseEntity.ok(projetoService.buscarPorPeriodo(dataInicio, dataFim));
+    }
 }

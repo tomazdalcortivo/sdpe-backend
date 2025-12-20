@@ -1,5 +1,8 @@
 package br.com.ifpr.edu.sdpe_backend.service;
 
+import br.com.ifpr.edu.sdpe_backend.domain.Contato;
+import br.com.ifpr.edu.sdpe_backend.domain.Coordenador;
+import br.com.ifpr.edu.sdpe_backend.domain.Participante;
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
 import br.com.ifpr.edu.sdpe_backend.exception.EntityNotFoundException;
 import br.com.ifpr.edu.sdpe_backend.repository.ProjetoRepository;
@@ -9,7 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -17,6 +20,10 @@ import java.util.List;
 public class ProjetoService {
 
     private final ProjetoRepository projetoRepository;
+
+    private final ParticipanteService participanteService;
+
+    private final ContatoService contatoService;
 
     public Projeto salvar(Projeto projeto) {
         return this.projetoRepository.save(projeto);
@@ -43,12 +50,66 @@ public class ProjetoService {
     }
 
     public void excluir(Long id) {
-        Projeto projeto = this.buscarPorId(id);
-        this.projetoRepository.delete(projeto);
+        this.projetoRepository.deleteById(id);
     }
 
     public Projeto buscarPorId(Long id) {
         return this.projetoRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Projeto não encontrado"));
+    }
+
+    public List<Projeto> buscarPorPeriodo(Date dataInicio, Date dataFim) {
+        return this.projetoRepository.findByDataInicioGreaterThanEqualAndDataFimLessThanEqual(dataInicio, dataFim);
+    }
+
+    public List<Coordenador> listarCoordenadores(Long idProjeto) {
+        Projeto projeto = buscarPorId(idProjeto);
+        return projeto.getCoordenadores();
+    }
+
+    public List<Participante> listarParticipantes(Long idProjeto) {
+        Projeto projeto = buscarPorId(idProjeto);
+        return projeto.getParticipantes();
+    }
+
+    public List<Contato> listarContatos(Long idProjeto) {
+        Projeto projeto = buscarPorId(idProjeto);
+        return projeto.getContatos();
+    }
+
+    public void adicionarParticipante(Long idProjeto, Long idParticipante) {
+        Projeto projeto = buscarPorId(idProjeto);
+
+        Participante participante = this.participanteService.buscarPorId(idParticipante);
+
+        if (!projeto.getParticipantes().contains(participante)) {
+            projeto.getParticipantes().add(participante);
+
+            participante.getProjetos().add(projeto);
+            this.projetoRepository.save(projeto);
+        }
+    }
+
+    public void excluirParticipante(Long idProjeto, Long idParticipante) {
+        Projeto projeto = buscarPorId(idProjeto);
+
+        Participante participante = this.participanteService.buscarPorId(idParticipante);
+
+        if (projeto.getParticipantes().contains(participante)) {
+            projeto.getParticipantes().remove(participante);
+
+            participante.getProjetos().remove(projeto);
+            this.projetoRepository.save(projeto);
+        }
+    }
+
+    public Contato adicionarFeedback(Long idProjeto, Contato contato) {
+        Projeto projeto = buscarPorId(idProjeto);
+        contato.setProjeto(projeto);
+        return contatoService.salvar(contato);
+    }
+
+    public void removerFeedback(Long idFeedback) {
+        contatoService.excluir(idFeedback);
     }
 }
