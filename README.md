@@ -35,6 +35,11 @@ Este é o backend do sistema **SDPE**, desenvolvido para gerenciar e divulgar pr
 * Sistema de contatos (Feedback e Chamados) vinculados aos projetos.
 * Estrutura para geração de relatórios de inscritos e visualizações.
 
+## 📄 Documentação Completa
+
+O projeto conta com uma documentação acadêmica detalhando requisitos e modelagem:
+[**➡ Clique aqui para acessar o PDF do Sistema (SDPE)**](./Sistema%20para%20Divulgação%20de%20Projetos%20de%20Extensão%20(SDPE).pdf)
+
 ## 📋 Pré-requisitos
 
 * JDK 21 ou superior.
