@@ -2,6 +2,7 @@ package br.com.ifpr.edu.sdpe_backend.domain;
 
 import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoContato;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,6 +24,11 @@ public class Contato {
     private Long id;
 
     private String mensagem;
+
+    private String nome;
+
+    @Email
+    private String email;
 
     private TipoContato tipoContato;
 
