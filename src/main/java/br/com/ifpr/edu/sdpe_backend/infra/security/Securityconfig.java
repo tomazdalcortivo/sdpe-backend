@@ -36,8 +36,14 @@ public class Securityconfig {
                         .requestMatchers(HttpMethod.POST, "/api/projetos").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/projetos").hasRole("COORDENADOR")
                         .requestMatchers(HttpMethod.POST, "/api/images/upload").permitAll()
+                        .requestMatchers(HttpMethod.GET,
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/projetos/**", "/**").permitAll() // Temporário!
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
