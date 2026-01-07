@@ -1,22 +1,16 @@
 package br.com.ifpr.edu.sdpe_backend.controller;
 
 import br.com.ifpr.edu.sdpe_backend.domain.Conta;
-import br.com.ifpr.edu.sdpe_backend.domain.Coordenador;
 import br.com.ifpr.edu.sdpe_backend.domain.DTO.AuthDTO;
 import br.com.ifpr.edu.sdpe_backend.domain.DTO.RegisterDTO;
-import br.com.ifpr.edu.sdpe_backend.domain.Participante;
-import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoPerfil;
 import br.com.ifpr.edu.sdpe_backend.infra.security.TokenService;
-import br.com.ifpr.edu.sdpe_backend.repository.ContaRepository;
-import br.com.ifpr.edu.sdpe_backend.service.CoordenadorService;
-import br.com.ifpr.edu.sdpe_backend.service.ParticipanteService;
+import br.com.ifpr.edu.sdpe_backend.service.AuthorizationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,11 +25,7 @@ public class AuthenticationController {
 
     private final TokenService tokenService;
 
-    private final ContaRepository repository;
-
-    private final ParticipanteService participanteService;
-
-    private final CoordenadorService coordenadorService;
+    private final AuthorizationService authorizationService;
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthDTO data) {
@@ -48,45 +38,13 @@ public class AuthenticationController {
 
     @PostMapping("/registrar")
     public ResponseEntity registrar(@RequestBody @Valid RegisterDTO data) {
-        if (this.repository.findByEmail(data.email()) != null) return ResponseEntity.badRequest().build();
-
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.senha());
-
-        Conta novaConta = Conta.builder()
-                .email(data.email())
-                .senha(encryptedPassword)
-                .perfil(data.perfil())
-                .ativo(true)
-                .build();
-
-        this.repository.save(novaConta);
-
-        if (data.perfil() == TipoPerfil.COORDENADOR) {
-            Coordenador coordenador = Coordenador.builder()
-                    .nome(data.nome())
-                    .dataNascimento(data.dataNascimento())
-                    .vinculoInstitucional(data.vinculoInstitucional())
-                    .cpf(data.cpf())
-                    .cidade(data.cidade())
-                    .contato(data.email())
-                    .conta(novaConta)
-                    .build();
-
-            this.coordenadorService.salvar(coordenador);
-
-        } else if (data.perfil() == TipoPerfil.PARTICIPANTE) {
-
-            Participante participante = Participante.builder()
-                    .nome(data.nome())
-                    .dataNascimento(data.dataNascimento())
-                    .cpf(data.cpf())
-                    .cidade(data.cidade())
-                    .vinculoInstitucional(data.vinculoInstitucional())
-                    .conta(novaConta)
-                    .build();
-
-            this.participanteService.salvar(participante);
+        try {
+            this.authorizationService.registrarUsuario(data);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao cadastrar: Verifique os dados inseridos (CPF, Nome, etc).");
         }
-        return ResponseEntity.ok().build();
     }
 }
