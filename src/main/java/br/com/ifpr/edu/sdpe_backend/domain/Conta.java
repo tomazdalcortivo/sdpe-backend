@@ -31,10 +31,10 @@ public class Conta implements UserDetails {
     @NotBlank(message = "email não pode ser vazio")
     private String email;
 
-//    @Pattern(
-//            regexp = "/^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$/\n",
-//            message = "A senha deve ter no mínimo 8 caracteres, incluindo letra maiúscula, minúscula, número e caractere especial"
-//    )
+    private String codigoRecuperacao;
+
+    private Instant dataExpiracaoCodigo;
+
     @NotBlank(message = "Senha não pode ser vazia")
     private String senha;
 

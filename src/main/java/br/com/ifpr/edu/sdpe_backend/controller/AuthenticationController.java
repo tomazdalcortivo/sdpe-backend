@@ -2,7 +2,10 @@ package br.com.ifpr.edu.sdpe_backend.controller;
 
 import br.com.ifpr.edu.sdpe_backend.domain.Conta;
 import br.com.ifpr.edu.sdpe_backend.domain.DTO.AuthDTO;
+import br.com.ifpr.edu.sdpe_backend.domain.DTO.EmailRequestDTO;
+import br.com.ifpr.edu.sdpe_backend.domain.DTO.PasswordResetDTO;
 import br.com.ifpr.edu.sdpe_backend.domain.DTO.RegisterDTO;
+import br.com.ifpr.edu.sdpe_backend.exception.EntityNotFoundException;
 import br.com.ifpr.edu.sdpe_backend.infra.security.TokenService;
 import br.com.ifpr.edu.sdpe_backend.service.AuthorizationService;
 import jakarta.validation.Valid;
@@ -45,6 +48,24 @@ public class AuthenticationController {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao cadastrar: Verifique os dados inseridos (CPF, Nome, etc).");
+        }
+    }
+
+    @PostMapping("/recuperar-senha")
+    public ResponseEntity solicitarRecuperacao(@RequestBody @Valid EmailRequestDTO data) {
+        authorizationService.solicitarRecuperacao(data.email());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/redefinir-senha")
+    public ResponseEntity redefinirSenha(@RequestBody @Valid PasswordResetDTO data) {
+        try {
+            authorizationService.redefinirSenha(data.email(), data.codigo(), data.novaSenha());
+            return ResponseEntity.ok().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
