@@ -1,10 +1,8 @@
 package br.com.ifpr.edu.sdpe_backend.controller;
 
 import br.com.ifpr.edu.sdpe_backend.domain.Conta;
-import br.com.ifpr.edu.sdpe_backend.domain.DTO.AuthDTO;
-import br.com.ifpr.edu.sdpe_backend.domain.DTO.EmailRequestDTO;
-import br.com.ifpr.edu.sdpe_backend.domain.DTO.PasswordResetDTO;
-import br.com.ifpr.edu.sdpe_backend.domain.DTO.RegisterDTO;
+import br.com.ifpr.edu.sdpe_backend.domain.DTO.*;
+import br.com.ifpr.edu.sdpe_backend.domain.Participante;
 import br.com.ifpr.edu.sdpe_backend.exception.EntityNotFoundException;
 import br.com.ifpr.edu.sdpe_backend.infra.security.TokenService;
 import br.com.ifpr.edu.sdpe_backend.service.AuthorizationService;
@@ -14,10 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -67,5 +63,28 @@ public class AuthenticationController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping("/perfil")
+    public ResponseEntity<UsuarioResponseDTO> getPerfilUsuarioLogado(@AuthenticationPrincipal Conta conta) {
+
+        Participante participante = conta.getParticipante();
+
+        String nome = (participante != null) ? participante.getNome() : "Usuário";
+        String cidade = (participante != null) ? participante.getCidade() : "";
+        String resumo = (participante != null) ? participante.getResumo() : "";
+        String telefone = (participante != null) ? participante.getTelefone() : "";
+
+        UsuarioResponseDTO response = new UsuarioResponseDTO(
+                conta.getId(),
+                nome,
+                conta.getEmail(),
+                telefone,
+                cidade,
+                resumo,
+                conta.getPerfil()
+        );
+
+        return ResponseEntity.ok(response);
     }
 }

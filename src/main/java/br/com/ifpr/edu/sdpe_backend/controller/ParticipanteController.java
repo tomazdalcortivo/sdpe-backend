@@ -1,8 +1,10 @@
 package br.com.ifpr.edu.sdpe_backend.controller;
 
+import br.com.ifpr.edu.sdpe_backend.domain.DTO.ParticipanteUpdateDTO;
 import br.com.ifpr.edu.sdpe_backend.domain.Participante;
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
 import br.com.ifpr.edu.sdpe_backend.service.ParticipanteService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +18,7 @@ public class ParticipanteController {
     private final ParticipanteService participanteService;
 
     @PostMapping
-    public ResponseEntity<Participante> salvar(@RequestBody Participante participante) {
+    public ResponseEntity<Participante> salvar(@RequestBody @Valid Participante participante) {
         this.participanteService.salvar(participante);
         return ResponseEntity.ok(participante);
     }
@@ -34,7 +36,7 @@ public class ParticipanteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Participante> atualizar(@RequestBody Participante participante, @PathVariable Long id) {
+    public ResponseEntity<Participante> atualizar(@RequestBody @Valid ParticipanteUpdateDTO participante, @PathVariable Long id) {
         this.participanteService.atualizar(participante, id);
         return ResponseEntity.noContent().build();
     }
