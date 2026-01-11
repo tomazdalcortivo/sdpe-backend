@@ -9,5 +9,6 @@ public record UsuarioResponseDTO(
         String telefone,
         String cidade,
         String resumo,
+        String fotoPerfil,
         TipoPerfil perfil
 ) {}

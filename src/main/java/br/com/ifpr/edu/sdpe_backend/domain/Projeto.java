@@ -1,6 +1,7 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
 import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoFormato;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
@@ -59,6 +60,7 @@ public class Projeto {
             joinColumns = @JoinColumn(name = "projeto_id"),
             inverseJoinColumns = @JoinColumn(name = "participante_id")
     )
+    @JsonIgnore
     private List<Participante> participantes;
 
     @OneToMany(mappedBy = "projeto")

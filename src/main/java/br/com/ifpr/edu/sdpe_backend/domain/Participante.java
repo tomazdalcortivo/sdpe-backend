@@ -47,6 +47,8 @@ public class Participante {
 
     private String telefone;
 
+    private String fotoPerfil;
+
     private Boolean vinculoInstitucional;
 
     @ManyToMany(mappedBy = "participantes")

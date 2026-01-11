@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -54,5 +57,17 @@ public class ParticipanteController {
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
         this.participanteService.excluir(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/foto")
+    public ResponseEntity<Participante> atualizarFoto(
+            @PathVariable Long id,
+            @RequestParam("file") MultipartFile file) {
+        try {
+            Participante atualizado = this.participanteService.uploadFotoPerfil(id, file);
+            return ResponseEntity.ok(atualizado);
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }

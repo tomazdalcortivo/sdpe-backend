@@ -74,6 +74,7 @@ public class AuthenticationController {
         String cidade = (participante != null) ? participante.getCidade() : "";
         String resumo = (participante != null) ? participante.getResumo() : "";
         String telefone = (participante != null) ? participante.getTelefone() : "";
+        String fotoPerfil = (participante != null) ? participante.getFotoPerfil() : null;
 
         UsuarioResponseDTO response = new UsuarioResponseDTO(
                 conta.getId(),
@@ -82,6 +83,7 @@ public class AuthenticationController {
                 telefone,
                 cidade,
                 resumo,
+                fotoPerfil,
                 conta.getPerfil()
         );
 

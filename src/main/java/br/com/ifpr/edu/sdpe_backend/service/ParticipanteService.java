@@ -13,6 +13,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 
 @Service
@@ -22,6 +30,8 @@ public class ParticipanteService {
     private final ParticipanteRepository participanteRepository;
 
     private final ContaRepository contaRepository;
+
+    private final Path rootLocation = Paths.get("uploads");
 
     public Participante salvar(Participante participante) {
         return this.participanteRepository.save(participante);
@@ -47,6 +57,22 @@ public class ParticipanteService {
         return this.participanteRepository.findByProjetos(projeto, pageable);
     }
 
+    public Participante uploadFotoPerfil(Long id, MultipartFile arquivo) throws IOException {
+        Participante participante = this.buscarPorId(id);
+
+        if (!Files.exists(rootLocation)) Files.createDirectory(rootLocation);
+
+        String filename = "perfil-" + id + "-" + UUID.randomUUID().toString() + ".jpg";
+
+        Path destinationFile = rootLocation.resolve(filename);
+        Files.copy(arquivo.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
+
+        String fileUrl = "http://localhost:8080/imagens/" + filename;
+
+        participante.setFotoPerfil(fileUrl);
+        return this.participanteRepository.save(participante);
+    }
+
     @Transactional
     public void excluir(Long id) {
         Participante participante = buscarPorId(id);
@@ -69,4 +95,5 @@ public class ParticipanteService {
 
         return this.participanteRepository.save(existente);
     }
+
 }
