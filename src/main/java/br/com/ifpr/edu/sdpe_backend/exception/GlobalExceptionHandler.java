@@ -1,8 +1,10 @@
 package br.com.ifpr.edu.sdpe_backend.exception;
 
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,5 +43,23 @@ public class GlobalExceptionHandler {
                 errors.put(error.getField(), error.getDefaultMessage())
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    @ExceptionHandler(TransactionSystemException.class)
+    public ResponseEntity<String> handleTransactionSystemException(TransactionSystemException ex) {
+        Throwable cause = ex.getRootCause();
+
+        if (cause instanceof ConstraintViolationException) {
+            ConstraintViolationException validationException = (ConstraintViolationException) cause;
+            StringBuilder mensagens = new StringBuilder();
+
+            for (ConstraintViolation<?> violation : validationException.getConstraintViolations()) {
+                mensagens.append(violation.getMessage()).append("\n");
+            }
+
+            return ResponseEntity.badRequest().body(mensagens.toString());
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno ao salvar dados.");
     }
 }
