@@ -42,6 +42,7 @@ public class Securityconfig {
                         .requestMatchers(HttpMethod.POST, "/auth/redefinir-senha").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/projetos").permitAll()
                         .requestMatchers(HttpMethod.GET, "/imagens/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/documentos/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/projetos").hasRole("COORDENADOR")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()

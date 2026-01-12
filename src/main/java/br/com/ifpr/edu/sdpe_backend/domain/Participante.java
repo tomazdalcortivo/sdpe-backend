@@ -49,6 +49,8 @@ public class Participante {
 
     private String fotoPerfil;
 
+    private String documentoUrl;
+
     private Boolean vinculoInstitucional;
 
     @ManyToMany(mappedBy = "participantes")
