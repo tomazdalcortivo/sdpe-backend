@@ -42,6 +42,13 @@ public class Participante {
 
     private String cidade;
 
+    @Column(columnDefinition = "TEXT")
+    private String resumo;
+
+    private String telefone;
+
+    private String fotoPerfil;
+
     private Boolean vinculoInstitucional;
 
     @ManyToMany(mappedBy = "participantes")
@@ -55,13 +62,8 @@ public class Participante {
     private List<Notificacao> notificacoes;
 
     public Participante() {
-        nome = " ";
-        dataNascimento = new Date();
-        cpf = " ";
-        cidade = " ";
         vinculoInstitucional = true;
         projetos = new ArrayList();
-        //conta = new Conta();
     }
 
 }

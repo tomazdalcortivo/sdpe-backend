@@ -30,19 +30,20 @@ public class Securityconfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/projetos").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/projetos").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/projetos").hasRole("COORDENADOR")
-                        .requestMatchers(HttpMethod.POST, "/api/images/upload").permitAll()
+                        .requestMatchers("/h2-console/**").permitAll() // libera a url do h2 somente para desenvolvimento
                         .requestMatchers(HttpMethod.GET,
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
-                        ).permitAll()
+                        ).permitAll() // libera a url do swagger somente desenvolvimento
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/registrar").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/recuperar-senha").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/redefinir-senha").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/projetos").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/imagens/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/projetos").hasRole("COORDENADOR")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/projetos/**", "/**").permitAll() // Temporário!
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )

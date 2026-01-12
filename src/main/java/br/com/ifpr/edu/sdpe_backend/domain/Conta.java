@@ -1,6 +1,7 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
 import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoPerfil;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -42,6 +43,7 @@ public class Conta implements UserDetails {
     private TipoPerfil perfil;
 
     @OneToOne(mappedBy = "conta")
+    @JsonIgnore
     private Participante participante;
 
     @CreationTimestamp
