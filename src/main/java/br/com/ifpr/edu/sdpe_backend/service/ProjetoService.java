@@ -2,9 +2,11 @@ package br.com.ifpr.edu.sdpe_backend.service;
 
 import br.com.ifpr.edu.sdpe_backend.domain.Contato;
 import br.com.ifpr.edu.sdpe_backend.domain.Coordenador;
+import br.com.ifpr.edu.sdpe_backend.domain.InstituicaoEnsino; // Import adicionado
 import br.com.ifpr.edu.sdpe_backend.domain.Participante;
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
 import br.com.ifpr.edu.sdpe_backend.exception.EntityNotFoundException;
+import br.com.ifpr.edu.sdpe_backend.repository.InstituicaoEnsinoRepository; // Import adicionado
 import br.com.ifpr.edu.sdpe_backend.repository.ProjetoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,7 +27,22 @@ public class ProjetoService {
 
     private final ContatoService contatoService;
 
+    private final InstituicaoEnsinoRepository instituicaoEnsinoRepository;
+
     public Projeto salvar(Projeto projeto) {
+
+        if (projeto.getInstituicaoEnsino() != null) {
+            InstituicaoEnsino instituicaoInput = projeto.getInstituicaoEnsino();
+
+            if (instituicaoInput.getNome() != null && !instituicaoInput.getNome().isEmpty()) {
+                InstituicaoEnsino instituicaoBanco = instituicaoEnsinoRepository
+                        .findByNome(instituicaoInput.getNome())
+                        .orElseGet(() -> instituicaoEnsinoRepository.save(instituicaoInput)); // Salva se não existir
+
+                projeto.setInstituicaoEnsino(instituicaoBanco);
+            }
+        }
+
         return this.projetoRepository.save(projeto);
     }
 
@@ -44,6 +61,14 @@ public class ProjetoService {
         existente.setParticipantes(projeto.getParticipantes());
         existente.setCargaHoraria(projeto.getCargaHoraria());
         existente.setFormato(projeto.getFormato());
+
+
+        if (projeto.getInstituicaoEnsino() != null) {
+
+            InstituicaoEnsino inst = instituicaoEnsinoRepository.findByNome(projeto.getInstituicaoEnsino().getNome())
+                    .orElseGet(() -> instituicaoEnsinoRepository.save(projeto.getInstituicaoEnsino()));
+            existente.setInstituicaoEnsino(inst);
+        }
 
         this.projetoRepository.save(existente);
         return existente;
