@@ -2,11 +2,11 @@ package br.com.ifpr.edu.sdpe_backend.service;
 
 import br.com.ifpr.edu.sdpe_backend.domain.Contato;
 import br.com.ifpr.edu.sdpe_backend.domain.Coordenador;
-import br.com.ifpr.edu.sdpe_backend.domain.InstituicaoEnsino; // Import adicionado
+import br.com.ifpr.edu.sdpe_backend.domain.InstituicaoEnsino;
 import br.com.ifpr.edu.sdpe_backend.domain.Participante;
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
 import br.com.ifpr.edu.sdpe_backend.exception.EntityNotFoundException;
-import br.com.ifpr.edu.sdpe_backend.repository.InstituicaoEnsinoRepository; // Import adicionado
+import br.com.ifpr.edu.sdpe_backend.repository.InstituicaoEnsinoRepository;
 import br.com.ifpr.edu.sdpe_backend.repository.ProjetoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,19 +32,45 @@ public class ProjetoService {
 
     public Projeto salvar(Projeto projeto) {
 
-        if (projeto.getInstituicaoEnsino() != null) {
-            InstituicaoEnsino instituicaoInput = projeto.getInstituicaoEnsino();
+        projeto.setStatus(true);
 
-            if (instituicaoInput.getNome() != null && !instituicaoInput.getNome().isEmpty()) {
-                InstituicaoEnsino instituicaoBanco = instituicaoEnsinoRepository
-                        .findByNome(instituicaoInput.getNome())
-                        .orElseGet(() -> instituicaoEnsinoRepository.save(instituicaoInput)); // Salva se não existir
-
-                projeto.setInstituicaoEnsino(instituicaoBanco);
+        if (projeto.getDataInicio() != null && projeto.getDataFim() != null) {
+            if (projeto.getDataFim().before(projeto.getDataInicio())) {
+                throw new IllegalArgumentException("A data de fim não pode ser anterior à data de início.");
             }
         }
-
+        tratarInstituicao(projeto);
         return this.projetoRepository.save(projeto);
+    }
+
+    private void tratarInstituicao(Projeto projeto) {
+        if (projeto.getInstituicaoEnsino() != null) {
+            InstituicaoEnsino input = projeto.getInstituicaoEnsino();
+            input.getProjetos().add(projeto);
+
+            if (input.getNome() != null && !input.getNome().trim().isEmpty()) {
+
+                Optional<InstituicaoEnsino> busca;
+
+                if (input.getCidade() != null && !input.getCidade().trim().isEmpty()) {
+                    busca = instituicaoEnsinoRepository.findByNomeAndCidade(input.getNome(), input.getCidade());
+                } else {
+                    busca = instituicaoEnsinoRepository.findByNome(input.getNome());
+                }
+
+                InstituicaoEnsino instituicaoFinal;
+
+
+                if (busca.isPresent()) {
+                    // Se já existe, usamos a do banco (ignorando a descrição nova para não sobrescrever dados antigos sem querer)
+                    instituicaoFinal = busca.get();
+                } else {
+                    instituicaoFinal = instituicaoEnsinoRepository.save(input);
+                }
+
+                projeto.setInstituicaoEnsino(instituicaoFinal);
+            }
+        }
     }
 
     public Page<Projeto> buscarTodos(int numPag, int tamPag) {

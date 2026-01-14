@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -42,9 +43,8 @@ public class ParticipanteService {
                 () -> new EntityNotFoundException("Participante não encontrado"));
     }
 
-    public Participante buscarPorNome(String nome) {
-        return this.participanteRepository.findByNome(nome).orElseThrow(
-                () -> new EntityNotFoundException("Participante não encontrado"));
+    public List<Participante> buscarPorNome(String nome) {
+        return this.participanteRepository.findByNomeContainingIgnoreCase(nome);
     }
 
     public Participante buscarPorCpf(String cpf) {

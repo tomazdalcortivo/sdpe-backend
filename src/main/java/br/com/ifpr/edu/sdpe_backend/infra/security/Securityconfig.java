@@ -44,6 +44,7 @@ public class Securityconfig {
                         .requestMatchers(HttpMethod.GET, "/imagens/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/documentos/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/projetos").hasRole("COORDENADOR")
+                        .requestMatchers(HttpMethod.POST, "/api/instituicao-ensino").hasRole("COORDENADOR")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()

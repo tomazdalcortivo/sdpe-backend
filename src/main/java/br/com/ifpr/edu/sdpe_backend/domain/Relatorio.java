@@ -1,5 +1,6 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,7 @@ public abstract class Relatorio {
 
     @ManyToOne
     @JoinColumn(name = "projeto_id")
+    @JsonIgnore
     private Projeto projeto;
 
     public Relatorio() {

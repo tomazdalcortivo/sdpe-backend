@@ -1,6 +1,8 @@
 package br.com.ifpr.edu.sdpe_backend.controller;
 
+import br.com.ifpr.edu.sdpe_backend.domain.Coordenador;
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
+import br.com.ifpr.edu.sdpe_backend.service.CoordenadorService;
 import br.com.ifpr.edu.sdpe_backend.service.ProjetoService;
 //import br.com.ifpr.edu.sdpe_backend.util.UploadUtil;
 import org.springframework.core.io.Resource;
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
@@ -26,16 +29,14 @@ public class ProjetoController {
 
     private final ProjetoService projetoService;
 
-//    @PostMapping
-//    public ResponseEntity<Projeto> salvar(@RequestBody Projeto projeto) {
-//        Projeto projetoCriado = this.projetoService.salvar(projeto);
-//        return new ResponseEntity<>(projetoCriado, HttpStatus.CREATED);
-//    }
+    private final CoordenadorService coordenadorService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Projeto> salvar(
             @RequestPart("projeto") Projeto projeto,
-            @RequestPart("imagem") MultipartFile imagem) throws IOException {
+            @RequestPart("imagem") MultipartFile imagem,
+            Principal principal
+    ) throws IOException {
 
         if (imagem != null && !imagem.isEmpty()) {
             // Onde as imagens serão salvas
@@ -56,8 +57,23 @@ public class ProjetoController {
             projeto.setImagemPath(arquivoDestino.getAbsolutePath());
         }
 
-        Projeto salvo = projetoService.salvar(projeto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
+        Projeto projetoSalvo = projetoService.salvar(projeto);
+
+        if (principal != null) {
+            String email = principal.getName();
+            try {
+                Coordenador coordenador = coordenadorService.buscarPorEmail(email);
+
+                projetoSalvo.getCoordenadores().add(coordenador);
+                coordenador.getProjetos().add(projetoSalvo);
+
+                projetoService.salvar(projetoSalvo);
+            } catch (Exception e) {
+                throw new RuntimeException("Erro ao vincular coordenador:" + e);
+            }
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(projetoSalvo);
     }
 
     @GetMapping("/{id}")

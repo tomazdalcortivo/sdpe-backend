@@ -1,6 +1,7 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
 import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoContato;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -37,6 +38,7 @@ public class Contato {
 
     @ManyToOne
     @JoinColumn(name = "projeto_id")
+    @JsonIgnore
     private Projeto projeto;
 
     public Contato() {

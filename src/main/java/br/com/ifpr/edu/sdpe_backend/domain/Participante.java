@@ -1,5 +1,6 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PastOrPresent;
@@ -54,6 +55,7 @@ public class Participante {
     private Boolean vinculoInstitucional;
 
     @ManyToMany(mappedBy = "participantes")
+    @JsonIgnore
     private List<Projeto> projetos;
 
     @OneToOne
