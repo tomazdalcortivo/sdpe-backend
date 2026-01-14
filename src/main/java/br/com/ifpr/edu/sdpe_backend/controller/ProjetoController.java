@@ -1,8 +1,10 @@
 package br.com.ifpr.edu.sdpe_backend.controller;
 
 import br.com.ifpr.edu.sdpe_backend.domain.Coordenador;
+import br.com.ifpr.edu.sdpe_backend.domain.Participante;
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
 import br.com.ifpr.edu.sdpe_backend.service.CoordenadorService;
+import br.com.ifpr.edu.sdpe_backend.service.ParticipanteService;
 import br.com.ifpr.edu.sdpe_backend.service.ProjetoService;
 //import br.com.ifpr.edu.sdpe_backend.util.UploadUtil;
 import org.springframework.core.io.Resource;
@@ -30,6 +32,8 @@ public class ProjetoController {
     private final ProjetoService projetoService;
 
     private final CoordenadorService coordenadorService;
+
+    private final ParticipanteService participanteService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Projeto> salvar(
@@ -74,6 +78,18 @@ public class ProjetoController {
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(projetoSalvo);
+    }
+
+    @GetMapping("/meus-criados")
+    public ResponseEntity<List<Projeto>> listarMeusProjetosCriados(Principal principal) {
+        Coordenador coord = coordenadorService.buscarPorEmail(principal.getName());
+        return ResponseEntity.ok(projetoService.buscarPorCoordenador(coord.getId()));
+    }
+
+    @GetMapping("/meus-participados")
+    public ResponseEntity<List<Projeto>> listarMeusProjetosParticipados(Principal principal) {
+        Participante part = participanteService.buscarPorEmail(principal.getName());
+        return ResponseEntity.ok(projetoService.buscarPorParticipante(part.getId()));
     }
 
     @GetMapping("/{id}")

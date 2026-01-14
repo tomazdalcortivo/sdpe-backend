@@ -47,6 +47,11 @@ public class ParticipanteService {
         return this.participanteRepository.findByNomeContainingIgnoreCase(nome);
     }
 
+    public Participante buscarPorEmail(String email) {
+        return this.participanteRepository.findByContaEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("Participante não encontrado"));
+    }
+
     public Participante buscarPorCpf(String cpf) {
         return this.participanteRepository.findByCpf(cpf).orElseThrow(
                 () -> new EntityNotFoundException("Participante não encontrado"));

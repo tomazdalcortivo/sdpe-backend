@@ -73,6 +73,14 @@ public class ProjetoService {
         }
     }
 
+    public List<Projeto> buscarPorCoordenador(Long idCoordenador) {
+        return projetoRepository.findByCoordenadores_Id(idCoordenador);
+    }
+
+    public List<Projeto> buscarPorParticipante(Long idParticipante) {
+        return projetoRepository.findByParticipantes_Id(idParticipante);
+    }
+
     public Page<Projeto> buscarTodos(int numPag, int tamPag) {
         Pageable pageable = PageRequest.of(numPag, tamPag);
         return this.projetoRepository.findAll(pageable);

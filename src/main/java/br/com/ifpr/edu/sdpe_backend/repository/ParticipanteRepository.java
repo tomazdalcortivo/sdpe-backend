@@ -15,5 +15,7 @@ public interface ParticipanteRepository extends JpaRepository<Participante, Long
 
     Optional<Participante> findByCpf(String cpf);
 
+    Optional<Participante> findByContaEmail(String email);
+
     Page<Participante> findByProjetos(Projeto projeto, Pageable pageable);
 }
