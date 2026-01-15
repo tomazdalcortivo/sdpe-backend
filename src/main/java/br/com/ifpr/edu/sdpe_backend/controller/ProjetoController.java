@@ -41,7 +41,9 @@ public class ProjetoController {
             Principal principal
     ) throws IOException {
 
-        Projeto salvo = projetoService.salvar(projeto, arquivo, principal);
+        String emailCoordenador = (principal != null) ? principal.getName() : null;
+
+        Projeto salvo = projetoService.salvar(projeto, arquivo, emailCoordenador);
         return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
     }
 

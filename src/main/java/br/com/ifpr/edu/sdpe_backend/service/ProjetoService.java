@@ -38,8 +38,9 @@ public class ProjetoService {
     private final InstituicaoEnsinoRepository instituicaoEnsinoRepository;
 
     private final Path rootLocation = Paths.get("uploads");
+    private final CoordenadorService coordenadorService;
 
-    public Projeto salvar(Projeto projeto, MultipartFile arquivo) throws IOException {
+    public Projeto salvar(Projeto projeto, MultipartFile arquivo, String emailCoordenador) throws IOException {
 
         projeto.setStatus(true);
 
@@ -61,6 +62,17 @@ public class ProjetoService {
 
             projeto.setDocumentoPath(documentoPath);
         }
+        if (emailCoordenador != null && !emailCoordenador.isEmpty()) {
+            try {
+                Coordenador coordenador = coordenadorService.buscarPorEmail(emailCoordenador);
+                if (!projeto.getCoordenadores().contains(coordenador)) {
+                    projeto.getCoordenadores().add(coordenador);
+                }
+            } catch (Exception e) {
+                System.err.println("Erro ao vincular coordenador: " + e.getMessage());
+            }
+        }
+
         tratarInstituicao(projeto);
         return this.projetoRepository.save(projeto);
     }
