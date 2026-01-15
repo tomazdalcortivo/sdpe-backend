@@ -6,7 +6,6 @@ import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
 import br.com.ifpr.edu.sdpe_backend.service.CoordenadorService;
 import br.com.ifpr.edu.sdpe_backend.service.ParticipanteService;
 import br.com.ifpr.edu.sdpe_backend.service.ProjetoService;
-//import br.com.ifpr.edu.sdpe_backend.util.UploadUtil;
 import org.springframework.core.io.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.UrlResource;
@@ -20,14 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,10 +37,11 @@ public class ProjetoController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Projeto> salvar(
             @RequestPart("projeto") Projeto projeto,
-            @RequestPart(value = "arquivo", required = false) MultipartFile arquivo
+            @RequestPart(value = "arquivo", required = false) MultipartFile arquivo,
+            Principal principal
     ) throws IOException {
 
-        Projeto salvo = projetoService.salvar(projeto, arquivo);
+        Projeto salvo = projetoService.salvar(projeto, arquivo, principal);
         return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
     }
 
