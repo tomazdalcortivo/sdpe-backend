@@ -13,10 +13,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +37,9 @@ public class ProjetoService {
 
     private final InstituicaoEnsinoRepository instituicaoEnsinoRepository;
 
-    public Projeto salvar(Projeto projeto) {
+    private final Path rootLocation = Paths.get("uploads");
+
+    public Projeto salvar(Projeto projeto, MultipartFile arquivo) throws IOException {
 
         projeto.setStatus(true);
 
@@ -38,6 +47,19 @@ public class ProjetoService {
             if (projeto.getDataFim().before(projeto.getDataInicio())) {
                 throw new IllegalArgumentException("A data de fim não pode ser anterior à data de início.");
             }
+        }
+
+        if (arquivo != null && !arquivo.isEmpty()) {
+            if (!Files.exists(rootLocation)) Files.createDirectories(rootLocation);
+
+            String filename = "doc-projeto-" + UUID.randomUUID() + ".pdf";
+            Path destinationFile = rootLocation.resolve(filename);
+
+            Files.copy(arquivo.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
+
+            String documentoPath = "http://localhost:8080/documentos/" + filename;
+
+            projeto.setDocumentoPath(documentoPath);
         }
         tratarInstituicao(projeto);
         return this.projetoRepository.save(projeto);
@@ -110,7 +132,25 @@ public class ProjetoService {
     }
 
     public void excluir(Long id) {
+        Projeto projeto = buscarPorId(id);
+
+        if (projeto.getImagemPath() != null && !projeto.getImagemPath().trim().isEmpty())
+            deletarArquivoFisico(projeto.getImagemPath());
+
+        if (projeto.getDocumentoPath() != null && !projeto.getDocumentoPath().trim().isEmpty())
+            deletarArquivoFisico(projeto.getDocumentoPath());
+
         this.projetoRepository.deleteById(id);
+    }
+
+    private void deletarArquivoFisico(String nomeArquivo) {
+        try {
+            Path arquivo = rootLocation.resolve(nomeArquivo);
+
+            Files.deleteIfExists(arquivo);
+        } catch (IOException e) {
+            System.err.println("Erro ao deletar arquivo físico (" + nomeArquivo + "): " + e.getMessage());
+        }
     }
 
     public Projeto buscarPorId(Long id) {

@@ -35,7 +35,7 @@ public class Projeto {
 
     private String imagemPath;
 
-    private String documentoUrl;
+    private String documentoPath;
 
     @ManyToOne
     @JoinColumn(name = "instituicao_id")
@@ -80,6 +80,6 @@ public class Projeto {
         participantes = new ArrayList<>();
         contatos = new ArrayList<>();
         imagemPath = " ";
-
+        documentoPath = "";
     }
 }

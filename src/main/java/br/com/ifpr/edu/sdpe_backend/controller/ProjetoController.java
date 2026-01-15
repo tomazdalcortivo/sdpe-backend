@@ -20,9 +20,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,46 +43,11 @@ public class ProjetoController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Projeto> salvar(
             @RequestPart("projeto") Projeto projeto,
-            @RequestPart("imagem") MultipartFile imagem,
-            Principal principal
+            @RequestPart(value = "arquivo", required = false) MultipartFile arquivo
     ) throws IOException {
 
-        if (imagem != null && !imagem.isEmpty()) {
-            // Onde as imagens serão salvas
-            String pastaImagens = "D:/imagemsdpe/";
-            File diretorio = new File(pastaImagens);
-            if (!diretorio.exists()) {
-                diretorio.mkdirs();
-            }
-
-            // Recriar o nome da imagem
-            String nomeArquivo = System.currentTimeMillis() + "_" + imagem.getOriginalFilename();
-
-            // Salvar no disco
-            File arquivoDestino = new File(diretorio, nomeArquivo);
-            imagem.transferTo(arquivoDestino);
-
-            // Salvar o caminho no banco
-            projeto.setImagemPath(arquivoDestino.getAbsolutePath());
-        }
-
-        Projeto projetoSalvo = projetoService.salvar(projeto);
-
-        if (principal != null) {
-            String email = principal.getName();
-            try {
-                Coordenador coordenador = coordenadorService.buscarPorEmail(email);
-
-                projetoSalvo.getCoordenadores().add(coordenador);
-                coordenador.getProjetos().add(projetoSalvo);
-
-                projetoService.salvar(projetoSalvo);
-            } catch (Exception e) {
-                throw new RuntimeException("Erro ao vincular coordenador:" + e);
-            }
-        }
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(projetoSalvo);
+        Projeto salvo = projetoService.salvar(projeto, arquivo);
+        return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
     }
 
     @GetMapping("/meus-criados")
