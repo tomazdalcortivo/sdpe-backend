@@ -52,8 +52,8 @@ public class Projeto {
     )
     private List<Coordenador> coordenadores;
 
-    @OneToMany(mappedBy = "projeto")
-    private List<Relatorio> relatorios;
+//    @OneToMany(mappedBy = "projeto")
+//    private List<Relatorio> relatorios;
 
     @ManyToMany
     @JoinTable(

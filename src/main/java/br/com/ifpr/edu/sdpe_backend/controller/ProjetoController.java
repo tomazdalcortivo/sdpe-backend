@@ -60,7 +60,7 @@ public class ProjetoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Projeto> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<Projeto> buscarPorId(@PathVariable("id") Long id) {
         Projeto projeto = this.projetoService.buscarPorId(id);
         return ResponseEntity.ok(projeto);
     }

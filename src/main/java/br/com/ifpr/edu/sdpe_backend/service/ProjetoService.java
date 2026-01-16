@@ -1,13 +1,11 @@
 package br.com.ifpr.edu.sdpe_backend.service;
 
-import br.com.ifpr.edu.sdpe_backend.domain.Contato;
-import br.com.ifpr.edu.sdpe_backend.domain.Coordenador;
-import br.com.ifpr.edu.sdpe_backend.domain.InstituicaoEnsino;
-import br.com.ifpr.edu.sdpe_backend.domain.Participante;
-import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
+import br.com.ifpr.edu.sdpe_backend.domain.*;
+import br.com.ifpr.edu.sdpe_backend.domain.DTO.EstatisticaDTO;
 import br.com.ifpr.edu.sdpe_backend.exception.EntityNotFoundException;
 import br.com.ifpr.edu.sdpe_backend.repository.InstituicaoEnsinoRepository;
 import br.com.ifpr.edu.sdpe_backend.repository.ProjetoRepository;
+import br.com.ifpr.edu.sdpe_backend.repository.VisualizacoesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,10 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -37,8 +32,11 @@ public class ProjetoService {
 
     private final InstituicaoEnsinoRepository instituicaoEnsinoRepository;
 
-    private final Path rootLocation = Paths.get("uploads");
     private final CoordenadorService coordenadorService;
+
+    private final VisualizacoesRepository visualizacoesRepository;
+
+    private final Path rootLocation = Paths.get("uploads");
 
     public Projeto salvar(Projeto projeto, MultipartFile arquivo, String emailCoordenador) throws IOException {
 
@@ -166,8 +164,43 @@ public class ProjetoService {
     }
 
     public Projeto buscarPorId(Long id) {
-        return this.projetoRepository.findById(id).orElseThrow(
+        Projeto projeto = this.projetoRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Projeto não encontrado"));
+
+        Visualizacao visualizacao = Visualizacao.builder()
+                .projeto(projeto)
+                .build();
+
+        visualizacoesRepository.save(visualizacao);
+
+        return projeto;
+    }
+
+    public List<EstatisticaDTO> getEstatisticasVisualizacoes() {
+        List<Object[]> dados = visualizacoesRepository.countVisualizacoesPorMesNoAnoAtual();
+        List<EstatisticaDTO> estatisticas = new ArrayList<>();
+
+        String[] meses = {"Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+
+        for (Object[] d : dados) {
+            int mesIndex = (int) d[0] - 1;
+            Long qtd = (Long) d[1];
+            estatisticas.add(new EstatisticaDTO(meses[mesIndex], qtd));
+        }
+        return estatisticas;
+    }
+
+    public List<EstatisticaDTO> getEstatisticasPorArea() {
+
+        List<Object[]> dados = projetoRepository.contProjetosPorArea();
+        List<EstatisticaDTO> estatisticas = new ArrayList<>();
+
+        for (Object[] d : dados) {
+            String area = (String) d[0];
+            Long qtd = (Long) d[1];
+            estatisticas.add(new EstatisticaDTO(area, qtd));
+        }
+        return estatisticas;
     }
 
     public List<Projeto> buscarPorPeriodo(Date dataInicio, Date dataFim) {

@@ -83,6 +83,15 @@ public class ParticipanteService {
         Participante participante = buscarPorId(id);
         Conta conta = participante.getConta();
 
+        if (participante.getDocumentoUrl() != null && !participante.getDocumentoUrl().isEmpty()) {
+            try {
+                Path arquivo = rootLocation.resolve(participante.getDocumentoUrl());
+                Files.deleteIfExists(arquivo);
+            } catch (IOException e) {
+                System.err.println("Erro ao deletar arquivo físico (" + participante.getDocumentoUrl() + "): " + e.getMessage());
+            }
+        }
+
         this.participanteRepository.delete(participante);
 
         if (conta != null) this.contaRepository.delete(conta);
