@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -18,8 +19,9 @@ public class EstatisticaController {
     private final ProjetoService projetoService;
 
     @GetMapping("/visualizacoes")
-    public ResponseEntity<List<EstatisticaDTO>> getVisualizacoes() {
-        return ResponseEntity.ok(projetoService.getEstatisticasVisualizacoes());
+    public ResponseEntity<List<EstatisticaDTO>> getVisualizacoes(
+            @RequestParam(required = false) Long projetoId) {
+        return ResponseEntity.ok(projetoService.getEstatisticasVisualizacoes(projetoId));
     }
 
     @GetMapping("/areas")

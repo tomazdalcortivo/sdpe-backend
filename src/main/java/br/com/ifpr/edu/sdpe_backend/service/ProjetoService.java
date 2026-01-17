@@ -176,11 +176,17 @@ public class ProjetoService {
         return projeto;
     }
 
-    public List<EstatisticaDTO> getEstatisticasVisualizacoes() {
-        List<Object[]> dados = visualizacoesRepository.countVisualizacoesPorMesNoAnoAtual();
-        List<EstatisticaDTO> estatisticas = new ArrayList<>();
+    public List<EstatisticaDTO> getEstatisticasVisualizacoes(Long idProjeto) {
+        List<Object[]> dados;
 
-        String[] meses = {"Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+        if (idProjeto != null) {
+            dados = visualizacoesRepository.countVisualizacoesPorMesDoProjeto(idProjeto);
+        } else {
+            dados = visualizacoesRepository.countVisualizacoesPorMesNoAnoAtual();
+        }
+
+        List<EstatisticaDTO> estatisticas = new ArrayList<>();
+        String[] meses = {"Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"};
 
         for (Object[] d : dados) {
             int mesIndex = (int) d[0] - 1;

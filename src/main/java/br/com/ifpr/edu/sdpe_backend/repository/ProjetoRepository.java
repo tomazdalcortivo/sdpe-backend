@@ -15,6 +15,14 @@ public interface ProjetoRepository extends JpaRepository<Projeto, Long> {
 
     List<Projeto> findByParticipantes_Id(Long id);
 
+    @Query("SELECT MONTH(p.dataInicio), COUNT(p) " +
+            "FROM Projeto p " +
+            "WHERE YEAR(p.dataInicio) = YEAR(CURRENT_DATE) " +
+            "GROUP BY MONTH(p.dataInicio) " +
+            "ORDER BY MONTH(p.dataInicio)")
+    List<Object[]> countProjetosPorMesNoAnoAtual();
+
     @Query("SELECT p.area, COUNT(p) FROM Projeto p GROUP BY p.area")
-    List<Object[]>contProjetosPorArea();
+
+    List<Object[]> contProjetosPorArea();
 }
