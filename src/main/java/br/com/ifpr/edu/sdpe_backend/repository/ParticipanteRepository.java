@@ -6,13 +6,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ParticipanteRepository extends JpaRepository<Participante, Long> {
 
+    List<Participante> findByNomeContainingIgnoreCase(String nome);
+
     Optional<Participante> findByCpf(String cpf);
 
-    Optional<Participante> findByNome(String nome);
+    Optional<Participante> findByContaEmail(String email);
 
     Page<Participante> findByProjetos(Projeto projeto, Pageable pageable);
 }

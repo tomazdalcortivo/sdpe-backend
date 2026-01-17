@@ -14,20 +14,34 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Random;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class AuthorizationService implements UserDetailsService {
 
     private final ContaRepository contaRepository;
+
     private final ParticipanteService participanteService;
+
     private final CoordenadorService coordenadorService;
+
     private final EmailService emailService;
+
     private final ContaRepository repository;
+
+    private final Path rootLocation = Paths.get("uploads");
+
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -35,7 +49,7 @@ public class AuthorizationService implements UserDetailsService {
     }
 
     @Transactional
-    public void registrarUsuario(RegisterDTO data) {
+    public void registrarUsuario(RegisterDTO data, MultipartFile arquivo) throws IOException {
         if (this.contaRepository.findByEmail(data.email()) != null)
             throw new IllegalArgumentException("E-mail já cadastrado.");
 
@@ -50,6 +64,18 @@ public class AuthorizationService implements UserDetailsService {
 
         this.contaRepository.save(novaConta);
 
+        String documentoUrl = null;
+        if (arquivo != null && !arquivo.isEmpty()) {
+            if (!Files.exists(rootLocation)) Files.createDirectory(rootLocation);
+
+            String filename = "doc-" + UUID.randomUUID().toString() + ".pdf";
+            Path destinationFile = rootLocation.resolve(filename);
+
+            Files.copy(arquivo.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
+
+            documentoUrl = "http://localhost:8080/documentos/" + filename;
+        }
+
         if (data.perfil() == TipoPerfil.COORDENADOR) {
             Coordenador coordenador = Coordenador.builder()
                     .nome(data.nome())
@@ -59,6 +85,7 @@ public class AuthorizationService implements UserDetailsService {
                     .cidade(data.cidade())
                     .contato(data.email())
                     .conta(novaConta)
+                    .documentoUrl(documentoUrl)
                     .build();
 
             this.coordenadorService.salvar(coordenador);
@@ -71,6 +98,7 @@ public class AuthorizationService implements UserDetailsService {
                     .cidade(data.cidade())
                     .vinculoInstitucional(data.vinculoInstitucional())
                     .conta(novaConta)
+                    .documentoUrl(documentoUrl)
                     .build();
 
             this.participanteService.salvar(participante);
