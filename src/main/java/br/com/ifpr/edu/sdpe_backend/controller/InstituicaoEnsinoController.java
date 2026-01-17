@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/instituicao-ensino")
@@ -16,6 +18,12 @@ public class InstituicaoEnsinoController {
     @PostMapping
     public ResponseEntity<InstituicaoEnsino> salvar(@RequestBody InstituicaoEnsino instituicaoEnsino) {
         return ResponseEntity.ok(instituicaoEnsinoService.salvar(instituicaoEnsino));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<InstituicaoEnsino>> buscarTodas() {
+        List<InstituicaoEnsino> Instituicoes  = instituicaoEnsinoService.buscarTodas();
+        return ResponseEntity.ok(Instituicoes);
     }
 
     @GetMapping("/nome/{nome}")

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,10 +33,9 @@ public class ParticipanteController {
         return ResponseEntity.ok(participante);
     }
 
-    @GetMapping("/nome/{nome}")
-    public ResponseEntity<Participante> buscarPorNome(@PathVariable String nome) {
-        Participante participante = this.participanteService.buscarPorNome(nome);
-        return ResponseEntity.ok(participante);
+    @GetMapping("/buscar")
+    public ResponseEntity<List<Participante>> buscarPorNome(@RequestParam String nome) {
+        return ResponseEntity.ok(participanteService.buscarPorNome(nome));
     }
 
     @PutMapping("/{id}")
