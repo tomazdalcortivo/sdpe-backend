@@ -40,7 +40,7 @@ public class Securityconfig {
                         .requestMatchers(HttpMethod.POST, "/auth/registrar").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/recuperar-senha").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/redefinir-senha").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/projetos").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/projetos/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/imagens/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/documentos/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/estatisticas/geral/**").permitAll()
