@@ -124,12 +124,15 @@ public class ProjetoService {
 
         existente.setNome(projeto.getNome());
         existente.setDescricao(projeto.getDescricao());
-        // existente.setCoordenadores(projeto.getCoordenadores()); // Cuidado ao sobrescrever coordenadores diretamente via JSON se não enviar a lista completa
         existente.setArea(projeto.getArea());
         existente.setDataInicio(projeto.getDataInicio());
         existente.setDataFim(projeto.getDataFim());
         existente.setCargaHoraria(projeto.getCargaHoraria());
         existente.setFormato(projeto.getFormato());
+
+        if (projeto.getRedesSociais() != null) {
+            existente.setRedesSociais(projeto.getRedesSociais());
+        }
 
         if (projeto.getInstituicaoEnsino() != null) {
             InstituicaoEnsino inst = instituicaoEnsinoRepository.findByNome(projeto.getInstituicaoEnsino().getNome())
