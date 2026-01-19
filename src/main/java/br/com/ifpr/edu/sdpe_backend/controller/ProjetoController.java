@@ -120,4 +120,28 @@ public class ProjetoController {
     public ResponseEntity<List<Projeto>> buscarPorPeriodo(@PathVariable Date dataInicio, Date dataFim) {
         return ResponseEntity.ok(projetoService.buscarPorPeriodo(dataInicio, dataFim));
     }
+
+    @PostMapping("/{id}/participantes/{idParticipante}")
+    public ResponseEntity<Void> adicionarParticipante(@PathVariable Long id, @PathVariable Long idParticipante) {
+        projetoService.adicionarParticipante(id, idParticipante);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}/participantes/{idParticipante}")
+    public ResponseEntity<Void> removerParticipante(@PathVariable Long id, @PathVariable Long idParticipante) {
+        projetoService.removerParticipante(id, idParticipante);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/coordenadores/{idCoordenador}")
+    public ResponseEntity<Void> adicionarCoordenador(@PathVariable Long id, @PathVariable Long idCoordenador) {
+        projetoService.adicionarCoordenador(id, idCoordenador);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}/coordenadores/{idCoordenador}")
+    public ResponseEntity<Void> removerCoordenador(@PathVariable Long id, @PathVariable Long idCoordenador) {
+        projetoService.removerCoordenador(id, idCoordenador);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -224,7 +224,7 @@ public class ProjetoService {
         }
     }
 
-    public void excluirParticipante(Long idProjeto, Long idParticipante) {
+    public void removerParticipante(Long idProjeto, Long idParticipante) {
         Projeto projeto = buscarPorId(idProjeto);
 
         Participante participante = this.participanteService.buscarPorId(idParticipante);
@@ -233,6 +233,27 @@ public class ProjetoService {
             projeto.getParticipantes().remove(participante);
 
             participante.getProjetos().remove(projeto);
+            this.projetoRepository.save(projeto);
+        }
+    }
+
+    public void adicionarCoordenador(Long idProjeto, Long idCoordenador) {
+        Projeto projeto = buscarPorId(idProjeto);
+
+        Coordenador coordenador = coordenadorService.buscarPorId(idCoordenador);
+
+        if (!projeto.getCoordenadores().contains(coordenador)) {
+            projeto.getCoordenadores().add(coordenador);
+            this.projetoRepository.save(projeto);
+        }
+    }
+
+    public void removerCoordenador(Long idProjeto, Long idCoordenador) {
+        Projeto projeto = buscarPorId(idProjeto);
+        Coordenador coordenador = coordenadorService.buscarPorId(idCoordenador);
+
+        if (projeto.getCoordenadores().contains(coordenador)) {
+            projeto.getCoordenadores().remove(coordenador);
             this.projetoRepository.save(projeto);
         }
     }
