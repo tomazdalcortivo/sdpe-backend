@@ -85,10 +85,29 @@ public class ProjetoController {
         return ResponseEntity.ok(projetos);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Projeto> atualizar(@RequestBody Projeto projeto, @PathVariable Long id) {
-        this.projetoService.atualizar(projeto, id);
-        return ResponseEntity.noContent().build();
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Projeto> atualizar(
+            @PathVariable Long id,
+            @RequestPart("projeto") Projeto projeto,
+            @RequestPart(value = "imagem", required = false) MultipartFile imagem,
+            Principal principal) throws IOException {
+
+        if (principal != null) {
+            Coordenador coordLogado = coordenadorService.buscarPorEmail(principal.getName());
+            Projeto projetoExistente = projetoService.buscarPorId(id);
+
+            boolean isCoordenadorDoProjeto = projetoExistente.getCoordenadores().stream()
+                    .anyMatch(c -> c.getId().equals(coordLogado.getId()));
+
+            // Se não for coordenador do projeto (e assumindo que não temos role ADMIN separada aqui no check), lança erro
+            if (!isCoordenadorDoProjeto) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+        }
+
+        Projeto atualizado = this.projetoService.atualizar(projeto, id, imagem);
+        return ResponseEntity.ok(atualizado);
     }
 
     @DeleteMapping("/{id}")
