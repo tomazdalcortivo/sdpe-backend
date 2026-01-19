@@ -118,23 +118,38 @@ public class ProjetoService {
         return this.projetoRepository.findAll(pageable);
     }
 
-    public Projeto atualizar(Projeto projeto, Long id) {
+    public Projeto atualizar(Projeto projeto, Long id, MultipartFile imagem) throws IOException {
         Projeto existente = this.projetoRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Projeto a ser atualizado não encontrado"));
 
         existente.setNome(projeto.getNome());
         existente.setDescricao(projeto.getDescricao());
-        existente.setCoordenadores(projeto.getCoordenadores());
-        existente.setParticipantes(projeto.getParticipantes());
+        // existente.setCoordenadores(projeto.getCoordenadores()); // Cuidado ao sobrescrever coordenadores diretamente via JSON se não enviar a lista completa
+        existente.setArea(projeto.getArea());
+        existente.setDataInicio(projeto.getDataInicio());
+        existente.setDataFim(projeto.getDataFim());
         existente.setCargaHoraria(projeto.getCargaHoraria());
         existente.setFormato(projeto.getFormato());
 
-
         if (projeto.getInstituicaoEnsino() != null) {
-
             InstituicaoEnsino inst = instituicaoEnsinoRepository.findByNome(projeto.getInstituicaoEnsino().getNome())
                     .orElseGet(() -> instituicaoEnsinoRepository.save(projeto.getInstituicaoEnsino()));
             existente.setInstituicaoEnsino(inst);
+        }
+
+        if (imagem != null && !imagem.isEmpty()) {
+            if (!Files.exists(rootLocation)) Files.createDirectories(rootLocation);
+
+            if (existente.getImagemPath() != null && !existente.getImagemPath().trim().isEmpty()) {
+                deletarArquivoFisico(existente.getImagemPath());
+            }
+
+            String filename = "img-projeto-" + UUID.randomUUID() + "-" + imagem.getOriginalFilename();
+            Path destinationFile = rootLocation.resolve(filename);
+
+            Files.copy(imagem.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
+
+            existente.setImagemPath(destinationFile.toString());
         }
 
         this.projetoRepository.save(existente);
