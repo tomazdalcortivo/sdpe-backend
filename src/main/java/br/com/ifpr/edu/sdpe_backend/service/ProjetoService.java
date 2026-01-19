@@ -1,11 +1,11 @@
 package br.com.ifpr.edu.sdpe_backend.service;
 
 import br.com.ifpr.edu.sdpe_backend.domain.*;
-import br.com.ifpr.edu.sdpe_backend.domain.DTO.EstatisticaDTO;
+//import br.com.ifpr.edu.sdpe_backend.domain.DTO.EstatisticaDTO;
 import br.com.ifpr.edu.sdpe_backend.exception.EntityNotFoundException;
 import br.com.ifpr.edu.sdpe_backend.repository.InstituicaoEnsinoRepository;
 import br.com.ifpr.edu.sdpe_backend.repository.ProjetoRepository;
-import br.com.ifpr.edu.sdpe_backend.repository.VisualizacoesRepository;
+import br.com.ifpr.edu.sdpe_backend.repository.VisualizacaoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,7 +34,7 @@ public class ProjetoService {
 
     private final CoordenadorService coordenadorService;
 
-    private final VisualizacoesRepository visualizacoesRepository;
+    private final VisualizacaoRepository visualizacaoRepository;
 
     private final Path rootLocation = Paths.get("uploads");
 
@@ -142,7 +142,8 @@ public class ProjetoService {
     }
 
     public void excluir(Long id) {
-        Projeto projeto = buscarPorId(id);
+        Projeto projeto = this.projetoRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Projeto a ser atualizado não encontrado"));
 
         if (projeto.getImagemPath() != null && !projeto.getImagemPath().trim().isEmpty())
             deletarArquivoFisico(projeto.getImagemPath());
@@ -171,42 +172,9 @@ public class ProjetoService {
                 .projeto(projeto)
                 .build();
 
-        visualizacoesRepository.save(visualizacao);
+        visualizacaoRepository.save(visualizacao);
 
         return projeto;
-    }
-
-    public List<EstatisticaDTO> getEstatisticasVisualizacoes(Long idProjeto) {
-        List<Object[]> dados;
-
-        if (idProjeto != null) {
-            dados = visualizacoesRepository.countVisualizacoesPorMesDoProjeto(idProjeto);
-        } else {
-            dados = visualizacoesRepository.countVisualizacoesPorMesNoAnoAtual();
-        }
-
-        List<EstatisticaDTO> estatisticas = new ArrayList<>();
-        String[] meses = {"Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"};
-
-        for (Object[] d : dados) {
-            int mesIndex = (int) d[0] - 1;
-            Long qtd = (Long) d[1];
-            estatisticas.add(new EstatisticaDTO(meses[mesIndex], qtd));
-        }
-        return estatisticas;
-    }
-
-    public List<EstatisticaDTO> getEstatisticasPorArea() {
-
-        List<Object[]> dados = projetoRepository.contProjetosPorArea();
-        List<EstatisticaDTO> estatisticas = new ArrayList<>();
-
-        for (Object[] d : dados) {
-            String area = (String) d[0];
-            Long qtd = (Long) d[1];
-            estatisticas.add(new EstatisticaDTO(area, qtd));
-        }
-        return estatisticas;
     }
 
     public List<Projeto> buscarPorPeriodo(Date dataInicio, Date dataFim) {
