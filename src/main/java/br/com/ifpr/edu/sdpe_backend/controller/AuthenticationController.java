@@ -8,12 +8,14 @@ import br.com.ifpr.edu.sdpe_backend.infra.security.TokenService;
 import br.com.ifpr.edu.sdpe_backend.service.AuthorizationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,10 +37,14 @@ public class AuthenticationController {
         return ResponseEntity.ok(token);
     }
 
-    @PostMapping("/registrar")
-    public ResponseEntity registrar(@RequestBody @Valid RegisterDTO data) {
+    @PostMapping(value = "/registrar",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity registrar(
+            @RequestPart("dados") @Valid RegisterDTO data,
+            @RequestPart(value = "arquivo", required = false) MultipartFile arquivo
+    ) {
         try {
-            this.authorizationService.registrarUsuario(data);
+            this.authorizationService.registrarUsuario(data, arquivo);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

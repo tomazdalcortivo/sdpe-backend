@@ -1,8 +1,11 @@
 package br.com.ifpr.edu.sdpe_backend.controller;
 
+import br.com.ifpr.edu.sdpe_backend.domain.Coordenador;
+import br.com.ifpr.edu.sdpe_backend.domain.Participante;
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
+import br.com.ifpr.edu.sdpe_backend.service.CoordenadorService;
+import br.com.ifpr.edu.sdpe_backend.service.ParticipanteService;
 import br.com.ifpr.edu.sdpe_backend.service.ProjetoService;
-//import br.com.ifpr.edu.sdpe_backend.util.UploadUtil;
 import org.springframework.core.io.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.UrlResource;
@@ -16,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
@@ -26,42 +30,37 @@ public class ProjetoController {
 
     private final ProjetoService projetoService;
 
-//    @PostMapping
-//    public ResponseEntity<Projeto> salvar(@RequestBody Projeto projeto) {
-//        Projeto projetoCriado = this.projetoService.salvar(projeto);
-//        return new ResponseEntity<>(projetoCriado, HttpStatus.CREATED);
-//    }
+    private final CoordenadorService coordenadorService;
+
+    private final ParticipanteService participanteService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Projeto> salvar(
             @RequestPart("projeto") Projeto projeto,
-            @RequestPart("imagem") MultipartFile imagem) throws IOException {
+            @RequestPart(value = "arquivo", required = false) MultipartFile arquivo,
+            Principal principal
+    ) throws IOException {
 
-        if (imagem != null && !imagem.isEmpty()) {
-            // Onde as imagens serão salvas
-            String pastaImagens = "D:/imagemsdpe/";
-            File diretorio = new File(pastaImagens);
-            if (!diretorio.exists()) {
-                diretorio.mkdirs();
-            }
+        String emailCoordenador = (principal != null) ? principal.getName() : null;
 
-            // Recriar o nome da imagem
-            String nomeArquivo = System.currentTimeMillis() + "_" + imagem.getOriginalFilename();
-
-            // Salvar no disco
-            File arquivoDestino = new File(diretorio, nomeArquivo);
-            imagem.transferTo(arquivoDestino);
-
-            // Salvar o caminho no banco
-            projeto.setImagemPath(arquivoDestino.getAbsolutePath());
-        }
-
-        Projeto salvo = projetoService.salvar(projeto);
+        Projeto salvo = projetoService.salvar(projeto, arquivo, emailCoordenador);
         return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
     }
 
+    @GetMapping("/meus-criados")
+    public ResponseEntity<List<Projeto>> listarMeusProjetosCriados(Principal principal) {
+        Coordenador coord = coordenadorService.buscarPorEmail(principal.getName());
+        return ResponseEntity.ok(projetoService.buscarPorCoordenador(coord.getId()));
+    }
+
+    @GetMapping("/meus-participados")
+    public ResponseEntity<List<Projeto>> listarMeusProjetosParticipados(Principal principal) {
+        Participante part = participanteService.buscarPorEmail(principal.getName());
+        return ResponseEntity.ok(projetoService.buscarPorParticipante(part.getId()));
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<Projeto> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<Projeto> buscarPorId(@PathVariable("id") Long id) {
         Projeto projeto = this.projetoService.buscarPorId(id);
         return ResponseEntity.ok(projeto);
     }

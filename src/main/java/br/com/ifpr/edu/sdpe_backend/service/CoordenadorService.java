@@ -25,6 +25,11 @@ public class CoordenadorService {
                 () -> new EntityNotFoundException("Coordenador não encontrado"));
     }
 
+    public Coordenador buscarPorEmail(String email) {
+        return this.coordenadorRepository.findByContaEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("Coordenador não encontrado"));
+    }
+
     public Coordenador buscarPorCpf(String cpf) {
         return this.coordenadorRepository.findByCpf(cpf).orElseThrow(
                 () -> new EntityNotFoundException("Coordenador não encontrado"));
@@ -58,12 +63,10 @@ public class CoordenadorService {
         existente.setCpf(coordenador.getCpf());
         existente.setCidade(coordenador.getCidade());
         existente.setDataNascimento(coordenador.getDataNascimento());
-        // Se você não quiser mudar a conta, não a defina.
-        // existente.setConta(coordenador.getConta());
 
         existente.setCargoInstituicao(coordenador.getCargoInstituicao());
         existente.setContato(coordenador.getContato());
-        existente.setProjeto(coordenador.getProjeto());
+        existente.setProjetos(coordenador.getProjetos());
         existente.setFuncao(coordenador.getFuncao());
 
         this.coordenadorRepository.save(existente);

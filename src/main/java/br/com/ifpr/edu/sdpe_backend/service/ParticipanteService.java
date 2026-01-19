@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -42,8 +43,12 @@ public class ParticipanteService {
                 () -> new EntityNotFoundException("Participante não encontrado"));
     }
 
-    public Participante buscarPorNome(String nome) {
-        return this.participanteRepository.findByNome(nome).orElseThrow(
+    public List<Participante> buscarPorNome(String nome) {
+        return this.participanteRepository.findByNomeContainingIgnoreCase(nome);
+    }
+
+    public Participante buscarPorEmail(String email) {
+        return this.participanteRepository.findByContaEmail(email).orElseThrow(
                 () -> new EntityNotFoundException("Participante não encontrado"));
     }
 
@@ -77,6 +82,15 @@ public class ParticipanteService {
     public void excluir(Long id) {
         Participante participante = buscarPorId(id);
         Conta conta = participante.getConta();
+
+        if (participante.getDocumentoUrl() != null && !participante.getDocumentoUrl().isEmpty()) {
+            try {
+                Path arquivo = rootLocation.resolve(participante.getDocumentoUrl());
+                Files.deleteIfExists(arquivo);
+            } catch (IOException e) {
+                System.err.println("Erro ao deletar arquivo físico (" + participante.getDocumentoUrl() + "): " + e.getMessage());
+            }
+        }
 
         this.participanteRepository.delete(participante);
 
