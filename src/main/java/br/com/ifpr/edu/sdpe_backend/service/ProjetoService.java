@@ -199,20 +199,6 @@ public class ProjetoService {
         return this.projetoRepository.findByDataInicioGreaterThanEqualAndDataFimLessThanEqual(dataInicio, dataFim);
     }
 
-    public List<Coordenador> listarCoordenadores(Long idProjeto) {
-        Projeto projeto = buscarPorId(idProjeto);
-        return projeto.getCoordenadores();
-    }
-
-    public List<Participante> listarParticipantes(Long idProjeto) {
-        Projeto projeto = buscarPorId(idProjeto);
-        return projeto.getParticipantes();
-    }
-
-    public List<Contato> listarContatos(Long idProjeto) {
-        Projeto projeto = buscarPorId(idProjeto);
-        return projeto.getContatos();
-    }
 
     public void adicionarParticipante(Long idProjeto, Long idParticipante) {
         Projeto projeto = buscarPorId(idProjeto);
