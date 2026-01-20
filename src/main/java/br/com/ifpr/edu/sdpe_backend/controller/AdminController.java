@@ -1,7 +1,9 @@
 package br.com.ifpr.edu.sdpe_backend.controller;
 
 import br.com.ifpr.edu.sdpe_backend.domain.Conta;
+import br.com.ifpr.edu.sdpe_backend.domain.Participante;
 import br.com.ifpr.edu.sdpe_backend.repository.ContaRepository;
+import br.com.ifpr.edu.sdpe_backend.repository.ParticipanteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +16,16 @@ import java.util.List;
 public class AdminController {
 
     private final ContaRepository contaRepository;
+    private final ParticipanteRepository participanteRepository;
 
     @GetMapping("/contas")
     public ResponseEntity<List<Conta>> listarTodasContas() {
         return ResponseEntity.ok(contaRepository.findAll());
+    }
+
+    @GetMapping("/solicitacoes-pendentes")
+    public ResponseEntity<List<Participante>> listarPendentes() {
+        return ResponseEntity.ok(participanteRepository.findPendentesDeAprovacao());
     }
 
     @PatchMapping("/contas/{id}/status")

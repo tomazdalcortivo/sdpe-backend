@@ -1,8 +1,8 @@
 package br.com.ifpr.edu.sdpe_backend.service;
 
 import br.com.ifpr.edu.sdpe_backend.domain.InstituicaoEnsino;
-import br.com.ifpr.edu.sdpe_backend.exception.EntityNotFoundException;
 import br.com.ifpr.edu.sdpe_backend.repository.InstituicaoEnsinoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

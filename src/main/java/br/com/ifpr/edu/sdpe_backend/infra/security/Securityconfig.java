@@ -36,17 +36,28 @@ public class Securityconfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll() // libera a url do swagger somente desenvolvimento
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/registrar").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/recuperar-senha").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/redefinir-senha").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/projetos/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/imagens/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/documentos/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/estatisticas/geral/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/projetos").hasRole("COORDENADOR")
-                        .requestMatchers(HttpMethod.PUT, "/api/projetos").hasRole("COORDENADOR")
-                        .requestMatchers(HttpMethod.POST, "/api/instituicao-ensino").hasRole("COORDENADOR")
+                        .requestMatchers(HttpMethod.POST,
+                                "/auth/login",
+                                "/auth/registrar",
+                                "/api/contatos",
+                                "/auth/recuperar-senha",
+                                "/auth/redefinir-senha"
+                        ).permitAll()
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/estatisticas/geral/**",
+                                "/api/projetos/**",
+                                "/imagens/**",
+                                "/documentos/**"
+                        ).permitAll()
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/projetos/**",
+                                "/api/instituicao-ensino"
+                        ).hasRole("COORDENADOR")
+                        .requestMatchers(HttpMethod.DELETE,
+                                "/api/instituicao-ensino",
+                                "/api/projetos/**")
+                        .hasRole("COORDENADOR")
+                        .requestMatchers(HttpMethod.PUT, "/api/projetos/**").hasRole("COORDENADOR")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()

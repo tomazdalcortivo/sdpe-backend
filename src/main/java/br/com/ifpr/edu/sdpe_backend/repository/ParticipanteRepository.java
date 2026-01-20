@@ -5,6 +5,7 @@ import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,4 +19,7 @@ public interface ParticipanteRepository extends JpaRepository<Participante, Long
     Optional<Participante> findByContaEmail(String email);
 
     Page<Participante> findByProjetos(Projeto projeto, Pageable pageable);
+
+    @Query("SELECT p FROM Participante p WHERE p.conta.ativo = false AND p.documentoUrl IS NOT NULL AND p.documentoUrl != ''")
+    List<Participante> findPendentesDeAprovacao();
 }
