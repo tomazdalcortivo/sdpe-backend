@@ -11,9 +11,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,8 +32,20 @@ public class AuthenticationController {
 
     private final AuthorizationService authorizationService;
 
+    private final PasswordEncoder passwordEncoder;
+
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthDTO data) {
+        UserDetails usuario = this.authorizationService.loadUserByUsername(data.email());
+
+        if (usuario != null) {
+            if (!passwordEncoder.matches(data.senha(), usuario.getPassword())) {
+                throw new BadCredentialsException("Email ou senha incorretos.");
+            }
+        }
+
+        if  (usuario == null) throw new UsernameNotFoundException("Usuário não encontrado");
+
         UsernamePasswordAuthenticationToken usuarioSenha = new UsernamePasswordAuthenticationToken(data.email(), data.senha());
         Authentication auth = this.authenticationManager.authenticate(usuarioSenha);
 
