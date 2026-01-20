@@ -2,10 +2,10 @@ package br.com.ifpr.edu.sdpe_backend.service;
 
 import br.com.ifpr.edu.sdpe_backend.domain.*;
 //import br.com.ifpr.edu.sdpe_backend.domain.DTO.EstatisticaDTO;
-import br.com.ifpr.edu.sdpe_backend.exception.EntityNotFoundException;
 import br.com.ifpr.edu.sdpe_backend.repository.InstituicaoEnsinoRepository;
 import br.com.ifpr.edu.sdpe_backend.repository.ProjetoRepository;
 import br.com.ifpr.edu.sdpe_backend.repository.VisualizacaoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -124,12 +124,15 @@ public class ProjetoService {
 
         existente.setNome(projeto.getNome());
         existente.setDescricao(projeto.getDescricao());
-        // existente.setCoordenadores(projeto.getCoordenadores()); // Cuidado ao sobrescrever coordenadores diretamente via JSON se não enviar a lista completa
         existente.setArea(projeto.getArea());
         existente.setDataInicio(projeto.getDataInicio());
         existente.setDataFim(projeto.getDataFim());
         existente.setCargaHoraria(projeto.getCargaHoraria());
         existente.setFormato(projeto.getFormato());
+
+        if (projeto.getRedesSociais() != null) {
+            existente.setRedesSociais(projeto.getRedesSociais());
+        }
 
         if (projeto.getInstituicaoEnsino() != null) {
             InstituicaoEnsino inst = instituicaoEnsinoRepository.findByNome(projeto.getInstituicaoEnsino().getNome())
@@ -196,20 +199,6 @@ public class ProjetoService {
         return this.projetoRepository.findByDataInicioGreaterThanEqualAndDataFimLessThanEqual(dataInicio, dataFim);
     }
 
-    public List<Coordenador> listarCoordenadores(Long idProjeto) {
-        Projeto projeto = buscarPorId(idProjeto);
-        return projeto.getCoordenadores();
-    }
-
-    public List<Participante> listarParticipantes(Long idProjeto) {
-        Projeto projeto = buscarPorId(idProjeto);
-        return projeto.getParticipantes();
-    }
-
-    public List<Contato> listarContatos(Long idProjeto) {
-        Projeto projeto = buscarPorId(idProjeto);
-        return projeto.getContatos();
-    }
 
     public void adicionarParticipante(Long idProjeto, Long idParticipante) {
         Projeto projeto = buscarPorId(idProjeto);
@@ -224,7 +213,7 @@ public class ProjetoService {
         }
     }
 
-    public void excluirParticipante(Long idProjeto, Long idParticipante) {
+    public void removerParticipante(Long idProjeto, Long idParticipante) {
         Projeto projeto = buscarPorId(idProjeto);
 
         Participante participante = this.participanteService.buscarPorId(idParticipante);
@@ -233,6 +222,27 @@ public class ProjetoService {
             projeto.getParticipantes().remove(participante);
 
             participante.getProjetos().remove(projeto);
+            this.projetoRepository.save(projeto);
+        }
+    }
+
+    public void adicionarCoordenador(Long idProjeto, Long idCoordenador) {
+        Projeto projeto = buscarPorId(idProjeto);
+
+        Coordenador coordenador = coordenadorService.buscarPorId(idCoordenador);
+
+        if (!projeto.getCoordenadores().contains(coordenador)) {
+            projeto.getCoordenadores().add(coordenador);
+            this.projetoRepository.save(projeto);
+        }
+    }
+
+    public void removerCoordenador(Long idProjeto, Long idCoordenador) {
+        Projeto projeto = buscarPorId(idProjeto);
+        Coordenador coordenador = coordenadorService.buscarPorId(idCoordenador);
+
+        if (projeto.getCoordenadores().contains(coordenador)) {
+            projeto.getCoordenadores().remove(coordenador);
             this.projetoRepository.save(projeto);
         }
     }

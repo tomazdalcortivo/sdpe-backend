@@ -31,6 +31,7 @@ public class Contato {
     @Email
     private String email;
 
+    @Enumerated(EnumType.STRING)
     private TipoContato tipoContato;
 
     @CreationTimestamp

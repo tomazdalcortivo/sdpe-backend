@@ -5,8 +5,8 @@ import br.com.ifpr.edu.sdpe_backend.domain.Coordenador;
 import br.com.ifpr.edu.sdpe_backend.domain.DTO.RegisterDTO;
 import br.com.ifpr.edu.sdpe_backend.domain.Participante;
 import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoPerfil;
-import br.com.ifpr.edu.sdpe_backend.exception.EntityNotFoundException;
 import br.com.ifpr.edu.sdpe_backend.repository.ContaRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -59,7 +59,7 @@ public class AuthorizationService implements UserDetailsService {
                 .email(data.email())
                 .senha(encryptedPassword)
                 .perfil(data.perfil())
-                .ativo(true)
+                .ativo(false)
                 .build();
 
         this.contaRepository.save(novaConta);

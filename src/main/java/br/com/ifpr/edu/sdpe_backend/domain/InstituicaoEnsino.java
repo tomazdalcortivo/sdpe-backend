@@ -36,11 +36,4 @@ public class InstituicaoEnsino {
         projetos = new ArrayList<>();
     }
 
-//    public void addProjeto(Projeto projeto){
-//        projetos.add(projeto);
-//    }
-//
-//    public void removeProjeto(Projeto projeto){
-//        projetos.remove(projeto);
-//    }
 }

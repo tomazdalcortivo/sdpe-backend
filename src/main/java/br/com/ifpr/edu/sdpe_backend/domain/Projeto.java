@@ -3,9 +3,11 @@ package br.com.ifpr.edu.sdpe_backend.domain;
 import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoFormato;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -51,9 +53,14 @@ public class Projeto {
             inverseJoinColumns = @JoinColumn(name = "coordenador_id")
     )
     private List<Coordenador> coordenadores;
-
-//    @OneToMany(mappedBy = "projeto")
-//    private List<Relatorio> relatorios;
+    @ElementCollection
+    @CollectionTable(
+            name = "projeto_redes_sociais",
+            joinColumns = @JoinColumn(name = "projeto_id"))
+    @MapKeyColumn(name = "rede_social")
+    @Column(name = "url")
+    @Builder.Default
+    private Map<String, String> redesSociais;
 
     @ManyToMany
     @JoinTable(
