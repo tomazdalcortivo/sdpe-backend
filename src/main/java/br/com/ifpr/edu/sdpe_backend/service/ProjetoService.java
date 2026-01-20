@@ -6,6 +6,7 @@ import br.com.ifpr.edu.sdpe_backend.repository.InstituicaoEnsinoRepository;
 import br.com.ifpr.edu.sdpe_backend.repository.ProjetoRepository;
 import br.com.ifpr.edu.sdpe_backend.repository.VisualizacaoRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
