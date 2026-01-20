@@ -54,7 +54,7 @@ public class Conta implements UserDetails {
     public Conta(){
         email  = " ";
         senha = " ";
-        ativo = true;
+        ativo = false;
         dataCriacao =  Instant.now();
         perfil = TipoPerfil.PARTICIPANTE;
     }
@@ -104,6 +104,6 @@ public class Conta implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.ativo;
     }
 }

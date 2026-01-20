@@ -2,10 +2,10 @@ package br.com.ifpr.edu.sdpe_backend.service;
 
 import br.com.ifpr.edu.sdpe_backend.domain.*;
 //import br.com.ifpr.edu.sdpe_backend.domain.DTO.EstatisticaDTO;
-import br.com.ifpr.edu.sdpe_backend.exception.EntityNotFoundException;
 import br.com.ifpr.edu.sdpe_backend.repository.InstituicaoEnsinoRepository;
 import br.com.ifpr.edu.sdpe_backend.repository.ProjetoRepository;
 import br.com.ifpr.edu.sdpe_backend.repository.VisualizacaoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

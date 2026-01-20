@@ -2,8 +2,8 @@ package br.com.ifpr.edu.sdpe_backend.service;
 
 import br.com.ifpr.edu.sdpe_backend.domain.Coordenador;
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
-import br.com.ifpr.edu.sdpe_backend.exception.EntityNotFoundException;
 import br.com.ifpr.edu.sdpe_backend.repository.CoordenadorRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;

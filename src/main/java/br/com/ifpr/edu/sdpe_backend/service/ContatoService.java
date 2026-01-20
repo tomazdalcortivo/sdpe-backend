@@ -3,7 +3,7 @@ package br.com.ifpr.edu.sdpe_backend.service;
 import br.com.ifpr.edu.sdpe_backend.domain.Contato;
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
 import br.com.ifpr.edu.sdpe_backend.repository.ContatoRepository;
-import br.com.ifpr.edu.sdpe_backend.exception.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
