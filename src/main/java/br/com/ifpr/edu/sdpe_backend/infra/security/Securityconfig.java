@@ -40,6 +40,7 @@ public class Securityconfig {
                                 "/auth/login",
                                 "/auth/registrar",
                                 "/api/contatos",
+                                "/api/projetos/*/visualizacao",
                                 "/auth/recuperar-senha",
                                 "/auth/redefinir-senha"
                         ).permitAll()

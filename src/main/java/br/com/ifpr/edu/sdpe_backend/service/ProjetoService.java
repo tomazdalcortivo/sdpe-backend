@@ -184,16 +184,18 @@ public class ProjetoService {
     }
 
     public Projeto buscarPorId(Long id) {
-        Projeto projeto = this.projetoRepository.findById(id).orElseThrow(
+        return this.projetoRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Projeto não encontrado"));
+    }
+
+    public void registrarVisualizacao(Long id) {
+        Projeto projeto = buscarPorId(id);
 
         Visualizacao visualizacao = Visualizacao.builder()
                 .projeto(projeto)
                 .build();
 
         visualizacaoRepository.save(visualizacao);
-
-        return projeto;
     }
 
     public List<Projeto> buscarPorPeriodo(Date dataInicio, Date dataFim) {
