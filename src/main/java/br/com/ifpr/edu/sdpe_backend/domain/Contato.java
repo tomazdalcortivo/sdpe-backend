@@ -46,7 +46,6 @@ public class Contato {
         mensagem = " ";
         tipoContato = TipoContato.CHAMADO;
         dataEnvio = Instant.now();
-        projeto = new Projeto();
     }
 
 }

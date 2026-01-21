@@ -65,6 +65,12 @@ public class ProjetoController {
         return ResponseEntity.ok(projeto);
     }
 
+    @PostMapping("/{id}/visualizacao")
+    public ResponseEntity<Void> registrarVisualizacao(@PathVariable("id") Long id) {
+        this.projetoService.registrarVisualizacao(id);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/{id}/imagem")
     public ResponseEntity<Resource> getImagem(@PathVariable Long id) throws MalformedURLException, MalformedURLException {
         Projeto projeto = projetoService.buscarPorId(id);

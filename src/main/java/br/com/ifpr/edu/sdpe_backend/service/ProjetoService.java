@@ -6,6 +6,7 @@ import br.com.ifpr.edu.sdpe_backend.repository.InstituicaoEnsinoRepository;
 import br.com.ifpr.edu.sdpe_backend.repository.ProjetoRepository;
 import br.com.ifpr.edu.sdpe_backend.repository.VisualizacaoRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -183,16 +184,18 @@ public class ProjetoService {
     }
 
     public Projeto buscarPorId(Long id) {
-        Projeto projeto = this.projetoRepository.findById(id).orElseThrow(
+        return this.projetoRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Projeto não encontrado"));
+    }
+
+    public void registrarVisualizacao(Long id) {
+        Projeto projeto = buscarPorId(id);
 
         Visualizacao visualizacao = Visualizacao.builder()
                 .projeto(projeto)
                 .build();
 
         visualizacaoRepository.save(visualizacao);
-
-        return projeto;
     }
 
     public List<Projeto> buscarPorPeriodo(Date dataInicio, Date dataFim) {
