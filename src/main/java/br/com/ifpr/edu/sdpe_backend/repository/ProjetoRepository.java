@@ -11,7 +11,9 @@ public interface ProjetoRepository extends JpaRepository<Projeto, Long> {
 
     List<Projeto> findByDataInicioGreaterThanEqualAndDataFimLessThanEqual(Date dataInicio, Date dataFim);
 
-    List<Projeto> findByCoordenadores_Id(Long id);
+//    List<Projeto> findByCoordenadores_Id(Long id);
+
+    List<Projeto> findByCoordenadoresId(Long id);
 
     List<Projeto> findByParticipantes_Id(Long id);
 

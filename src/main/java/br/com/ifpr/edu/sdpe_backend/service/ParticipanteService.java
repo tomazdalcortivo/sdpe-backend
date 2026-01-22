@@ -52,10 +52,10 @@ public class ParticipanteService {
                 () -> new EntityNotFoundException("Participante não encontrado"));
     }
 
-    public Participante buscarPorCpf(String cpf) {
-        return this.participanteRepository.findByCpf(cpf).orElseThrow(
-                () -> new EntityNotFoundException("Participante não encontrado"));
-    }
+//    public Participante buscarPorCpf(String cpf) {
+//        return this.participanteRepository.findByCpf(cpf).orElseThrow(
+//                () -> new EntityNotFoundException("Participante não encontrado"));
+//    }
 
     public Page<Participante> listarPorProjeto(Projeto projeto, int numPag, int tamPag) {
         Pageable pageable = PageRequest.of(numPag, tamPag);

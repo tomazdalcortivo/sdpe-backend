@@ -29,15 +29,15 @@ public class ContatoController {
         return ResponseEntity.ok(contatos);
     }
 
-    @GetMapping("/projeto")
-    public ResponseEntity<Page<Contato>> buscarProjeto(
-            @RequestBody Projeto projeto,
-            @RequestParam(defaultValue = "0") int numPag,
-            @RequestParam(defaultValue = "5") int tamPag) {
-
-        Page<Contato> contatos = contatoService.buscarPorProjeto(projeto, numPag, tamPag);
-        return ResponseEntity.ok(contatos);
-    }
+//    @GetMapping("/projeto")
+//    public ResponseEntity<Page<Contato>> buscarProjeto(
+//            @RequestBody Projeto projeto,
+//            @RequestParam(defaultValue = "0") int numPag,
+//            @RequestParam(defaultValue = "5") int tamPag) {
+//
+//        Page<Contato> contatos = contatoService.buscarPorProjeto(projeto, numPag, tamPag);
+//        return ResponseEntity.ok(contatos);
+//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {

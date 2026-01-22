@@ -18,6 +18,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "tb_conta")
@@ -50,20 +51,6 @@ public class Conta implements UserDetails {
     private Instant dataCriacao;
 
     private Boolean ativo;
-
-    public Conta(){
-        email  = " ";
-        senha = " ";
-        ativo = false;
-        dataCriacao =  Instant.now();
-        perfil = TipoPerfil.PARTICIPANTE;
-    }
-
-    public Conta(String email, String senha, TipoPerfil perfil) {
-        this.email = email;
-        this.perfil = perfil;
-        this.senha = senha;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

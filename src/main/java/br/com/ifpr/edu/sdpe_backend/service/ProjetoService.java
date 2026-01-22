@@ -107,7 +107,7 @@ public class ProjetoService {
     }
 
     public List<Projeto> buscarPorCoordenador(Long idCoordenador) {
-        return projetoRepository.findByCoordenadores_Id(idCoordenador);
+        return projetoRepository.findByCoordenadoresId(idCoordenador);
     }
 
     public List<Projeto> buscarPorParticipante(Long idParticipante) {

@@ -14,7 +14,7 @@ public interface ParticipanteRepository extends JpaRepository<Participante, Long
 
     List<Participante> findByNomeContainingIgnoreCase(String nome);
 
-    Optional<Participante> findByCpf(String cpf);
+//    Optional<Participante> findByCpf(String cpf);
 
     Optional<Participante> findByContaEmail(String email);
 
