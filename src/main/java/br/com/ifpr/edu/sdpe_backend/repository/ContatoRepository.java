@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface ContatoRepository extends JpaRepository<Contato, Long> {
 
+    void deleteByProjetoId(Long id);
+
     List<Contato> findByProjetoId(Long id);
 
 }

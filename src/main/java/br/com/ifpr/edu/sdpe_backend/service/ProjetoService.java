@@ -111,7 +111,7 @@ public class ProjetoService {
     }
 
     public List<Projeto> buscarPorParticipante(Long idParticipante) {
-        return projetoRepository.findByParticipantes_Id(idParticipante);
+        return projetoRepository.findByParticipantesId(idParticipante);
     }
 
     public Page<Projeto> buscarTodos(int numPag, int tamPag) {
