@@ -66,9 +66,5 @@ public class Participante {
     @OneToMany(mappedBy = "participante")
     private List<Notificacao> notificacoes;
 
-//    public Participante() {
-//        vinculoInstitucional = true;
-//        projetos = new ArrayList();
-//    }
 
 }

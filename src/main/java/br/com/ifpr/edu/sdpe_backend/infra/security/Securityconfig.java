@@ -43,12 +43,14 @@ public class Securityconfig {
                                 "/api/contatos",
                                 "/api/projetos/*/visualizacao",
                                 "/auth/recuperar-senha",
-                                "/auth/redefinir-senha"
+                                "/auth/redefinir-senha",
+                                "/api/feed/"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/api/estatisticas/geral/**",
                                 "/api/projetos/**",
                                 "/api/contatos/challenge",
+                                "/api/feed/**",
                                 "/imagens/**",
                                 "/documentos/**"
                         ).permitAll()
