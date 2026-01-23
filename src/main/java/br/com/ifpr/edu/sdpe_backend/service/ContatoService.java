@@ -37,10 +37,10 @@ public class ContatoService {
         return this.contatoRepository.findAll(pageable);
     }
 
-    public Page<Contato> buscarPorProjeto(Projeto projeto, int numPag, int tamPag) {
-        Pageable pageable = PageRequest.of(numPag, tamPag);
-        return this.contatoRepository.findByProjeto(projeto, pageable);
-    }
+//    public Page<Contato> buscarPorProjeto(Projeto projeto, int numPag, int tamPag) {
+//        Pageable pageable = PageRequest.of(numPag, tamPag);
+//        return this.contatoRepository.findByProjeto(projeto, pageable);
+//    }
 
     public void excluir(Long id) {
         this.contatoRepository.deleteById(id);

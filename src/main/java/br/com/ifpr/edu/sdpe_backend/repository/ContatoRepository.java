@@ -1,12 +1,13 @@
 package br.com.ifpr.edu.sdpe_backend.repository;
-
 import br.com.ifpr.edu.sdpe_backend.domain.Contato;
-import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 public interface ContatoRepository extends JpaRepository<Contato, Long> {
 
-    Page<Contato> findByProjeto(Projeto projeto, Pageable pageable);
+    void deleteByProjetoId(Long id);
+
+    List<Contato> findByProjetoId(Long id);
+
 }

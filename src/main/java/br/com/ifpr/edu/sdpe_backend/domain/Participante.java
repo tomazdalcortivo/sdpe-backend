@@ -18,6 +18,7 @@ import java.util.List;
 @Setter
 @SuperBuilder
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "tb_participante")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -65,9 +66,9 @@ public class Participante {
     @OneToMany(mappedBy = "participante")
     private List<Notificacao> notificacoes;
 
-    public Participante() {
-        vinculoInstitucional = true;
-        projetos = new ArrayList();
-    }
+//    public Participante() {
+//        vinculoInstitucional = true;
+//        projetos = new ArrayList();
+//    }
 
 }

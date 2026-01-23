@@ -59,7 +59,6 @@ public class Projeto {
             joinColumns = @JoinColumn(name = "projeto_id"))
     @MapKeyColumn(name = "rede_social")
     @Column(name = "url")
-    @Builder.Default
     private Map<String, String> redesSociais;
 
     @ManyToMany

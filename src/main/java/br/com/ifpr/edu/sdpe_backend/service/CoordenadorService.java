@@ -30,10 +30,10 @@ public class CoordenadorService {
                 () -> new EntityNotFoundException("Coordenador não encontrado"));
     }
 
-    public Coordenador buscarPorCpf(String cpf) {
-        return this.coordenadorRepository.findByCpf(cpf).orElseThrow(
-                () -> new EntityNotFoundException("Coordenador não encontrado"));
-    }
+//    public Coordenador buscarPorCpf(String cpf) {
+//        return this.coordenadorRepository.findByCpf(cpf).orElseThrow(
+//                () -> new EntityNotFoundException("Coordenador não encontrado"));
+//    }
 
     public Coordenador buscarPorContato(String contato) {
         return this.coordenadorRepository.findByContato(contato).orElseThrow(

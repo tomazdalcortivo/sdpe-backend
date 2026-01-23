@@ -17,6 +17,9 @@ spring:
           auth: true
           starttls:
             enable: true
+app:
+  altcha:
+    hmac-key: "UMA_CHAVE_SECRETA_MUITO_LONGA_E_ALEATORIA_AQUI"
 
   h2:
     console:

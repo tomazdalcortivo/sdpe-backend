@@ -1,10 +1,15 @@
 package br.com.ifpr.edu.sdpe_backend.controller;
 
+
 import br.com.ifpr.edu.sdpe_backend.domain.Contato;
-import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
+import br.com.ifpr.edu.sdpe_backend.domain.DTO.ContatoPublicoDTO;
+import br.com.ifpr.edu.sdpe_backend.service.AltchaService;
 import br.com.ifpr.edu.sdpe_backend.service.ContatoService;
+import br.com.ifpr.edu.sdpe_backend.service.ProjetoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.altcha.altcha.Altcha.Challenge;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,44 +19,35 @@ import org.springframework.web.bind.annotation.*;
 public class ContatoController {
 
     private final ContatoService contatoService;
+    private final AltchaService altchaService;
+    private final ProjetoService projetoService;
+
+
+    @GetMapping("/challenge")
+    public ResponseEntity<Challenge> getChallenge() {
+        return ResponseEntity.ok(altchaService.createChallenge());
+    }
 
     @PostMapping
-    public ResponseEntity<Contato> salvar(@RequestBody Contato contato) {
-        return ResponseEntity.ok(contatoService.salvar(contato));
-    }
+    public ResponseEntity<?> enviarContato(@RequestBody @Valid ContatoPublicoDTO dados) {
+        boolean isHuman = altchaService.verifySolution(dados.altcha());
 
-    @GetMapping
-    public ResponseEntity<Page<Contato>> buscarTodos(
-            @RequestParam(defaultValue = "0") int numPag,
-            @RequestParam(defaultValue = "5") int tamPag) {
+        if (!isHuman) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(java.util.Collections.singletonMap("error", "Verificação de segurança falhou (Captcha inválido)."));
+        }
 
-        Page<Contato> contatos = contatoService.buscarTodos(numPag, tamPag);
-        return ResponseEntity.ok(contatos);
-    }
+        Contato novoContato = new Contato();
+        novoContato.setNome(dados.nome());
+        novoContato.setEmail(dados.email());
+        novoContato.setMensagem(dados.mensagem());
+        novoContato.setTipoContato(dados.tipoContato());
 
-    @GetMapping("/projeto")
-    public ResponseEntity<Page<Contato>> buscarProjeto(
-            @RequestBody Projeto projeto,
-            @RequestParam(defaultValue = "0") int numPag,
-            @RequestParam(defaultValue = "5") int tamPag) {
+        if (dados.projetoId() != null) projetoService.buscarPorId(dados.projetoId());
 
-        Page<Contato> contatos = contatoService.buscarPorProjeto(projeto, numPag, tamPag);
-        return ResponseEntity.ok(contatos);
-    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable Long id) {
-        this.contatoService.excluir(id);
-        return ResponseEntity.noContent().build();
-    }
+        contatoService.salvar(novoContato);
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Contato> atualizar(@PathVariable Long id, @RequestBody Contato contato) {
-        return ResponseEntity.ok(contatoService.atualizar(contato, id));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Contato> buscarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(contatoService.buscarPorId(id));
+        return ResponseEntity.status(HttpStatus.CREATED).body(novoContato);
     }
 }
