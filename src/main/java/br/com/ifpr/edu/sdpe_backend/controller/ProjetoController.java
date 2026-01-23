@@ -2,9 +2,11 @@ package br.com.ifpr.edu.sdpe_backend.controller;
 
 import br.com.ifpr.edu.sdpe_backend.domain.Coordenador;
 import br.com.ifpr.edu.sdpe_backend.domain.Participante;
+import br.com.ifpr.edu.sdpe_backend.domain.Post;
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
 import br.com.ifpr.edu.sdpe_backend.service.CoordenadorService;
 import br.com.ifpr.edu.sdpe_backend.service.ParticipanteService;
+import br.com.ifpr.edu.sdpe_backend.service.PostService;
 import br.com.ifpr.edu.sdpe_backend.service.ProjetoService;
 import org.springframework.core.io.Resource;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,8 @@ public class ProjetoController {
     private final CoordenadorService coordenadorService;
 
     private final ParticipanteService participanteService;
+
+    private final PostService postService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Projeto> salvar(
@@ -149,5 +153,24 @@ public class ProjetoController {
     public ResponseEntity<Void> removerCoordenador(@PathVariable Long id, @PathVariable Long idCoordenador) {
         projetoService.removerCoordenador(id, idCoordenador);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/posts")
+    public ResponseEntity<Post> criarPost(
+            @PathVariable Long id,
+            @RequestPart("conteudo") String conteudo,
+            @RequestPart(value = "arquivo", required = false) MultipartFile arquivo,
+            Principal principal
+    ) throws IOException {
+        Coordenador autor = coordenadorService.buscarPorEmail(principal.getName());
+        Post post = postService.criarPost(id, conteudo, arquivo, autor.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(post);
+    }
+
+    @PostMapping("/{id}/seguir")
+    public ResponseEntity<Void> seguirProjeto(@PathVariable Long id, Principal principal) {
+        Participante participante = participanteService.buscarPorEmail(principal.getName());
+        postService.alternarSeguir(id, participante.getId());
+        return ResponseEntity.ok().build();
     }
 }

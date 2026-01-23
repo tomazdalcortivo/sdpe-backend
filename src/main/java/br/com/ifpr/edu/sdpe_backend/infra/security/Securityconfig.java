@@ -25,7 +25,8 @@ public class Securityconfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .cors(cors ->{})
+                .cors(cors -> {
+                })
                 .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers.frameOptions(frame -> frame.disable())) // libera frames (necessário pro H2)
                 .sessionManagement(session -> session
@@ -42,6 +43,7 @@ public class Securityconfig {
                                 "/auth/registrar",
                                 "/api/contatos",
                                 "/api/projetos/*/visualizacao",
+                                "/api/projetos/*/seguir",
                                 "/auth/recuperar-senha",
                                 "/auth/redefinir-senha",
                                 "/api/feed/"
@@ -54,9 +56,11 @@ public class Securityconfig {
                                 "/imagens/**",
                                 "/documentos/**"
                         ).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/projetos/*/seguir").hasRole("PARTICIPANTE")
                         .requestMatchers(HttpMethod.POST,
                                 "/api/projetos/**",
-                                "/api/instituicao-ensino"
+                                "/api/instituicao-ensino",
+                                "/api/projetos/*/posts"
                         ).hasRole("COORDENADOR")
                         .requestMatchers(HttpMethod.DELETE,
                                 "/api/instituicao-ensino",

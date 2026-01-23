@@ -72,6 +72,18 @@ public class Projeto {
     @OneToMany(mappedBy = "projeto")
     private List<Contato> contatos;
 
+    @OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OrderBy("dataPublicacao DESC")
+    private List<Post> posts;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "projeto_seguidores",
+            joinColumns = @JoinColumn(name = "projeto_id"),
+            inverseJoinColumns = @JoinColumn(name = "participante_id")
+    )
+    private List<Participante> seguidores;
+
     public Projeto() {
         nome = " ";
         descricao = "";
@@ -85,6 +97,8 @@ public class Projeto {
         coordenadores = new ArrayList();
         participantes = new ArrayList<>();
         contatos = new ArrayList<>();
+        posts = new ArrayList<>();
+        seguidores = new ArrayList<>();
         imagemPath = " ";
         documentoPath = "";
     }

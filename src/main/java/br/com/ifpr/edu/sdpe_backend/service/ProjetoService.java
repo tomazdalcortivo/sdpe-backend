@@ -39,6 +39,10 @@ public class ProjetoService {
 
     private final Path rootLocation = Paths.get("uploads");
 
+    public Projeto salvar(Projeto projeto) {
+        return projetoRepository.save(projeto);
+    }
+
     public Projeto salvar(Projeto projeto, MultipartFile arquivo, String emailCoordenador) throws IOException {
 
         projeto.setStatus(true);
