@@ -63,12 +63,4 @@ public class Participante {
     @JoinColumn(name = "conta_id")
     private Conta conta;
 
-    @OneToMany(mappedBy = "participante")
-    private List<Notificacao> notificacoes;
-
-//    public Participante() {
-//        vinculoInstitucional = true;
-//        projetos = new ArrayList();
-//    }
-
 }
