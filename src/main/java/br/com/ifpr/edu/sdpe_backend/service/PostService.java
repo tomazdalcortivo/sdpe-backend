@@ -1,7 +1,6 @@
 package br.com.ifpr.edu.sdpe_backend.service;
 
 import br.com.ifpr.edu.sdpe_backend.domain.Coordenador;
-import br.com.ifpr.edu.sdpe_backend.domain.Participante;
 import br.com.ifpr.edu.sdpe_backend.domain.Post;
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
 import lombok.RequiredArgsConstructor;
