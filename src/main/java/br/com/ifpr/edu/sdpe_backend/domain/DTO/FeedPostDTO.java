@@ -8,7 +8,5 @@ public record FeedPostDTO(
         String descricao,
         String imagemCapa,
         String autores,
-        Date dataPublicacao,
-        Long totalSeguidores,
-        boolean seguindo
+        Date dataPublicacao
 ) {}

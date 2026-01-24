@@ -76,13 +76,6 @@ public class Projeto {
     @OrderBy("dataPublicacao DESC")
     private List<Post> posts;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "projeto_seguidores",
-            joinColumns = @JoinColumn(name = "projeto_id"),
-            inverseJoinColumns = @JoinColumn(name = "participante_id")
-    )
-    private List<Participante> seguidores;
 
     public Projeto() {
         nome = " ";
@@ -98,7 +91,6 @@ public class Projeto {
         participantes = new ArrayList<>();
         contatos = new ArrayList<>();
         posts = new ArrayList<>();
-        seguidores = new ArrayList<>();
         imagemPath = " ";
         documentoPath = "";
     }

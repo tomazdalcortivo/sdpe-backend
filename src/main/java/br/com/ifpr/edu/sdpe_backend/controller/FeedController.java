@@ -24,9 +24,4 @@ public class FeedController {
         return ResponseEntity.ok(feedService.buscarFeed(pageable));
     }
 
-    @PostMapping("/{id}/seguir")
-    public ResponseEntity<Void> toggleFollow(@PathVariable Long id) {
-        feedService.alternarSeguir(id);
-        return ResponseEntity.ok().build();
-    }
 }

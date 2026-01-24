@@ -59,15 +59,4 @@ public class PostService {
         return post;
     }
 
-    public void alternarSeguir(Long idProjeto,Long idParticipante){
-        Projeto projeto = this.projetoService.buscarPorId(idProjeto);
-        Participante participante = this.participanteService.buscarPorId(idParticipante);
-
-        if (projeto.getSeguidores().contains(participante)){
-            projeto.getSeguidores().remove(participante);
-        }else {
-            projeto.getSeguidores().add(participante);
-        }
-        this.projetoService.salvar(projeto);
-    }
 }

@@ -43,7 +43,6 @@ public class Securityconfig {
                                 "/auth/registrar",
                                 "/api/contatos",
                                 "/api/projetos/*/visualizacao",
-                                "/api/projetos/*/seguir",
                                 "/auth/recuperar-senha",
                                 "/auth/redefinir-senha",
                                 "/api/feed/"

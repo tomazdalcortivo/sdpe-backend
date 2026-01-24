@@ -21,12 +21,6 @@ public class CoordenadorController {
         return ResponseEntity.ok(coordenador);
     }
 
-//    @GetMapping("/cpf/{cpf}")
-//    public ResponseEntity<Coordenador> buscarPorCpf(@PathVariable String cpf) {
-//        Coordenador coordenador = this.coordenadorService.buscarPorCpf(cpf);
-//        return ResponseEntity.ok(coordenador);
-//    }
-
     @GetMapping("/nome/{nome}")
     public ResponseEntity<Coordenador> buscarPorNome(@PathVariable String nome) {
         Coordenador coordenador = this.coordenadorService.buscarPorNome(nome);

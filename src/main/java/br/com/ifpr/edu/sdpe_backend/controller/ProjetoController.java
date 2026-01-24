@@ -167,10 +167,4 @@ public class ProjetoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(post);
     }
 
-    @PostMapping("/{id}/seguir")
-    public ResponseEntity<Void> seguirProjeto(@PathVariable Long id, Principal principal) {
-        Participante participante = participanteService.buscarPorEmail(principal.getName());
-        postService.alternarSeguir(id, participante.getId());
-        return ResponseEntity.ok().build();
-    }
 }
