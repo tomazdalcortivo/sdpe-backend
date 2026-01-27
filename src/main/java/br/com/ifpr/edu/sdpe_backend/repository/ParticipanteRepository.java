@@ -22,4 +22,5 @@ public interface ParticipanteRepository extends JpaRepository<Participante, Long
 
     @Query("SELECT p FROM Participante p WHERE p.conta.ativo = false AND p.documentoUrl IS NOT NULL AND p.documentoUrl != ''")
     List<Participante> findPendentesDeAprovacao();
+
 }

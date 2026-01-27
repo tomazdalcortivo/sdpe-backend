@@ -27,12 +27,6 @@ public class ParticipanteController {
         return ResponseEntity.ok(participante);
     }
 
-//    @GetMapping("/cpf/{cpf}")
-//    public ResponseEntity<Participante> buscarPorCpf(@PathVariable String cpf) {
-//        Participante participante = this.participanteService.buscarPorCpf(cpf);
-//        return ResponseEntity.ok(participante);
-//    }
-
     @GetMapping("/buscar")
     public ResponseEntity<List<Participante>> buscarPorNome(@RequestParam String nome) {
         return ResponseEntity.ok(participanteService.buscarPorNome(nome));
