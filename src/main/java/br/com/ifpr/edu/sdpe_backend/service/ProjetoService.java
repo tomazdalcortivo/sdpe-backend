@@ -115,7 +115,7 @@ public class ProjetoService {
 
     public Page<Projeto> buscarTodos(int numPag, int tamPag) {
         Pageable pageable = PageRequest.of(numPag, tamPag);
-        return this.projetoRepository.findAll(pageable);
+        return this.projetoRepository.findByAtivo(true, pageable);
     }
 
     public Projeto atualizar(Projeto projeto, Long id, MultipartFile imagem) throws IOException {
