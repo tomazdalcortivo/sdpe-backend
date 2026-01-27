@@ -6,7 +6,6 @@ import br.com.ifpr.edu.sdpe_backend.repository.InstituicaoEnsinoRepository;
 import br.com.ifpr.edu.sdpe_backend.repository.ProjetoRepository;
 import br.com.ifpr.edu.sdpe_backend.repository.VisualizacaoRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,7 +40,7 @@ public class ProjetoService {
 
     public Projeto salvar(Projeto projeto, MultipartFile arquivo, String emailCoordenador) throws IOException {
 
-        projeto.setStatus(true);
+        projeto.setAtivo(false);
 
         if (projeto.getDataInicio() != null && projeto.getDataFim() != null) {
             if (projeto.getDataFim().before(projeto.getDataInicio())) {
@@ -131,9 +130,11 @@ public class ProjetoService {
         existente.setCargaHoraria(projeto.getCargaHoraria());
         existente.setFormato(projeto.getFormato());
 
-        if (projeto.getRedesSociais() != null) {
-            existente.setRedesSociais(projeto.getRedesSociais());
-        }
+        existente.setAtivo(false);
+        existente.setMotivoRejeicao(null);
+
+        if (projeto.getRedesSociais() != null) existente.setRedesSociais(projeto.getRedesSociais());
+
 
         if (projeto.getInstituicaoEnsino() != null) {
             InstituicaoEnsino inst = instituicaoEnsinoRepository.findByNome(projeto.getInstituicaoEnsino().getNome())

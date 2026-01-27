@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -65,5 +66,33 @@ public class AdminController {
     @GetMapping("/contatos")
     public ResponseEntity<List<Contato>> listarContatos() {
         return ResponseEntity.ok(adminService.listarTodosContatos());
+    }
+
+    @GetMapping("/projetos-pendentes")
+    public ResponseEntity<List<Projeto>> listarProjetosPendentes() {
+        return ResponseEntity.ok(this.adminService.listarProjetosPendentes());
+    }
+
+    @PatchMapping("/projetos/{id}/status")
+    public ResponseEntity<Void> atualizarStatusProjeto(@PathVariable Long id, @RequestParam boolean ativo) {
+        this.adminService.atualizarStatusProjeto(id, ativo);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/projetos/{id}/rejeitar")
+    public ResponseEntity<Void> rejeitarProjeto(@PathVariable Long id, @RequestBody String motivo) {
+        this.adminService.rejeitarProjeto(id, motivo);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/contatos/{id}/responder")
+    public ResponseEntity<Void> responderContato(@PathVariable Long id, @RequestBody Map<String, String> payload) {
+        String mensagem = payload.get("mensagem");
+        if (mensagem == null || mensagem.trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        adminService.responderContato(id, mensagem);
+        return ResponseEntity.ok().build();
     }
 }

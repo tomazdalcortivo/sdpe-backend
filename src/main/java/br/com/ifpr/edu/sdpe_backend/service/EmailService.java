@@ -26,4 +26,25 @@ public class EmailService {
 
         mailSender.send(message);
     }
+
+    public void enviarRespostaSuporte(String destinatario, String nomeContato, String mensagemResposta) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(destinatario);
+        message.setSubject("Resposta ao seu contacto - SDPE");
+        message.setText(
+                "Olá " + nomeContato + ",\n\n" +
+                        "Recebemos o seu contacto através da nossa plataforma.\n\n" +
+                        "Resposta da Administração:\n" +
+                        mensagemResposta + "\n\n" +
+                        "Atenciosamente,\n" +
+                        "Equipa SDPE"
+        );
+
+        try {
+            mailSender.send(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao enviar email.");
+        }
+    }
 }

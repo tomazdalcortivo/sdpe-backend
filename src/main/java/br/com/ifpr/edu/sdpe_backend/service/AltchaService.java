@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AltchaService {
 
-    @Value("${app.altcha.hmac-key:segredo-padrao-muito-seguro}")
+    @Value("${app.altcha.hmac-key}")
     private String hmacKey;
 
     public Challenge createChallenge() {
@@ -18,7 +18,6 @@ public class AltchaService {
             ChallengeOptions options = new ChallengeOptions();
             options.algorithm = Algorithm.SHA256;
             options.hmacKey = hmacKey;
-            // options.maxNumber = 100000; // Opcional: Ajustar dificuldade
 
             return Altcha.createChallenge(options);
         } catch (Exception e) {
@@ -31,7 +30,6 @@ public class AltchaService {
             return false;
         }
         try {
-            // O true no final indica validação estrita (recomendado)
             return Altcha.verifySolution(payload, hmacKey, true);
         } catch (Exception e) {
             e.printStackTrace();

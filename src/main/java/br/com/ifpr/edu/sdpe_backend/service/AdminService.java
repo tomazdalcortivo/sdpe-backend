@@ -21,8 +21,10 @@ public class AdminService {
     private final ContaRepository contaRepository;
     private final ParticipanteRepository participanteRepository;
     private final ProjetoRepository projetoRepository;
+    private final ProjetoService projetoService;
     private final ContatoRepository contatoRepository;
     private final VisualizacaoRepository visualizacaoRepository;
+    private final EmailService emailService;
 
 
     public List<Participante> listarTodosUsuarios() {
@@ -76,6 +78,26 @@ public class AdminService {
         contaRepository.delete(conta);
     }
 
+    public List<Projeto> listarProjetosPendentes() {
+        return this.projetoRepository.findByAtivo(false);
+    }
+
+    public void atualizarStatusProjeto(Long idProjeto, Boolean ativo) {
+        Projeto projeto = this.projetoService.buscarPorId(idProjeto);
+        if (ativo) projeto.setMotivoRejeicao(null);
+        projeto.setAtivo(ativo);
+        this.projetoRepository.save(projeto);
+    }
+
+    public void rejeitarProjeto(Long id, String motivo) {
+        Projeto projeto = projetoService.buscarPorId(id);
+
+        projeto.setMotivoRejeicao(motivo);
+        projeto.setAtivo(false);
+
+        projetoRepository.save(projeto);
+    }
+
     @Transactional
     public void excluirProjeto(Long id) {
         if (!projetoRepository.existsById(id)) {
@@ -83,6 +105,13 @@ public class AdminService {
         }
         excluirDependenciasProjeto(id);
         projetoRepository.deleteById(id);
+    }
+
+    public void responderContato(Long idContato, String mensagem) {
+        Contato contato = contatoRepository.findById(idContato)
+                .orElseThrow(() -> new RuntimeException("Contacto não encontrado"));
+
+        emailService.enviarRespostaSuporte(contato.getEmail(), contato.getNome(), mensagem);
     }
 
     private void excluirDependenciasProjeto(Long projetoId) {
