@@ -67,6 +67,7 @@ public class Securityconfig {
                         .hasRole("COORDENADOR")
                         .requestMatchers(HttpMethod.PUT, "/api/projetos/**").hasRole("COORDENADOR")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/localidades/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )

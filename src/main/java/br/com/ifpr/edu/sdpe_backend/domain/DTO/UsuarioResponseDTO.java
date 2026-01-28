@@ -8,6 +8,7 @@ public record UsuarioResponseDTO(
         String email,
         String telefone,
         String cidade,
+        String estado,
         String resumo,
         String fotoPerfil,
         TipoPerfil perfil

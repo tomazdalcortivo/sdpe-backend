@@ -36,13 +36,15 @@ public class Participante {
     @NotBlank(message = "O nome não pode ser vazio")
     private String nome;
 
-    @PastOrPresent(message = "A data não pode ser maior que hoje")
+    @PastOrPresent(message = "A data não pode ser futura")
     private Date dataNascimento;
 
-    @CPF(message = "Informe um cpf valido")
+    @CPF(message = "Informe um CPF válido")
     private String cpf;
 
     private String cidade;
+
+    private String estado;
 
     @Column(columnDefinition = "TEXT")
     private String resumo;
