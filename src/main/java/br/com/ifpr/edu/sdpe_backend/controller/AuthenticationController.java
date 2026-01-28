@@ -65,7 +65,7 @@ public class AuthenticationController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao cadastrar: Verifique os dados inseridos (CPF, Nome, etc).");
+            return ResponseEntity.badRequest().body("Erro ao cadastrar. Verifique os dados inseridos.");
         }
     }
 
@@ -94,6 +94,7 @@ public class AuthenticationController {
 
         String nome = (participante != null) ? participante.getNome() : "Usuário";
         String cidade = (participante != null) ? participante.getCidade() : "";
+        String estado = (participante != null) ? participante.getEstado() : "";
         String resumo = (participante != null) ? participante.getResumo() : "";
         String telefone = (participante != null) ? participante.getTelefone() : "";
         String fotoPerfil = (participante != null) ? participante.getFotoPerfil() : null;
@@ -104,6 +105,7 @@ public class AuthenticationController {
                 conta.getEmail(),
                 telefone,
                 cidade,
+                estado,
                 resumo,
                 fotoPerfil,
                 conta.getPerfil()
