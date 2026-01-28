@@ -12,5 +12,6 @@ public record RegisterDTO(
         Date dataNascimento,
         String cpf,
         String cidade,
+        String estado,
         Boolean vinculoInstitucional) {
 }

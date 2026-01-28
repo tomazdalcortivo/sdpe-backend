@@ -15,6 +15,8 @@ public record ParticipanteUpdateDTO(
 
         String cidade,
 
+        String estado,
+
         String resumo
 ) {
 }
