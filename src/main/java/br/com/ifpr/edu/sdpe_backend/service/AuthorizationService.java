@@ -42,7 +42,6 @@ public class AuthorizationService implements UserDetailsService {
 
     private final Path rootLocation = Paths.get("uploads");
 
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return contaRepository.findByEmail(email);
@@ -83,6 +82,7 @@ public class AuthorizationService implements UserDetailsService {
                     .vinculoInstitucional(data.vinculoInstitucional())
                     .cpf(data.cpf())
                     .cidade(data.cidade())
+                    .estado(data.estado())
                     .contato(data.email())
                     .conta(novaConta)
                     .documentoUrl(documentoUrl)
@@ -96,6 +96,7 @@ public class AuthorizationService implements UserDetailsService {
                     .dataNascimento(data.dataNascimento())
                     .cpf(data.cpf())
                     .cidade(data.cidade())
+                    .estado(data.estado())
                     .vinculoInstitucional(data.vinculoInstitucional())
                     .conta(novaConta)
                     .documentoUrl(documentoUrl)
