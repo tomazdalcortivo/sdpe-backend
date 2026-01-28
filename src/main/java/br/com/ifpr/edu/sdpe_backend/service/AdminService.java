@@ -109,7 +109,7 @@ public class AdminService {
 
     public void responderContato(Long idContato, String mensagem) {
         Contato contato = contatoRepository.findById(idContato)
-                .orElseThrow(() -> new RuntimeException("Contacto não encontrado"));
+                .orElseThrow(() -> new RuntimeException("Contato não encontrado"));
 
         emailService.enviarRespostaSuporte(contato.getEmail(), contato.getNome(), mensagem);
     }

@@ -19,6 +19,8 @@ public interface ProjetoRepository extends JpaRepository<Projeto, Long> {
 
     List<Projeto> findByAtivo(Boolean ativo);
 
+    Long countByAtivoTrue();
+
     List<Projeto> findByParticipantesId(Long id);
 
     @Query("SELECT p.area, COUNT(p) FROM Projeto p GROUP BY p.area")

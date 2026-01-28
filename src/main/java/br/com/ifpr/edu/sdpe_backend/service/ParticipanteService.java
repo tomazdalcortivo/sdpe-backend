@@ -104,6 +104,7 @@ public class ParticipanteService {
 
         if (dadosNovos.nome() != null && !dadosNovos.nome().isBlank()) existente.setNome(dadosNovos.nome());
         if (dadosNovos.cidade() != null) existente.setCidade(dadosNovos.cidade());
+        if (dadosNovos.estado() != null) existente.setEstado(dadosNovos.estado());
         if (dadosNovos.telefone() != null) existente.setTelefone(dadosNovos.telefone());
         if (dadosNovos.resumo() != null) existente.setResumo(dadosNovos.resumo());
 
