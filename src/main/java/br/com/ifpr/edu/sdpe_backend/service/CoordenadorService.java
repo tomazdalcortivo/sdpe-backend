@@ -1,20 +1,34 @@
 package br.com.ifpr.edu.sdpe_backend.service;
 
+import br.com.ifpr.edu.sdpe_backend.domain.Conta;
 import br.com.ifpr.edu.sdpe_backend.domain.Coordenador;
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
+import br.com.ifpr.edu.sdpe_backend.repository.ContaRepository;
 import br.com.ifpr.edu.sdpe_backend.repository.CoordenadorRepository;
+import br.com.ifpr.edu.sdpe_backend.repository.ProjetoRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CoordenadorService {
 
     private final CoordenadorRepository coordenadorRepository;
+    private final ContaRepository contaRepository;
+    private final ProjetoRepository projetoRepository;
+
+    private final Path rootLocation = Paths.get("uploads");
 
     public Coordenador salvar(Coordenador coordenador) {
         return this.coordenadorRepository.save(coordenador);
@@ -50,9 +64,37 @@ public class CoordenadorService {
         return this.coordenadorRepository.findByProjetos(coordenador, pageable);
     }
 
-
+    @Transactional
     public void excluir(Long id) {
-        this.coordenadorRepository.deleteById(id);
+    coordenadorRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void desvincularCoordenadorDoProjeto(Long projetoId, Long coordenadorId) {
+
+        Projeto projeto = projetoRepository.findById(projetoId)
+                .orElseThrow(() -> new RuntimeException("Projeto não encontrado"));
+
+        Coordenador coordenador = coordenadorRepository.findById(coordenadorId)
+                .orElseThrow(() -> new RuntimeException("Coordenador não encontrado"));
+
+        projeto.getCoordenadores().remove(coordenador);
+        coordenador.getProjetos().remove(projeto);
+    }
+
+    private void deletarArquivoFisico(String caminhoOuUrl) {
+        if (caminhoOuUrl != null && !caminhoOuUrl.isBlank()) {
+            try {
+                String nomeArquivo = caminhoOuUrl;
+                if (caminhoOuUrl.contains("/")) {
+                    nomeArquivo = caminhoOuUrl.substring(caminhoOuUrl.lastIndexOf("/") + 1);
+                }
+                Path arquivo = rootLocation.resolve(nomeArquivo);
+                Files.deleteIfExists(arquivo);
+            } catch (Exception e) {
+                System.err.println("Erro ao deletar arquivo físico (" + caminhoOuUrl + "): " + e.getMessage());
+            }
+        }
     }
 
     public Coordenador atualizar(Coordenador coordenador, Long id) {

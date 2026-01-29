@@ -10,7 +10,6 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.br.CPF;
 
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -61,7 +60,7 @@ public class Participante {
     @JsonIgnore
     private List<Projeto> projetos;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "conta_id")
     private Conta conta;
 

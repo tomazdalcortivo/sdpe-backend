@@ -92,6 +92,8 @@ public class AuthenticationController {
 
         Participante participante = conta.getParticipante();
 
+        Long perfilId = (participante != null) ? participante.getId() : null;
+
         String nome = (participante != null) ? participante.getNome() : "Usuário";
         String cidade = (participante != null) ? participante.getCidade() : "";
         String estado = (participante != null) ? participante.getEstado() : "";
@@ -100,7 +102,7 @@ public class AuthenticationController {
         String fotoPerfil = (participante != null) ? participante.getFotoPerfil() : null;
 
         UsuarioResponseDTO response = new UsuarioResponseDTO(
-                conta.getId(),
+                perfilId,
                 nome,
                 conta.getEmail(),
                 telefone,
