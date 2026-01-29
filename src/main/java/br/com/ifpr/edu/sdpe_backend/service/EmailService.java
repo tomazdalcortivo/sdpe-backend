@@ -30,14 +30,14 @@ public class EmailService {
     public void enviarRespostaSuporte(String destinatario, String nomeContato, String mensagemResposta) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(destinatario);
-        message.setSubject("Resposta ao seu contacto - SDPE");
+        message.setSubject("Resposta ao seu contato - SDPE");
         message.setText(
                 "Olá " + nomeContato + ",\n\n" +
-                        "Recebemos o seu contacto através da nossa plataforma.\n\n" +
+                        "Recebemos o seu contato através da nossa plataforma.\n\n" +
                         "Resposta da Administração:\n" +
                         mensagemResposta + "\n\n" +
                         "Atenciosamente,\n" +
-                        "Equipa SDPE"
+                        "Equipe SDPE"
         );
 
         try {

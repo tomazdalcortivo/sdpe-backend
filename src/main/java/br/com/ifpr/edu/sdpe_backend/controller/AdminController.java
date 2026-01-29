@@ -95,4 +95,14 @@ public class AdminController {
         adminService.responderContato(id, mensagem);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/contatos/{id}")
+    public ResponseEntity<Void> excluirContato(@PathVariable Long id) {
+        try {
+            adminService.excluirContato(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

@@ -4,6 +4,7 @@ import br.com.ifpr.edu.sdpe_backend.domain.Conta;
 import br.com.ifpr.edu.sdpe_backend.domain.Contato;
 import br.com.ifpr.edu.sdpe_backend.domain.Participante;
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
+import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoContato;
 import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoPerfil;
 import br.com.ifpr.edu.sdpe_backend.repository.*;
 import jakarta.transaction.Transactional;
@@ -40,7 +41,10 @@ public class AdminService {
     }
 
     public List<Contato> listarTodosContatos() {
-        return contatoRepository.findAll(Sort.by(Sort.Direction.DESC, "dataEnvio"));
+        return contatoRepository.findByTipoContatoNot(
+                TipoContato.FEEDBACK,
+                Sort.by(Sort.Direction.DESC, "dataEnvio")
+        );
     }
 
     public void alterarStatusConta(Long id, Boolean ativo) {
@@ -96,6 +100,11 @@ public class AdminService {
         projeto.setAtivo(false);
 
         projetoRepository.save(projeto);
+    }
+
+    public void excluirContato(Long id) {
+        if (contatoRepository.existsById(id)) contatoRepository.deleteById(id);
+        else throw new RuntimeException("Contato não encontrado");
     }
 
     @Transactional
