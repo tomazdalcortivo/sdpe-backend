@@ -255,9 +255,16 @@ public class ProjetoService {
         }
     }
 
+    public List<Contato> listarFeedbacks(Long idProjeto) {
+        buscarPorId(idProjeto);
+        return contatoService.buscarPorProjeto(idProjeto);
+    }
+
     public Contato adicionarFeedback(Long idProjeto, Contato contato) {
         Projeto projeto = buscarPorId(idProjeto);
+
         contato.setProjeto(projeto);
+        
         return contatoService.salvar(contato);
     }
 

@@ -55,7 +55,7 @@ public class Securityconfig {
                                 "/imagens/**",
                                 "/documentos/**"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/projetos/*/seguir").hasRole("PARTICIPANTE")
+                        .requestMatchers(HttpMethod.POST, "/api/projetos/*/feedbacks").hasRole("PARTICIPANTE")
                         .requestMatchers(HttpMethod.POST,
                                 "/api/projetos/**",
                                 "/api/instituicao-ensino",

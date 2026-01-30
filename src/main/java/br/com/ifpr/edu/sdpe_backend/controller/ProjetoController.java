@@ -1,9 +1,7 @@
 package br.com.ifpr.edu.sdpe_backend.controller;
 
-import br.com.ifpr.edu.sdpe_backend.domain.Coordenador;
-import br.com.ifpr.edu.sdpe_backend.domain.Participante;
-import br.com.ifpr.edu.sdpe_backend.domain.Post;
-import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
+import br.com.ifpr.edu.sdpe_backend.domain.*;
+import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoContato;
 import br.com.ifpr.edu.sdpe_backend.service.CoordenadorService;
 import br.com.ifpr.edu.sdpe_backend.service.ParticipanteService;
 import br.com.ifpr.edu.sdpe_backend.service.PostService;
@@ -76,14 +74,14 @@ public class ProjetoController {
     }
 
     @GetMapping("/{id}/imagem")
-    public ResponseEntity<Resource> getImagem(@PathVariable Long id) throws MalformedURLException, MalformedURLException {
+    public ResponseEntity<Resource> getImagem(@PathVariable Long id) throws MalformedURLException {
         Projeto projeto = projetoService.buscarPorId(id);
         File arquivo = new File(projeto.getImagemPath());
         if (!arquivo.exists()) return ResponseEntity.notFound().build();
         UrlResource resource = new UrlResource(arquivo.toURI());
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG) // ou IMAGE_PNG
-                .body((Resource) resource);
+                .body(resource);
     }
 
     @GetMapping
@@ -109,10 +107,7 @@ public class ProjetoController {
             boolean isCoordenadorDoProjeto = projetoExistente.getCoordenadores().stream()
                     .anyMatch(c -> c.getId().equals(coordLogado.getId()));
 
-            // Se não for coordenador do projeto (e assumindo que não temos role ADMIN separada aqui no check), lança erro
-            if (!isCoordenadorDoProjeto) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
+            if (!isCoordenadorDoProjeto) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
         }
 
@@ -167,4 +162,23 @@ public class ProjetoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(post);
     }
 
+
+    @GetMapping("/{id}/feedbacks")
+    public ResponseEntity<List<Contato>> listarFeedbacks(@PathVariable Long id) {
+        List<Contato> feedbacks = projetoService.listarFeedbacks(id);
+        return ResponseEntity.ok(feedbacks);
+    }
+
+    @PostMapping("/{id}/feedbacks")
+    public ResponseEntity<Contato> adicionarFeedback(@PathVariable Long id, @RequestBody Contato contato) {
+        contato.setTipoContato(TipoContato.FEEDBACK);
+        Contato novoFeedback = projetoService.adicionarFeedback(id, contato);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novoFeedback);
+    }
+
+    @DeleteMapping("/{id}/feedbacks/{idFeedback}")
+    public ResponseEntity<Void> removerFeedback(@PathVariable Long id, @PathVariable Long idFeedback) {
+        projetoService.removerFeedback(idFeedback);
+        return ResponseEntity.noContent().build();
+    }
 }
