@@ -2,9 +2,11 @@ package br.com.ifpr.edu.sdpe_backend.service;
 
 import br.com.ifpr.edu.sdpe_backend.domain.Conta;
 import br.com.ifpr.edu.sdpe_backend.domain.Coordenador;
+import br.com.ifpr.edu.sdpe_backend.domain.Post;
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
 import br.com.ifpr.edu.sdpe_backend.repository.ContaRepository;
 import br.com.ifpr.edu.sdpe_backend.repository.CoordenadorRepository;
+import br.com.ifpr.edu.sdpe_backend.repository.PostRepository;
 import br.com.ifpr.edu.sdpe_backend.repository.ProjetoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -27,6 +29,7 @@ public class CoordenadorService {
     private final CoordenadorRepository coordenadorRepository;
     private final ContaRepository contaRepository;
     private final ProjetoRepository projetoRepository;
+    private final PostRepository postRepository;
 
     private final Path rootLocation = Paths.get("uploads");
 
@@ -43,11 +46,6 @@ public class CoordenadorService {
         return this.coordenadorRepository.findByContaEmail(email).orElseThrow(
                 () -> new EntityNotFoundException("Coordenador não encontrado"));
     }
-
-//    public Coordenador buscarPorCpf(String cpf) {
-//        return this.coordenadorRepository.findByCpf(cpf).orElseThrow(
-//                () -> new EntityNotFoundException("Coordenador não encontrado"));
-//    }
 
     public Coordenador buscarPorContato(String contato) {
         return this.coordenadorRepository.findByContato(contato).orElseThrow(
@@ -66,20 +64,38 @@ public class CoordenadorService {
 
     @Transactional
     public void excluir(Long id) {
-    coordenadorRepository.deleteById(id);
-    }
+        List<Projeto> projetosVinculados = projetoRepository.findByCoordenadoresId(id);
 
-    @Transactional
-    public void desvincularCoordenadorDoProjeto(Long projetoId, Long coordenadorId) {
+        for (Projeto projeto : projetosVinculados) {
+            boolean removed = projeto.getCoordenadores().removeIf(c -> c.getId().equals(id));
 
-        Projeto projeto = projetoRepository.findById(projetoId)
-                .orElseThrow(() -> new RuntimeException("Projeto não encontrado"));
+            if (removed) projetoRepository.save(projeto);
 
-        Coordenador coordenador = coordenadorRepository.findById(coordenadorId)
-                .orElseThrow(() -> new RuntimeException("Coordenador não encontrado"));
+        }
 
-        projeto.getCoordenadores().remove(coordenador);
-        coordenador.getProjetos().remove(projeto);
+        try {
+            List<Post> posts = postRepository.findByAutorId(id);
+            if (!posts.isEmpty()) postRepository.deleteAll(posts);
+        } catch (Exception e) {
+            
+        }
+
+        Coordenador coordenador = buscarPorId(id);
+
+        deletarArquivoFisico(coordenador.getFotoPerfil());
+        deletarArquivoFisico(coordenador.getDocumentoUrl());
+
+        Conta conta = coordenador.getConta();
+
+        if (conta != null) {
+            conta.setParticipante(null);
+            contaRepository.save(conta);
+        }
+
+        coordenadorRepository.deleteById(id);
+
+        if (conta != null) contaRepository.delete(conta);
+
     }
 
     private void deletarArquivoFisico(String caminhoOuUrl) {
@@ -92,7 +108,7 @@ public class CoordenadorService {
                 Path arquivo = rootLocation.resolve(nomeArquivo);
                 Files.deleteIfExists(arquivo);
             } catch (Exception e) {
-                System.err.println("Erro ao deletar arquivo físico (" + caminhoOuUrl + "): " + e.getMessage());
+                System.err.println("Erro ao deletar arquivo físico: " + e.getMessage());
             }
         }
     }
