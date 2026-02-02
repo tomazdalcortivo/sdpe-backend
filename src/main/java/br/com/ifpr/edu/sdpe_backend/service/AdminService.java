@@ -4,7 +4,6 @@ import br.com.ifpr.edu.sdpe_backend.domain.Conta;
 import br.com.ifpr.edu.sdpe_backend.domain.Contato;
 import br.com.ifpr.edu.sdpe_backend.domain.Participante;
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
-import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoContato;
 import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoPerfil;
 import br.com.ifpr.edu.sdpe_backend.repository.*;
 import jakarta.transaction.Transactional;
@@ -22,10 +21,8 @@ public class AdminService {
     private final ContaRepository contaRepository;
     private final ParticipanteRepository participanteRepository;
     private final ProjetoRepository projetoRepository;
-    private final ProjetoService projetoService;
     private final ContatoRepository contatoRepository;
     private final VisualizacaoRepository visualizacaoRepository;
-    private final EmailService emailService;
 
 
     public List<Participante> listarTodosUsuarios() {
@@ -41,10 +38,7 @@ public class AdminService {
     }
 
     public List<Contato> listarTodosContatos() {
-        return contatoRepository.findByTipoContatoNot(
-                TipoContato.FEEDBACK,
-                Sort.by(Sort.Direction.DESC, "dataEnvio")
-        );
+        return contatoRepository.findAll(Sort.by(Sort.Direction.DESC, "dataEnvio"));
     }
 
     public void alterarStatusConta(Long id, Boolean ativo) {
@@ -82,31 +76,6 @@ public class AdminService {
         contaRepository.delete(conta);
     }
 
-    public List<Projeto> listarProjetosPendentes() {
-        return this.projetoRepository.findByAtivo(false);
-    }
-
-    public void atualizarStatusProjeto(Long idProjeto, Boolean ativo) {
-        Projeto projeto = this.projetoService.buscarPorId(idProjeto);
-        if (ativo) projeto.setMotivoRejeicao(null);
-        projeto.setAtivo(ativo);
-        this.projetoRepository.save(projeto);
-    }
-
-    public void rejeitarProjeto(Long id, String motivo) {
-        Projeto projeto = projetoService.buscarPorId(id);
-
-        projeto.setMotivoRejeicao(motivo);
-        projeto.setAtivo(false);
-
-        projetoRepository.save(projeto);
-    }
-
-    public void excluirContato(Long id) {
-        if (contatoRepository.existsById(id)) contatoRepository.deleteById(id);
-        else throw new RuntimeException("Contato não encontrado");
-    }
-
     @Transactional
     public void excluirProjeto(Long id) {
         if (!projetoRepository.existsById(id)) {
@@ -114,13 +83,6 @@ public class AdminService {
         }
         excluirDependenciasProjeto(id);
         projetoRepository.deleteById(id);
-    }
-
-    public void responderContato(Long idContato, String mensagem) {
-        Contato contato = contatoRepository.findById(idContato)
-                .orElseThrow(() -> new RuntimeException("Contato não encontrado"));
-
-        emailService.enviarRespostaSuporte(contato.getEmail(), contato.getNome(), mensagem);
     }
 
     private void excluirDependenciasProjeto(Long projetoId) {

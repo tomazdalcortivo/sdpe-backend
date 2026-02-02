@@ -1,7 +1,9 @@
 package br.com.ifpr.edu.sdpe_backend.service;
 
 import br.com.ifpr.edu.sdpe_backend.domain.DTO.EstatisticaDTO;
-import br.com.ifpr.edu.sdpe_backend.repository.*;
+import br.com.ifpr.edu.sdpe_backend.repository.ContaRepository;
+import br.com.ifpr.edu.sdpe_backend.repository.ProjetoRepository;
+import br.com.ifpr.edu.sdpe_backend.repository.VisualizacaoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,15 +17,8 @@ public class EstatisticasService {
     private final ContaRepository contaRepository;
     private final ProjetoRepository projetoRepository;
     private final VisualizacaoRepository visualizacaoRepository;
-    private final ParticipanteRepository participanteRepository;
 
-    public Long contarTotalVisualizacoes() {
-        return visualizacaoRepository.count();
-    }
-
-    public Long contarTotalParticipantes() {
-        return participanteRepository.countByContaAtivoTrue();
-    }
+    // --- VISÃO GERAL (TODOS) ---
 
     public List<EstatisticaDTO> getCadastrosMensais() {
         List<Object[]> resultados = contaRepository.countCadastrosPorMes();
@@ -31,7 +26,7 @@ public class EstatisticasService {
     }
 
     public long getTotalProjetos() {
-        return projetoRepository.countByAtivoTrue();
+        return projetoRepository.count();
     }
 
     public List<EstatisticaDTO> getProjetosPorArea() {

@@ -23,16 +23,6 @@ public class EstatisticasController {
         return ResponseEntity.ok(service.getCadastrosMensais());
     }
 
-    @GetMapping("/geral/total-visualizacoes")
-    public ResponseEntity<Long> getTotalVisualizacoes() {
-        return ResponseEntity.ok(service.contarTotalVisualizacoes());
-    }
-
-    @GetMapping("/geral/total-participantes")
-    public ResponseEntity<Long> getTotalParticipantes() {
-        return ResponseEntity.ok(service.contarTotalParticipantes());
-    }
-
     @GetMapping("/geral/total-projetos")
     public ResponseEntity<Long> getTotalProjetos() {
         return ResponseEntity.ok(service.getTotalProjetos());

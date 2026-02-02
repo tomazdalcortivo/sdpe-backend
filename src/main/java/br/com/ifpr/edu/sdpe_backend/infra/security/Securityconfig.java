@@ -8,7 +8,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,14 +21,18 @@ public class Securityconfig {
 
     private final SecurityFilter securityFilter;
 
+    // stateless token
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .cors(cors -> {})
-                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> {
+                })
+                .csrf(csrf -> csrf.disable())
+                .headers(headers -> headers.frameOptions(frame -> frame.disable())) // libera frames (necessário pro H2)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/h2-console/**").permitAll() // libera a url do h2 somente para desenvolvimento
                         .requestMatchers(HttpMethod.GET,
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
@@ -41,17 +44,18 @@ public class Securityconfig {
                                 "/api/contatos",
                                 "/api/projetos/*/visualizacao",
                                 "/auth/recuperar-senha",
-                                "/auth/redefinir-senha"
+                                "/auth/redefinir-senha",
+                                "/api/feed/"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/api/estatisticas/geral/**",
                                 "/api/projetos/**",
                                 "/api/contatos/challenge",
-                                "/api/localidades/**",
+                                "/api/feed/**",
                                 "/imagens/**",
                                 "/documentos/**"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/projetos/*/feedbacks").hasRole("PARTICIPANTE")
+                        .requestMatchers(HttpMethod.POST, "/api/projetos/*/seguir").hasRole("PARTICIPANTE")
                         .requestMatchers(HttpMethod.POST,
                                 "/api/projetos/**",
                                 "/api/instituicao-ensino",
@@ -63,6 +67,7 @@ public class Securityconfig {
                         .hasRole("COORDENADOR")
                         .requestMatchers(HttpMethod.PUT, "/api/projetos/**").hasRole("COORDENADOR")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/localidades/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )

@@ -1,7 +1,7 @@
 package br.com.ifpr.edu.sdpe_backend.service;
 
 import br.com.ifpr.edu.sdpe_backend.domain.*;
-import br.com.ifpr.edu.sdpe_backend.repository.ContatoRepository;
+//import br.com.ifpr.edu.sdpe_backend.domain.DTO.EstatisticaDTO;
 import br.com.ifpr.edu.sdpe_backend.repository.InstituicaoEnsinoRepository;
 import br.com.ifpr.edu.sdpe_backend.repository.ProjetoRepository;
 import br.com.ifpr.edu.sdpe_backend.repository.VisualizacaoRepository;
@@ -37,8 +37,6 @@ public class ProjetoService {
 
     private final VisualizacaoRepository visualizacaoRepository;
 
-    private final ContatoRepository contatoRepository;
-
     private final Path rootLocation = Paths.get("uploads");
 
     public Projeto salvar(Projeto projeto) {
@@ -47,7 +45,7 @@ public class ProjetoService {
 
     public Projeto salvar(Projeto projeto, MultipartFile arquivo, String emailCoordenador) throws IOException {
 
-        projeto.setAtivo(false);
+        projeto.setStatus(true);
 
         if (projeto.getDataInicio() != null && projeto.getDataFim() != null) {
             if (projeto.getDataFim().before(projeto.getDataInicio())) {
@@ -101,6 +99,7 @@ public class ProjetoService {
 
 
                 if (busca.isPresent()) {
+                    // Se já existe, usamos a do banco (ignorando a descrição nova para não sobrescrever dados antigos sem querer)
                     instituicaoFinal = busca.get();
                 } else {
                     instituicaoFinal = instituicaoEnsinoRepository.save(input);
@@ -121,7 +120,7 @@ public class ProjetoService {
 
     public Page<Projeto> buscarTodos(int numPag, int tamPag) {
         Pageable pageable = PageRequest.of(numPag, tamPag);
-        return this.projetoRepository.findByAtivo(true, pageable);
+        return this.projetoRepository.findAll(pageable);
     }
 
     public Projeto atualizar(Projeto projeto, Long id, MultipartFile imagem) throws IOException {
@@ -136,11 +135,9 @@ public class ProjetoService {
         existente.setCargaHoraria(projeto.getCargaHoraria());
         existente.setFormato(projeto.getFormato());
 
-        existente.setAtivo(false);
-        existente.setMotivoRejeicao(null);
-
-        if (projeto.getRedesSociais() != null) existente.setRedesSociais(projeto.getRedesSociais());
-
+        if (projeto.getRedesSociais() != null) {
+            existente.setRedesSociais(projeto.getRedesSociais());
+        }
 
         if (projeto.getInstituicaoEnsino() != null) {
             InstituicaoEnsino inst = instituicaoEnsinoRepository.findByNome(projeto.getInstituicaoEnsino().getNome())
@@ -167,34 +164,26 @@ public class ProjetoService {
         return existente;
     }
 
-    @Transactional
     public void excluir(Long id) {
-        Projeto projeto = this.buscarPorId(id);
+        Projeto projeto = this.projetoRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Projeto a ser atualizado não encontrado"));
 
-        visualizacaoRepository.deleteByProjetoId(id);
+        if (projeto.getImagemPath() != null && !projeto.getImagemPath().trim().isEmpty())
+            deletarArquivoFisico(projeto.getImagemPath());
 
-        List<Contato> contatos = contatoRepository.findByProjetoId(id);
-        if (!contatos.isEmpty()) contatoRepository.deleteAll(contatos);
-
-        deletarArquivoFisico(projeto.getImagemPath());
-        deletarArquivoFisico(projeto.getDocumentoPath());
+        if (projeto.getDocumentoPath() != null && !projeto.getDocumentoPath().trim().isEmpty())
+            deletarArquivoFisico(projeto.getDocumentoPath());
 
         this.projetoRepository.deleteById(id);
     }
 
-    private void deletarArquivoFisico(String caminhoOuUrl) {
-        if (caminhoOuUrl != null && !caminhoOuUrl.isBlank()) {
-            try {
-                String nomeArquivo = caminhoOuUrl;
-                if (caminhoOuUrl.contains("/")) {
-                    nomeArquivo = caminhoOuUrl.substring(caminhoOuUrl.lastIndexOf("/") + 1);
-                }
+    private void deletarArquivoFisico(String nomeArquivo) {
+        try {
+            Path arquivo = rootLocation.resolve(nomeArquivo);
 
-                Path arquivo = rootLocation.resolve(nomeArquivo);
-                Files.deleteIfExists(arquivo);
-            } catch (Exception e) {
-                System.err.println("Erro ao deletar arquivo físico (" + caminhoOuUrl + "): " + e.getMessage());
-            }
+            Files.deleteIfExists(arquivo);
+        } catch (IOException e) {
+            System.err.println("Erro ao deletar arquivo físico (" + nomeArquivo + "): " + e.getMessage());
         }
     }
 
@@ -265,16 +254,9 @@ public class ProjetoService {
         }
     }
 
-    public List<Contato> listarFeedbacks(Long idProjeto) {
-        buscarPorId(idProjeto);
-        return contatoService.buscarPorProjeto(idProjeto);
-    }
-
     public Contato adicionarFeedback(Long idProjeto, Contato contato) {
         Projeto projeto = buscarPorId(idProjeto);
-
         contato.setProjeto(projeto);
-
         return contatoService.salvar(contato);
     }
 

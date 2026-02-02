@@ -1,7 +1,6 @@
 package br.com.ifpr.edu.sdpe_backend.service;
 
 import br.com.ifpr.edu.sdpe_backend.domain.Conta;
-import br.com.ifpr.edu.sdpe_backend.domain.Coordenador;
 import br.com.ifpr.edu.sdpe_backend.domain.DTO.ParticipanteUpdateDTO;
 import br.com.ifpr.edu.sdpe_backend.domain.Participante;
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
@@ -21,7 +20,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -83,41 +81,21 @@ public class ParticipanteService {
     @Transactional
     public void excluir(Long id) {
         Participante participante = buscarPorId(id);
-
-        if (participante.getProjetos() != null) {
-            List<Projeto> projetosVinculados = new ArrayList<>(participante.getProjetos());
-
-            for (Projeto projeto : projetosVinculados) {
-                if (participante instanceof br.com.ifpr.edu.sdpe_backend.domain.Coordenador) {
-                    projeto.getCoordenadores().remove(participante);
-                } else {
-                    projeto.getParticipantes().remove(participante);
-                }
-            }
-        }
-        deletarArquivoFisico(participante.getFotoPerfil());
-        deletarArquivoFisico(participante.getDocumentoUrl());
-
         Conta conta = participante.getConta();
 
-        this.participanteRepository.delete(participante);
-        if (conta != null) this.contaRepository.delete(conta);
-    }
-
-    private void deletarArquivoFisico(String caminhoOuUrl) {
-        if (caminhoOuUrl != null && !caminhoOuUrl.isBlank()) {
-            String nomeArquivo = caminhoOuUrl;
+        if (participante.getDocumentoUrl() != null && !participante.getDocumentoUrl().isEmpty()) {
             try {
-                if (caminhoOuUrl.contains("/")) {
-                    nomeArquivo = caminhoOuUrl.substring(caminhoOuUrl.lastIndexOf("/") + 1);
-                }
-
-                Path arquivo = rootLocation.resolve(nomeArquivo);
+                Path arquivo = rootLocation.resolve(participante.getDocumentoUrl());
                 Files.deleteIfExists(arquivo);
-            } catch (Exception e) {
-                System.err.println("Erro ao deletar arquivo físico (" + nomeArquivo + "): " + e.getMessage());
+            } catch (IOException e) {
+                System.err.println("Erro ao deletar arquivo físico (" + participante.getDocumentoUrl() + "): " + e.getMessage());
             }
         }
+
+        this.participanteRepository.delete(participante);
+
+        if (conta != null) this.contaRepository.delete(conta);
+
     }
 
     public Participante atualizar(ParticipanteUpdateDTO dadosNovos, Long id) {
@@ -126,7 +104,6 @@ public class ParticipanteService {
 
         if (dadosNovos.nome() != null && !dadosNovos.nome().isBlank()) existente.setNome(dadosNovos.nome());
         if (dadosNovos.cidade() != null) existente.setCidade(dadosNovos.cidade());
-        if (dadosNovos.estado() != null) existente.setEstado(dadosNovos.estado());
         if (dadosNovos.telefone() != null) existente.setTelefone(dadosNovos.telefone());
         if (dadosNovos.resumo() != null) existente.setResumo(dadosNovos.resumo());
 

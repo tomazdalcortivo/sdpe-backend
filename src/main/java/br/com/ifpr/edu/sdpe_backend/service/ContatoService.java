@@ -10,8 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class ContatoService {
@@ -39,9 +37,10 @@ public class ContatoService {
         return this.contatoRepository.findAll(pageable);
     }
 
-    public List<Contato> buscarPorProjeto(Long projetoId) {
-        return this.contatoRepository.findByProjetoId(projetoId);
-    }
+//    public Page<Contato> buscarPorProjeto(Projeto projeto, int numPag, int tamPag) {
+//        Pageable pageable = PageRequest.of(numPag, tamPag);
+//        return this.contatoRepository.findByProjeto(projeto, pageable);
+//    }
 
     public void excluir(Long id) {
         this.contatoRepository.deleteById(id);
