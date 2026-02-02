@@ -27,7 +27,7 @@ public class Projeto {
 
     private String area;
 
-    private Boolean status;
+    private Boolean ativo;
 
     private Date dataInicio;
 
@@ -38,6 +38,9 @@ public class Projeto {
     private String imagemPath;
 
     private String documentoPath;
+
+    @Column(columnDefinition = "TEXT")
+    private String motivoRejeicao;
 
     @ManyToOne
     @JoinColumn(name = "instituicao_id")
@@ -81,7 +84,7 @@ public class Projeto {
         nome = " ";
         descricao = "";
         area = " ";
-        status = false;
+        ativo = false;
         dataInicio = new Date();
         dataFim = new Date();
         cargaHoraria = 0.0;

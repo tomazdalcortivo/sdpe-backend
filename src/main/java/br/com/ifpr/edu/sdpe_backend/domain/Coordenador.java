@@ -12,7 +12,6 @@ import java.util.List;
 @Getter
 @Setter
 @SuperBuilder
-@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "tb_coordenador")
@@ -29,11 +28,11 @@ public class Coordenador extends Participante {
     @Enumerated(EnumType.STRING)
     private FuncaoCoordenador funcao;
 
-//    public Coordenador(){
-//        cargoInstituicao = " ";
-//        contato = " ";
-//        projetos = new ArrayList<>();
-//        funcao = FuncaoCoordenador.COORDENADOR_GERAL;
-//    }
+    public Coordenador(){
+        cargoInstituicao = " ";
+        contato = " ";
+        projetos = new ArrayList<>();
+        funcao = FuncaoCoordenador.COORDENADOR_GERAL;
+    }
 
 }
