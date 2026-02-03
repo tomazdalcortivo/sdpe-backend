@@ -39,6 +39,9 @@ public class Projeto {
 
     private String documentoPath;
 
+    @OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Documento> documentos;
+
     @Column(columnDefinition = "TEXT")
     private String motivoRejeicao;
 

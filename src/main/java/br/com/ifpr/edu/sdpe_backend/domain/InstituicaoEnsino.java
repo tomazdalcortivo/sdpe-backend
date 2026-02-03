@@ -19,11 +19,12 @@ public class InstituicaoEnsino {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = false)
     private String nome;
 
     private String cidade;
 
-    private String descricao;
+    private String estado;
 
     @OneToMany(mappedBy = "instituicaoEnsino")
     @JsonIgnore
@@ -32,7 +33,6 @@ public class InstituicaoEnsino {
     public InstituicaoEnsino(){
         nome = " ";
         cidade = " ";
-        descricao = " ";
         projetos = new ArrayList<>();
     }
 
