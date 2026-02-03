@@ -6,6 +6,8 @@ import br.com.ifpr.edu.sdpe_backend.service.CoordenadorService;
 import br.com.ifpr.edu.sdpe_backend.service.ParticipanteService;
 import br.com.ifpr.edu.sdpe_backend.service.PostService;
 import br.com.ifpr.edu.sdpe_backend.service.ProjetoService;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.UrlResource;
@@ -96,23 +98,19 @@ public class ProjetoController {
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Projeto> atualizar(
             @PathVariable Long id,
-            @RequestPart("projeto") Projeto projeto,
+            @RequestPart("projeto") String projetoJson,
             @RequestPart(value = "imagem", required = false) MultipartFile imagem,
-            Principal principal) throws IOException {
+            @RequestPart(value = "documentos", required = false) List<MultipartFile> documentos) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            Projeto projeto = mapper.readValue(projetoJson, Projeto.class);
 
-        if (principal != null) {
-            Coordenador coordLogado = coordenadorService.buscarPorEmail(principal.getName());
-            Projeto projetoExistente = projetoService.buscarPorId(id);
-
-            boolean isCoordenadorDoProjeto = projetoExistente.getCoordenadores().stream()
-                    .anyMatch(c -> c.getId().equals(coordLogado.getId()));
-
-            if (!isCoordenadorDoProjeto) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-
+            return ResponseEntity.ok(projetoService.atualizar(projeto, id, imagem, documentos));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
         }
-
-        Projeto atualizado = this.projetoService.atualizar(projeto, id, imagem);
-        return ResponseEntity.ok(atualizado);
     }
 
     @DeleteMapping("/{id}")

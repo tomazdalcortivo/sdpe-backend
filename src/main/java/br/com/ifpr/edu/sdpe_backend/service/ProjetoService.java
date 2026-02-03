@@ -1,10 +1,7 @@
 package br.com.ifpr.edu.sdpe_backend.service;
 
 import br.com.ifpr.edu.sdpe_backend.domain.*;
-import br.com.ifpr.edu.sdpe_backend.repository.ContatoRepository;
-import br.com.ifpr.edu.sdpe_backend.repository.InstituicaoEnsinoRepository;
-import br.com.ifpr.edu.sdpe_backend.repository.ProjetoRepository;
-import br.com.ifpr.edu.sdpe_backend.repository.VisualizacaoRepository;
+import br.com.ifpr.edu.sdpe_backend.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +35,8 @@ public class ProjetoService {
     private final VisualizacaoRepository visualizacaoRepository;
 
     private final ContatoRepository contatoRepository;
+
+    private final DocumentoRepository documentoRepository;
 
     private final Path rootLocation = Paths.get("uploads");
 
@@ -80,6 +79,19 @@ public class ProjetoService {
 
         tratarInstituicao(projeto);
         return this.projetoRepository.save(projeto);
+    }
+
+    private String salvarArquivo(MultipartFile file) throws IOException {
+        Path uploadPath = Paths.get("uploads");
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        String nomeArquivo = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        Path filePath = uploadPath.resolve(nomeArquivo);
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        return "http://localhost:8080/documentos/" + nomeArquivo;
     }
 
     private void tratarInstituicao(Projeto projeto) {
@@ -127,7 +139,7 @@ public class ProjetoService {
         return this.projetoRepository.findByAtivo(true, pageable);
     }
 
-    public Projeto atualizar(Projeto projeto, Long id, MultipartFile imagem) throws IOException {
+    public Projeto atualizar(Projeto projeto, Long id, MultipartFile imagem, List<MultipartFile> docs) throws IOException {
         Projeto existente = this.projetoRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Projeto a ser atualizado não encontrado"));
 
@@ -166,8 +178,26 @@ public class ProjetoService {
             existente.setImagemPath(destinationFile.toString());
         }
 
-        this.projetoRepository.save(existente);
-        return existente;
+        if (docs != null && !docs.isEmpty()) {
+            for (MultipartFile file : docs) {
+                try {
+                    String url = salvarArquivo(file);
+
+                    Documento doc = Documento.builder()
+                            .nome(file.getOriginalFilename())
+                            .url(url)
+                            .projeto(existente)
+                            .build();
+
+                    if (existente.getDocumentos() == null) existente.setDocumentos(new ArrayList<>());
+                    existente.getDocumentos().add(doc);
+                } catch (IOException e) {
+                    throw new RuntimeException("Erro ao salvar documento", e);
+                }
+            }
+        }
+
+        return this.projetoRepository.save(existente);
     }
 
     @Transactional
