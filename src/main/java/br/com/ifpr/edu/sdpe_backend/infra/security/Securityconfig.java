@@ -26,7 +26,8 @@ public class Securityconfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .cors(cors -> {})
+                .cors(cors -> {
+                })
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)) // provisorio devido a clickjacking
                 .sessionManagement(session -> session
@@ -61,6 +62,7 @@ public class Securityconfig {
                         ).hasRole("COORDENADOR")
                         .requestMatchers(HttpMethod.DELETE,
                                 "/api/instituicao-ensino",
+                                "/api/documentos/**",
                                 "/api/projetos/**")
                         .hasRole("COORDENADOR")
                         .requestMatchers(HttpMethod.PUT, "/api/projetos/**").hasRole("COORDENADOR")
