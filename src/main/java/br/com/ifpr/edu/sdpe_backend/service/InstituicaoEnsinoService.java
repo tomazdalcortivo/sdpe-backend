@@ -24,7 +24,7 @@ public class InstituicaoEnsinoService {
 
         existente.setNome(instituicaoEnsino.getNome());
         existente.setCidade(instituicaoEnsino.getCidade());
-        existente.setDescricao(instituicaoEnsino.getDescricao());
+        existente.setEstado(instituicaoEnsino.getEstado());
 
         return instituicaoEnsinoRepository.save(existente);
     }
