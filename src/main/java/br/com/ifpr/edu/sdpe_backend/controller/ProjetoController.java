@@ -39,7 +39,7 @@ public class ProjetoController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Projeto> salvar(
             @RequestPart("projeto") Projeto projeto,
-            @RequestPart(value = "arquivo", required = false) MultipartFile arquivo,
+            @RequestPart(value = "arquivo") MultipartFile arquivo,
             Principal principal
     ) throws IOException {
 

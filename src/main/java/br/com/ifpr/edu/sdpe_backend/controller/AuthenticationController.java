@@ -44,7 +44,7 @@ public class AuthenticationController {
             }
         }
 
-        if  (usuario == null) throw new UsernameNotFoundException("Usuário não encontrado");
+        if (usuario == null) throw new UsernameNotFoundException("Usuário não encontrado");
 
         UsernamePasswordAuthenticationToken usuarioSenha = new UsernamePasswordAuthenticationToken(data.email(), data.senha());
         Authentication auth = this.authenticationManager.authenticate(usuarioSenha);
@@ -57,7 +57,7 @@ public class AuthenticationController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity registrar(
             @RequestPart("dados") @Valid RegisterDTO data,
-            @RequestPart(value = "arquivo", required = false) MultipartFile arquivo
+            @RequestPart(value = "arquivo") MultipartFile arquivo
     ) {
         try {
             this.authorizationService.registrarUsuario(data, arquivo);
