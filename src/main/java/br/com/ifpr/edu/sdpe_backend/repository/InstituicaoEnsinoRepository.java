@@ -13,4 +13,5 @@ public interface InstituicaoEnsinoRepository extends JpaRepository<InstituicaoEn
 
     Optional<InstituicaoEnsino> findByNomeAndCidade(String nome, String cidade);
 
+    Optional<InstituicaoEnsino> findByNomeAndCidadeAndEstado(String nome, String cidade, String estado);
 }

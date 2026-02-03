@@ -85,28 +85,31 @@ public class ProjetoService {
     private void tratarInstituicao(Projeto projeto) {
         if (projeto.getInstituicaoEnsino() != null) {
             InstituicaoEnsino input = projeto.getInstituicaoEnsino();
-            input.getProjetos().add(projeto);
 
-            if (input.getNome() != null && !input.getNome().trim().isEmpty()) {
+            if (input.getNome() != null) input.setNome(input.getNome().trim());
+            if (input.getCidade() != null) input.setCidade(input.getCidade().trim());
+            if (input.getEstado() != null) input.setEstado(input.getEstado().trim());
 
+            if (input.getNome() != null && !input.getNome().isEmpty()) {
                 Optional<InstituicaoEnsino> busca;
 
-                if (input.getCidade() != null && !input.getCidade().trim().isEmpty()) {
-                    busca = instituicaoEnsinoRepository.findByNomeAndCidade(input.getNome(), input.getCidade());
+                if (input.getCidade() != null && !input.getCidade().isEmpty() &&
+                        input.getEstado() != null && !input.getEstado().isEmpty()) {
+
+                    busca = instituicaoEnsinoRepository.findByNomeAndCidadeAndEstado(
+                            input.getNome(),
+                            input.getCidade(),
+                            input.getEstado()
+                    );
                 } else {
                     busca = instituicaoEnsinoRepository.findByNome(input.getNome());
                 }
 
-                InstituicaoEnsino instituicaoFinal;
-
-
                 if (busca.isPresent()) {
-                    instituicaoFinal = busca.get();
+                    projeto.setInstituicaoEnsino(busca.get());
                 } else {
-                    instituicaoFinal = instituicaoEnsinoRepository.save(input);
+                    projeto.setInstituicaoEnsino(instituicaoEnsinoRepository.save(input));
                 }
-
-                projeto.setInstituicaoEnsino(instituicaoFinal);
             }
         }
     }
