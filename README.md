@@ -1,71 +1,52 @@
 # SDPE - Sistema de Divulgação de Projetos de Extensão (Backend)
 
-Este é o backend do sistema **SDPE**, desenvolvido para gerenciar e divulgar projetos de extensão acadêmica. A aplicação permite o cadastro de instituições, projetos, participantes e coordenadores, contando com um sistema de autenticação robusto e suporte para upload de imagens.
+Este repositório contém o **backend** do sistema SDPE, uma API RESTful desenvolvida para gerenciar, divulgar e monitorar projetos de extensão acadêmica. O sistema oferece controle de acesso baseado em perfis, gestão de conteúdo e relatórios estatísticos.
 
 ## 🚀 Tecnologias Utilizadas
 
-* **Linguagem:** Java 21
-* **Framework:** Spring Boot 3.5.4
-* **Segurança:** Spring Security com autenticação JWT (JSON Web Token)
-* **Banco de Dados:** H2 Database (em memória para testes) e suporte para MySQL
-* **Persistência:** Spring Data JPA com Hibernate
-* **Outros:**
-    * Lombok para redução de código boilerplate
-    * Bean Validation para validação de dados
-    * Maven como gerenciador de dependências
+O projeto foi construído utilizando as seguintes tecnologias e bibliotecas principais:
 
-## 🛠️ Funcionalidades Principais
+* **Java 21** & **Spring Boot 3.5.4**
+* **Segurança:** Spring Security + JWT (JSON Web Token) para autenticação stateless.
+* **Banco de Dados:** MySQL (Driver `mysql-connector-j`) com Spring Data JPA e Hibernate.
+* **Documentação da API:** SpringDoc OpenAPI (Swagger UI).
+* **Segurança Anti-Spam:** Integração com [Altcha](https://altcha.org/).
+* **E-mail:** Java Mail Sender (SMTP Google).
+* **Utilitários:** Lombok, Bean Validation.
 
-### 1. Gestão de Projetos
-* Cadastro de projetos com suporte a upload de imagem.
-* Listagem paginada e busca por ID.
-* Download de imagens vinculadas aos projetos.
-* Associação de coordenadores e participantes a projetos específicos.
+## 🛠️ Funcionalidades
 
-### 2. Autenticação e Segurança
-* Sistema de login e registro diferenciado por perfis: `ADMIN`, `COORDENADOR` e `PARTICIPANTE`.
-* Geração e validação de tokens JWT com expiração de 2 horas.
-* Criptografia de senhas com BCrypt.
+### 1. Gestão de Projetos e Conteúdo
+* Cadastro completo de projetos com upload de imagens (armazenamento local/banco).
+* Listagem paginada de projetos disponíveis.
+* Sistema de busca e filtros.
 
-### 3. Gestão de Usuários
-* **Participantes:** Cadastro com validação de CPF e vínculo institucional.
-* **Coordenadores:** Extensão de participantes com atribuições de cargo e função (Geral ou Adjunto).
+### 2. Controle de Acesso (RBAC)
+* **Perfis:** `ADMIN`, `COORDENADOR` e `PARTICIPANTE`.
+* Registro de usuários com validação de dados.
+* Recuperação de senha via e-mail.
 
-### 4. Comunicação e Relatórios
-* Sistema de contatos (Feedback e Chamados) vinculados aos projetos.
-* Estrutura para geração de relatórios de inscritos e visualizações.
+### 3. Área Administrativa e Coordenação
+* Painel de controle para aprovação e gestão de projetos.
+* Vínculo de coordenadores e bolsistas a projetos.
 
-## 📄 Documentação Completa
+### 4. Relatórios e Estatísticas
+* Geração de estatísticas de visualização e inscrições.
+* Endpoints dedicados para alimentar dashboards.
 
-O projeto conta com uma documentação acadêmica detalhando requisitos e modelagem. Clique na imagem abaixo para acessar o PDF:
-
-[![Capa do TCC](./capa-tcc.png)](./Sistema%20para%20Divulgação%20de%20Projetos%20de%20Extensão%20(SDPE).pdf)
 ## 📋 Pré-requisitos
 
-* JDK 21 ou superior.
-* Maven 3.9.11 (incluído via Maven Wrapper).
+* **Java JDK 21** instalado.
+* **Maven 3.9.x** (ou utilizar o wrapper `./mvnw` incluso).
+* **MySQL Server** rodando na porta `3306`.
 
-## 🛣️ Endpoints Principais (Exemplos)
+## ⚙️ Configuração
 
-| Método | Endpoint | Descrição |
-| :--- | :--- | :--- |
-| POST | `/auth/registrar` | Registra um novo usuário (Conta + Perfil). |
-| POST | `/auth/login` | Realiza login e retorna o token JWT. |
-| GET | `/api/projetos` | Lista todos os projetos (Paginado). |
-| POST | `/api/projetos` | Cria um projeto (Multipart: JSON + Imagem). |
-| GET | `/api/participantes/cpf/{cpf}` | Busca participante por CPF. |
+Antes de executar, verifique o arquivo `src/main/resources/application.yaml`. As configurações padrão esperam um banco MySQL local:
 
-## 📦 Como Executar
-
-1.  Clone o repositório:
-    ```bash
-    git clone https://github.com/tomazdalcortivo/sdpe-backend.git
-    ```
-2.  Navegue até a pasta do projeto e execute:
-    ```bash
-    ./mvnw spring-boot:run
-    ```
-3.  Acesse o console do H2 em: `http://localhost:8080/h2-console` (Username: `sa`, sem senha).
-
----
-*Este projeto foi desenvolvido como parte do sistema inicial de gerenciamento de extensão do IFPR.*
+```yaml
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/sdpe-bd
+    username: root
+    password: root # Altere conforme seu ambiente
