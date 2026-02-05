@@ -39,7 +39,7 @@ O projeto foi construído utilizando as seguintes tecnologias e bibliotecas prin
 * **Segurança:** Spring Security + [JWT](https://www.jwt.io/) (JSON Web Token) para autenticação stateless
 * **Banco de Dados:** MySQL (Driver `mysql-connector-j`) com Spring Data JPA e Hibernate
 * **Documentação da API:** [SpringDoc OpenAPI (Swagger UI)](https://swagger.io/)
-* **Segurança Anti-Spam:** Integração com [Altcha](vhttps://altcha.org/)
+* **Segurança Anti-Spam:** Integração com [Altcha](https://altcha.org/)
 * **E-mail:** Java Mail Sender (SMTP Google)
 * **Utilitários:** Lombok, Bean Validation
 
