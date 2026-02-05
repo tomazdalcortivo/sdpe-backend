@@ -36,10 +36,10 @@ O backend serve como o núcleo de processamento para a plataforma SDPE, gerencia
 O projeto foi construído utilizando as seguintes tecnologias e bibliotecas principais:
 
 * **Java 21** & **Spring Boot 3.5.4**
-* **Segurança:** Spring Security + JWT (JSON Web Token) para autenticação stateless
+* **Segurança:** Spring Security + [JWT](https://www.jwt.io/) (JSON Web Token) para autenticação stateless
 * **Banco de Dados:** MySQL (Driver `mysql-connector-j`) com Spring Data JPA e Hibernate
-* **Documentação da API:** SpringDoc OpenAPI (Swagger UI)
-* **Segurança Anti-Spam:** Integração com Altcha
+* **Documentação da API:** [SpringDoc OpenAPI (Swagger UI)](https://swagger.io/)
+* **Segurança Anti-Spam:** Integração com [Altcha](vhttps://altcha.org/)
 * **E-mail:** Java Mail Sender (SMTP Google)
 * **Utilitários:** Lombok, Bean Validation
 
