@@ -33,7 +33,6 @@ public class CoordenadorController {
         return ResponseEntity.ok(coordenador);
     }
 
-
     @PutMapping("/{id}")
     public ResponseEntity<Coordenador> atualizar(@RequestBody Coordenador coordenador, @PathVariable Long id) {
         this.coordenadorService.atualizar(coordenador, id);

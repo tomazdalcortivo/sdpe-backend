@@ -32,7 +32,7 @@ public class Coordenador extends Participante {
         cargoInstituicao = " ";
         contato = " ";
         projetos = new ArrayList<>();
-        funcao = FuncaoCoordenador.COORDENADOR_GERAL;
+        funcao = FuncaoCoordenador.COORDENADOR;
     }
 
 }

@@ -47,6 +47,10 @@ public class Conta implements UserDetails {
     @JsonIgnore
     private Participante participante;
 
+    @OneToOne(mappedBy = "conta")
+    @JsonIgnore
+    private Coordenador coordenador;
+
     @CreationTimestamp
     private Instant dataCriacao;
 

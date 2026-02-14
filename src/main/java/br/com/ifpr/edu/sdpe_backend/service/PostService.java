@@ -3,6 +3,7 @@ package br.com.ifpr.edu.sdpe_backend.service;
 import br.com.ifpr.edu.sdpe_backend.domain.Coordenador;
 import br.com.ifpr.edu.sdpe_backend.domain.Post;
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,6 +57,47 @@ public class PostService {
         projeto.getPosts().add(post);
         this.projetoService.salvar(projeto);
         return post;
+    }
+
+    @Transactional
+    public Post atualizarPost(Long idProjeto, Long idPost, String novoConteudo, Long idCoordenador) {
+        Projeto projeto = this.projetoService.buscarPorId(idProjeto);
+        Coordenador autor = this.coordenadorService.buscarPorId(idCoordenador);
+
+        if (!projeto.getCoordenadores().contains(autor)) {
+            throw new IllegalArgumentException("Apenas coordenadores do projeto podem editar posts.");
+        }
+
+        Post post = projeto.getPosts().stream()
+                .filter(p -> p.getId().equals(idPost))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Post não encontrado neste projeto."));
+
+        post.setConteudo(novoConteudo);
+        // Opcional: post.setDataEdicao(new Date());
+
+        this.projetoService.salvar(projeto);
+        return post;
+    }
+
+    @Transactional
+    public void excluirPost(Long idProjeto, Long idPost, Long idCoordenador) {
+
+        Projeto projeto = this.projetoService.buscarPorId(idProjeto);
+        Coordenador autor = this.coordenadorService.buscarPorId(idCoordenador);
+
+
+        if (!projeto.getCoordenadores().contains(autor)) {
+            throw new IllegalArgumentException("Apenas coordenadores do projeto podem excluir posts.");
+        }
+
+        boolean removido = projeto.getPosts().removeIf(p -> p.getId().equals(idPost));
+
+        if (!removido) {
+            throw new IllegalArgumentException("Post não encontrado ou não pertence a este projeto.");
+        }
+
+        this.projetoService.salvar(projeto);
     }
 
 }

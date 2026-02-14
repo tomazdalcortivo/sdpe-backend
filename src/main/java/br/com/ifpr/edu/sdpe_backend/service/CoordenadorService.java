@@ -118,14 +118,18 @@ public class CoordenadorService {
                 () -> new EntityNotFoundException("Coordenador a ser atualizado não encontrado"));
 
         existente.setNome(coordenador.getNome());
-        existente.setCpf(coordenador.getCpf());
+        //existente.setCpf(coordenador.getCpf());
         existente.setCidade(coordenador.getCidade());
-        existente.setDataNascimento(coordenador.getDataNascimento());
+        existente.setEstado(coordenador.getEstado());
+        existente.setResumo(coordenador.getResumo());
+        //existente.setDataNascimento(coordenador.getDataNascimento());
 
-        existente.setCargoInstituicao(coordenador.getCargoInstituicao());
-        existente.setContato(coordenador.getContato());
-        existente.setProjetos(coordenador.getProjetos());
+        //existente.setCargoInstituicao(coordenador.getCargoInstituicao());
+        //existente.setContato(coordenador.getContato());
+        //existente.setProjetos(coordenador.getProjetos());
         existente.setFuncao(coordenador.getFuncao());
+
+
 
         this.coordenadorRepository.save(existente);
         return existente;

@@ -311,7 +311,40 @@ public class ProjetoService {
         return contatoService.salvar(contato);
     }
 
-    public void removerFeedback(Long idFeedback) {
-        contatoService.excluir(idFeedback);
+    @Transactional
+    public Contato editarFeedback(Long idProjeto, Long idFeedback, String novaMensagem, String emailLogado) {
+        buscarPorId(idProjeto);
+        Contato feedback = contatoRepository.findById(idFeedback)
+                .orElseThrow(() -> new EntityNotFoundException("Feedback não encontrado"));
+
+        if (!feedback.getEmail().equals(emailLogado)) {
+            throw new IllegalArgumentException("Você não tem permissão para editar este feedback.");
+        }
+
+        feedback.setMensagem(novaMensagem);
+        return contatoRepository.save(feedback);
     }
+
+    @Transactional
+    public void removerFeedback(Long idProjeto, Long idFeedback, String emailLogado) {
+        Projeto projeto = buscarPorId(idProjeto);
+
+        Contato feedback = contatoRepository.findById(idFeedback)
+                .orElseThrow(() -> new EntityNotFoundException("Feedback não encontrado"));
+
+        boolean Autor = feedback.getEmail().equals(emailLogado);
+
+        boolean Coordenador = projeto.getCoordenadores().stream()
+                .anyMatch(c -> c.getConta().getEmail().equals(emailLogado));
+
+        if (Autor || Coordenador) {
+            contatoService.excluir(idFeedback);
+        } else {
+            throw new IllegalArgumentException("Sem permissão para remover este feedback.");
+        }
+    }
+
+//    public void removerFeedback(Long idFeedback) {
+//        contatoService.excluir(idFeedback);
+//    }
 }
