@@ -1,6 +1,5 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
-import br.com.ifpr.edu.sdpe_backend.domain.enums.FuncaoCoordenador;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,14 +24,11 @@ public class Coordenador extends Participante {
     @JsonIgnore
     private List<Projeto> projetos;
 
-    @Enumerated(EnumType.STRING)
-    private FuncaoCoordenador funcao;
 
     public Coordenador(){
         cargoInstituicao = " ";
         contato = " ";
         projetos = new ArrayList<>();
-        funcao = FuncaoCoordenador.COORDENADOR;
     }
 
 }
