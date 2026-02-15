@@ -114,7 +114,7 @@ public class ProjetoService {
                             input.getEstado()
                     );
                 } else {
-                    busca = instituicaoEnsinoRepository.findByNome(input.getNome());
+                    busca = instituicaoEnsinoRepository.findFirstByNome(input.getNome());
                 }
 
                 if (busca.isPresent()) {
@@ -158,9 +158,8 @@ public class ProjetoService {
 
 
         if (projeto.getInstituicaoEnsino() != null) {
-            InstituicaoEnsino inst = instituicaoEnsinoRepository.findByNome(projeto.getInstituicaoEnsino().getNome())
-                    .orElseGet(() -> instituicaoEnsinoRepository.save(projeto.getInstituicaoEnsino()));
-            existente.setInstituicaoEnsino(inst);
+            tratarInstituicao(projeto);
+            existente.setInstituicaoEnsino(projeto.getInstituicaoEnsino());
         }
 
         if (imagem != null && !imagem.isEmpty()) {

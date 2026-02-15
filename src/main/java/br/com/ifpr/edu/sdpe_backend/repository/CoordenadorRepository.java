@@ -10,7 +10,6 @@ import java.util.Optional;
 
 public interface CoordenadorRepository extends JpaRepository<Coordenador, Long> {
 
-//    Optional<Coordenador> findByCpf(String cpf);
 
     Optional<Coordenador> findByNome(String nome);
 
