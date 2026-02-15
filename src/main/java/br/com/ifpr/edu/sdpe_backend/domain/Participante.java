@@ -39,6 +39,7 @@ public class Participante {
     private Date dataNascimento;
 
     @CPF(message = "Informe um CPF válido")
+    @Column(unique = true)
     private String cpf;
 
     private String cidade;

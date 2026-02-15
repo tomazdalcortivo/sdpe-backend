@@ -57,9 +57,13 @@ public class AuthenticationController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity registrar(
             @RequestPart("dados") @Valid RegisterDTO data,
-            @RequestPart(value = "arquivo") MultipartFile arquivo
+            @RequestPart(value = "arquivo", required = false) MultipartFile arquivo
     ) {
         try {
+
+            if (arquivo == null || !arquivo.isEmpty())
+                throw new IllegalArgumentException("O Documento comprobatório é obrigatório.");
+
             this.authorizationService.registrarUsuario(data, arquivo);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {

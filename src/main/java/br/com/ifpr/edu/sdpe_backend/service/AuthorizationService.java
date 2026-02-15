@@ -52,6 +52,9 @@ public class AuthorizationService implements UserDetailsService {
         if (this.contaRepository.findByEmail(data.email()) != null)
             throw new IllegalArgumentException("E-mail já cadastrado.");
 
+        if (participanteService.validarCpfDuplicado(data.cpf()))
+            throw new IllegalArgumentException("Erro: Este CPF já está cadastrado no sistema.");
+
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.senha());
 
         Conta novaConta = Conta.builder()
