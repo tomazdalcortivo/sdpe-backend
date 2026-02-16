@@ -22,23 +22,6 @@ public class ContatoService {
         return contatoRepository.save(contato);
     }
 
-    public Contato atualizar(Contato contato, Long id) {
-        Contato existente = this.contatoRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Projeto a ser atualizado não encontrado"));
-
-        existente.setMensagem(contato.getMensagem());
-        existente.setTipoContato(contato.getTipoContato());
-        existente.setDataEnvio(contato.getDataEnvio());
-        existente.setProjeto(contato.getProjeto());
-
-        return this.contatoRepository.save(existente);
-    }
-
-    public Page<Contato> buscarTodos(int numPag, int tamPag) {
-        Pageable pageable = PageRequest.of(numPag, tamPag);
-        return this.contatoRepository.findAll(pageable);
-    }
-
     public List<Contato> buscarPorProjeto(Long projetoId) {
         return this.contatoRepository.findByProjetoId(projetoId);
     }
@@ -47,8 +30,4 @@ public class ContatoService {
         this.contatoRepository.deleteById(id);
     }
 
-    public Contato buscarPorId(Long id) {
-        return this.contatoRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("contato não encontrado"));
-    }
 }

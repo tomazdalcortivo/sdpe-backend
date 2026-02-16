@@ -139,6 +139,7 @@ public class ProjetoService {
         return this.projetoRepository.findByAtivo(true, pageable);
     }
 
+    @Transactional
     public Projeto atualizar(Projeto projeto, Long id, MultipartFile imagem, List<MultipartFile> docs) throws IOException {
         Projeto existente = this.projetoRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Projeto a ser atualizado não encontrado"));
@@ -343,7 +344,4 @@ public class ProjetoService {
         }
     }
 
-//    public void removerFeedback(Long idFeedback) {
-//        contatoService.excluir(idFeedback);
-//    }
 }

@@ -16,17 +16,13 @@ import java.util.List;
 @Table(name = "tb_coordenador")
 public class Coordenador extends Participante {
 
-    private String cargoInstituicao;
-
     private String contato;
 
     @ManyToMany(mappedBy = "coordenadores")
     @JsonIgnore
     private List<Projeto> projetos;
 
-
     public Coordenador(){
-        cargoInstituicao = " ";
         contato = " ";
         projetos = new ArrayList<>();
     }

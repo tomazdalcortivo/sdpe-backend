@@ -23,9 +23,7 @@ public class PostService {
     private final ProjetoService projetoService;
 
     private final CoordenadorService coordenadorService;
-
-    private final ParticipanteService participanteService;
-
+    
     private final Path rootLocation = Paths.get("uploads");
 
     public Post criarPost(Long idProjeto, String conteudo, MultipartFile arquivo, Long idCoordenador) throws IOException {
@@ -74,7 +72,7 @@ public class PostService {
                 .orElseThrow(() -> new IllegalArgumentException("Post não encontrado neste projeto."));
 
         post.setConteudo(novoConteudo);
-        // Opcional: post.setDataEdicao(new Date());
+        post.setDataPublicacao(new Date());
 
         this.projetoService.salvar(projeto);
         return post;
