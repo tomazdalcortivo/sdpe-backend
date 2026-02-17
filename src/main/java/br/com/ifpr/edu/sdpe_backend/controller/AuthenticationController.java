@@ -21,6 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
@@ -53,23 +55,18 @@ public class AuthenticationController {
         return ResponseEntity.ok(token);
     }
 
-    @PostMapping(value = "/registrar",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity registrar(
+    @PostMapping(value = "/registrar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> registrar(
             @RequestPart("dados") @Valid RegisterDTO data,
-            @RequestPart(value = "arquivo", required = false) MultipartFile arquivo
+            @RequestPart(value = "arquivo") MultipartFile arquivo
     ) {
         try {
-
-            if (arquivo == null || !arquivo.isEmpty())
-                throw new IllegalArgumentException("O Documento comprobatório é obrigatório.");
-
             this.authorizationService.registrarUsuario(data, arquivo);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao cadastrar. Verifique os dados inseridos.");
+            return ResponseEntity.badRequest().body(Map.of("message", "Erro ao cadastrar. Verifique os dados inseridos."));
         }
     }
 

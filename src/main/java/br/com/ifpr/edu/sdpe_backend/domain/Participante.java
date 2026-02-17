@@ -55,8 +55,6 @@ public class Participante {
 
     private String documentoUrl;
 
-    private Boolean vinculoInstitucional;
-
     @ManyToMany(mappedBy = "participantes")
     @JsonIgnore
     private List<Projeto> projetos;
