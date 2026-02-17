@@ -81,7 +81,9 @@ public class AdminController {
     }
 
     @PatchMapping("/projetos/{id}/rejeitar")
-    public ResponseEntity<Void> rejeitarProjeto(@PathVariable Long id, @RequestBody String motivo) {
+    public ResponseEntity<Void> rejeitarProjeto(@PathVariable Long id, @RequestBody Map<String, String> payload) {
+        String motivo = payload.get("motivo");
+
         this.adminService.rejeitarProjeto(id, motivo);
         return ResponseEntity.ok().build();
     }

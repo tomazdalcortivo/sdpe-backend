@@ -37,9 +37,8 @@ public class CoordenadorService {
         return this.coordenadorRepository.save(coordenador);
     }
 
-    public Coordenador buscarPorNome(String nome) {
-        return this.coordenadorRepository.findByNome(nome).orElseThrow(
-                () -> new EntityNotFoundException("Coordenador não encontrado"));
+    public List<Coordenador> buscarPorNome(String nome) {
+        return coordenadorRepository.findByNomeContainingIgnoreCase(nome);
     }
 
     public Coordenador buscarPorEmail(String email) {
