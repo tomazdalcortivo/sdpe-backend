@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -59,15 +60,9 @@ public class AuthenticationController {
     public ResponseEntity<?> registrar(
             @RequestPart("dados") @Valid RegisterDTO data,
             @RequestPart(value = "arquivo") MultipartFile arquivo
-    ) {
-        try {
-            this.authorizationService.registrarUsuario(data, arquivo);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Erro ao cadastrar. Verifique os dados inseridos."));
-        }
+    ) throws IOException {
+        this.authorizationService.registrarUsuario(data, arquivo);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/recuperar-senha")
