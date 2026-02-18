@@ -36,7 +36,7 @@ public class EstatisticasService {
 
     public List<EstatisticaDTO> getProjetosPorArea() {
         List<Object[]> resultados = projetoRepository.countProjetosPorArea();
-        // Area já vem como String na query, não precisa converter mês
+
         return resultados.stream()
                 .map(obj -> new EstatisticaDTO((String) obj[0], (Long) obj[1]))
                 .collect(Collectors.toList());

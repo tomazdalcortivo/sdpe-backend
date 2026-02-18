@@ -107,12 +107,10 @@ public class AuthorizationService implements UserDetailsService {
     }
 
     public void solicitarRecuperacao(String email) {
-        // Cast necessário se o repositório retornar UserDetails
         Conta conta = (Conta) repository.findByEmail(email);
 
         if (conta == null) throw new EntityNotFoundException(email);
 
-        // Regra de Negócio: Gerar código e validade
         String codigo = String.format("%06d", new Random().nextInt(999999));
         conta.setCodigoRecuperacao(codigo);
         conta.setDataExpiracaoCodigo(Instant.now().plus(1, ChronoUnit.MINUTES));

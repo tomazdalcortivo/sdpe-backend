@@ -96,7 +96,6 @@ public class AuthenticationController {
         String resumo = (participante != null) ? participante.getResumo() : "";
         String fotoPerfil = (participante != null) ? participante.getFotoPerfil() : null;
 
-        // CORREÇÃO: Verifica se é Coordenador para pegar o telefone
         String telefone = "";
         if (participante instanceof br.com.ifpr.edu.sdpe_backend.domain.Coordenador coord) {
             telefone = coord.getTelefone();

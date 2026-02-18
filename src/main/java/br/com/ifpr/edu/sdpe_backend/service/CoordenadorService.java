@@ -45,11 +45,6 @@ public class CoordenadorService {
                 () -> new EntityNotFoundException("Coordenador não encontrado"));
     }
 
-//    public Coordenador buscarPorContato(String contato) {
-//        return this.coordenadorRepository.findByEmailContato(contato).orElseThrow(
-//                () -> new EntityNotFoundException("Coordenador não encontrado"));
-//    }
-
     public Coordenador buscarPorId(Long id) {
         return this.coordenadorRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Coordenador não encontrado"));

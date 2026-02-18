@@ -29,12 +29,6 @@ public class CoordenadorController {
         return ResponseEntity.ok(coordenadores);
     }
 
-//    @GetMapping("/contato/{contato}")
-//    public ResponseEntity<Coordenador> buscarPorContato(@PathVariable String contato) {
-//        Coordenador coordenador = this.coordenadorService.buscarPorContato(contato);
-//        return ResponseEntity.ok(coordenador);
-//    }
-
     @PutMapping("/{id}")
     public ResponseEntity<Coordenador> atualizar(@RequestBody Coordenador coordenador, @PathVariable Long id) {
         this.coordenadorService.atualizar(coordenador, id);

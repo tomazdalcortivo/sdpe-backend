@@ -84,7 +84,7 @@ public class ProjetoController {
         if (!arquivo.exists()) return ResponseEntity.notFound().build();
         UrlResource resource = new UrlResource(arquivo.toURI());
         return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG) // ou IMAGE_PNG
+                .contentType(MediaType.IMAGE_JPEG)
                 .body(resource);
     }
 
