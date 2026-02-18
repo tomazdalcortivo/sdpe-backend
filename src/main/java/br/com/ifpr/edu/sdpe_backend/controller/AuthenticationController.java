@@ -21,6 +21,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
@@ -53,20 +56,13 @@ public class AuthenticationController {
         return ResponseEntity.ok(token);
     }
 
-    @PostMapping(value = "/registrar",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity registrar(
+    @PostMapping(value = "/registrar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> registrar(
             @RequestPart("dados") @Valid RegisterDTO data,
             @RequestPart(value = "arquivo") MultipartFile arquivo
-    ) {
-        try {
-            this.authorizationService.registrarUsuario(data, arquivo);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao cadastrar. Verifique os dados inseridos.");
-        }
+    ) throws IOException {
+        this.authorizationService.registrarUsuario(data, arquivo);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/recuperar-senha")
@@ -98,8 +94,12 @@ public class AuthenticationController {
         String cidade = (participante != null) ? participante.getCidade() : "";
         String estado = (participante != null) ? participante.getEstado() : "";
         String resumo = (participante != null) ? participante.getResumo() : "";
-        String telefone = (participante != null) ? participante.getTelefone() : "";
         String fotoPerfil = (participante != null) ? participante.getFotoPerfil() : null;
+
+        String telefone = "";
+        if (participante instanceof br.com.ifpr.edu.sdpe_backend.domain.Coordenador coord) {
+            telefone = coord.getTelefone();
+        }
 
         UsuarioResponseDTO response = new UsuarioResponseDTO(
                 perfilId,

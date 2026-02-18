@@ -19,7 +19,6 @@ import org.springframework.data.domain.Pageable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -37,18 +36,12 @@ public class CoordenadorService {
         return this.coordenadorRepository.save(coordenador);
     }
 
-    public Coordenador buscarPorNome(String nome) {
-        return this.coordenadorRepository.findByNome(nome).orElseThrow(
-                () -> new EntityNotFoundException("Coordenador não encontrado"));
+    public List<Coordenador> buscarPorNome(String nome) {
+        return coordenadorRepository.findByNomeContainingIgnoreCase(nome);
     }
 
     public Coordenador buscarPorEmail(String email) {
         return this.coordenadorRepository.findByContaEmail(email).orElseThrow(
-                () -> new EntityNotFoundException("Coordenador não encontrado"));
-    }
-
-    public Coordenador buscarPorContato(String contato) {
-        return this.coordenadorRepository.findByContato(contato).orElseThrow(
                 () -> new EntityNotFoundException("Coordenador não encontrado"));
     }
 
@@ -59,7 +52,7 @@ public class CoordenadorService {
 
     public Page<Projeto> listarProjetos(Coordenador coordenador, int numPag, int tamPag) {
         Pageable pageable = PageRequest.of(numPag, tamPag);
-        return this.coordenadorRepository.findByProjetos(coordenador, pageable);
+        return this.coordenadorRepository.findByMeusProjetosCriados(coordenador, pageable);
     }
 
     @Transactional
@@ -118,18 +111,10 @@ public class CoordenadorService {
                 () -> new EntityNotFoundException("Coordenador a ser atualizado não encontrado"));
 
         existente.setNome(coordenador.getNome());
-        //existente.setCpf(coordenador.getCpf());
         existente.setCidade(coordenador.getCidade());
         existente.setEstado(coordenador.getEstado());
+        existente.setTelefone(coordenador.getTelefone());
         existente.setResumo(coordenador.getResumo());
-        //existente.setDataNascimento(coordenador.getDataNascimento());
-
-        //existente.setCargoInstituicao(coordenador.getCargoInstituicao());
-        //existente.setContato(coordenador.getContato());
-        //existente.setProjetos(coordenador.getProjetos());
-        existente.setFuncao(coordenador.getFuncao());
-
-
 
         this.coordenadorRepository.save(existente);
         return existente;

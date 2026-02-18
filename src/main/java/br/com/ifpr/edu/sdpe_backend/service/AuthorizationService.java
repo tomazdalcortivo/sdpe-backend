@@ -49,9 +49,12 @@ public class AuthorizationService implements UserDetailsService {
 
     @Transactional
     public void registrarUsuario(RegisterDTO data, MultipartFile arquivo) throws IOException {
-        if (this.contaRepository.findByEmail(data.email()) != null)
+        if (this.contaRepository.findByEmail(data.email()) != null) {
             throw new IllegalArgumentException("E-mail já cadastrado.");
-
+        }
+        if (participanteService.validarCpfDuplicado(data.cpf())) {
+            throw new IllegalArgumentException("Erro: Este CPF já está cadastrado no sistema.");
+        }
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.senha());
 
         Conta novaConta = Conta.builder()
@@ -79,11 +82,9 @@ public class AuthorizationService implements UserDetailsService {
             Coordenador coordenador = Coordenador.builder()
                     .nome(data.nome())
                     .dataNascimento(data.dataNascimento())
-                    .vinculoInstitucional(data.vinculoInstitucional())
                     .cpf(data.cpf())
                     .cidade(data.cidade())
                     .estado(data.estado())
-                    .contato(data.email())
                     .conta(novaConta)
                     .documentoUrl(documentoUrl)
                     .build();
@@ -97,7 +98,6 @@ public class AuthorizationService implements UserDetailsService {
                     .cpf(data.cpf())
                     .cidade(data.cidade())
                     .estado(data.estado())
-                    .vinculoInstitucional(data.vinculoInstitucional())
                     .conta(novaConta)
                     .documentoUrl(documentoUrl)
                     .build();
@@ -107,12 +107,10 @@ public class AuthorizationService implements UserDetailsService {
     }
 
     public void solicitarRecuperacao(String email) {
-        // Cast necessário se o repositório retornar UserDetails
         Conta conta = (Conta) repository.findByEmail(email);
 
         if (conta == null) throw new EntityNotFoundException(email);
 
-        // Regra de Negócio: Gerar código e validade
         String codigo = String.format("%06d", new Random().nextInt(999999));
         conta.setCodigoRecuperacao(codigo);
         conta.setDataExpiracaoCodigo(Instant.now().plus(1, ChronoUnit.MINUTES));

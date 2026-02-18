@@ -30,10 +30,10 @@ public class EmailService {
     public void enviarRespostaSuporte(String destinatario, String nomeContato, String mensagemResposta) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(destinatario);
-        message.setSubject("Resposta ao seu contato - SDPE");
+        message.setSubject("Resposta ao seu emailContato - SDPE");
         message.setText(
                 "Olá " + nomeContato + ",\n\n" +
-                        "Recebemos o seu contato através da nossa plataforma.\n\n" +
+                        "Recebemos o seu emailContato através da nossa plataforma.\n\n" +
                         "Resposta da Administração:\n" +
                         mensagemResposta + "\n\n" +
                         "Atenciosamente,\n" +
@@ -46,5 +46,30 @@ public class EmailService {
             e.printStackTrace();
             throw new RuntimeException("Erro ao enviar email.");
         }
+    }
+
+    public void enviarEmailRejeicaoCadastro(String destinatario, String nome, String motivo) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(destinatario);
+        message.setSubject("SDPE - Atualização sobre seu cadastro");
+
+        message.setText(
+                String.format("""
+                        Olá, %s.
+                        
+                        Informamos que sua solicitação de cadastro no sistema SDPE foi analisada.
+                        Infelizmente, o cadastro não foi aprovado neste momento.
+                        
+                        Motivo informado pela administração:
+                        "%s"
+                        
+                        Caso julgue necessário, você pode realizar um novo cadastro corrigindo as informações apontadas ou entrar em emailContato conosco.
+                        
+                        Atenciosamente,
+                        Equipe SDPE
+                        """, nome, motivo)
+        );
+
+        mailSender.send(message);
     }
 }

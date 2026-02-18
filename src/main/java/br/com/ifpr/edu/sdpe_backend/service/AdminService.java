@@ -2,6 +2,7 @@ package br.com.ifpr.edu.sdpe_backend.service;
 
 import br.com.ifpr.edu.sdpe_backend.domain.Conta;
 import br.com.ifpr.edu.sdpe_backend.domain.Contato;
+import br.com.ifpr.edu.sdpe_backend.domain.DTO.RejeicaoDTO;
 import br.com.ifpr.edu.sdpe_backend.domain.Participante;
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
 import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoContato;
@@ -56,6 +57,26 @@ public class AdminService {
         } else {
             throw new RuntimeException("Conta não encontrada");
         }
+    }
+
+    @Transactional
+    public void rejeitarCadastro(Long id, RejeicaoDTO dados) {
+        Conta conta = contaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+
+        String emailDestino = conta.getEmail();
+        String nomeUsuario = "Usuário";
+
+        if (conta.getParticipante() != null) {
+            nomeUsuario = conta.getParticipante().getNome();
+        }
+
+        try {
+            emailService.enviarEmailRejeicaoCadastro(emailDestino, nomeUsuario, dados.motivo());
+        } catch (Exception e) {
+            System.err.println("Erro ao enviar e-mail de rejeição: " + e.getMessage());
+        }
+        excluirConta(id);
     }
 
     @Transactional

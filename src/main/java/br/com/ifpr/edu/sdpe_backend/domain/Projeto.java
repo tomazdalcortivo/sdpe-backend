@@ -76,7 +76,7 @@ public class Projeto {
     private List<Participante> participantes;
 
     @OneToMany(mappedBy = "projeto")
-    private List<Contato> contatos;
+    private List<Contato> feedbacks;
 
     @OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @OrderBy("dataPublicacao DESC")
@@ -95,7 +95,7 @@ public class Projeto {
         formato = TipoFormato.PRESENCIAL;
         coordenadores = new ArrayList();
         participantes = new ArrayList<>();
-        contatos = new ArrayList<>();
+        feedbacks = new ArrayList<>();
         posts = new ArrayList<>();
         imagemPath = " ";
         documentoPath = "";

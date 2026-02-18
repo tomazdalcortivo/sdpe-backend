@@ -39,6 +39,7 @@ public class Participante {
     private Date dataNascimento;
 
     @CPF(message = "Informe um CPF válido")
+    @Column(unique = true)
     private String cpf;
 
     private String cidade;
@@ -48,13 +49,9 @@ public class Participante {
     @Column(columnDefinition = "TEXT")
     private String resumo;
 
-    private String telefone;
-
     private String fotoPerfil;
 
     private String documentoUrl;
-
-    private Boolean vinculoInstitucional;
 
     @ManyToMany(mappedBy = "participantes")
     @JsonIgnore

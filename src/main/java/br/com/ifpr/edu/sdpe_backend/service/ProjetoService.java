@@ -1,6 +1,7 @@
 package br.com.ifpr.edu.sdpe_backend.service;
 
 import br.com.ifpr.edu.sdpe_backend.domain.*;
+import br.com.ifpr.edu.sdpe_backend.domain.DTO.FeedbackResponseDTO;
 import br.com.ifpr.edu.sdpe_backend.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -114,7 +115,7 @@ public class ProjetoService {
                             input.getEstado()
                     );
                 } else {
-                    busca = instituicaoEnsinoRepository.findByNome(input.getNome());
+                    busca = instituicaoEnsinoRepository.findFirstByNome(input.getNome());
                 }
 
                 if (busca.isPresent()) {
@@ -139,6 +140,7 @@ public class ProjetoService {
         return this.projetoRepository.findByAtivo(true, pageable);
     }
 
+    @Transactional
     public Projeto atualizar(Projeto projeto, Long id, MultipartFile imagem, List<MultipartFile> docs) throws IOException {
         Projeto existente = this.projetoRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Projeto a ser atualizado não encontrado"));
@@ -158,9 +160,8 @@ public class ProjetoService {
 
 
         if (projeto.getInstituicaoEnsino() != null) {
-            InstituicaoEnsino inst = instituicaoEnsinoRepository.findByNome(projeto.getInstituicaoEnsino().getNome())
-                    .orElseGet(() -> instituicaoEnsinoRepository.save(projeto.getInstituicaoEnsino()));
-            existente.setInstituicaoEnsino(inst);
+            tratarInstituicao(projeto);
+            existente.setInstituicaoEnsino(projeto.getInstituicaoEnsino());
         }
 
         if (imagem != null && !imagem.isEmpty()) {
@@ -298,7 +299,7 @@ public class ProjetoService {
         }
     }
 
-    public List<Contato> listarFeedbacks(Long idProjeto) {
+    public List<FeedbackResponseDTO> listarFeedbacks(Long idProjeto) {
         buscarPorId(idProjeto);
         return contatoService.buscarPorProjeto(idProjeto);
     }
@@ -344,7 +345,4 @@ public class ProjetoService {
         }
     }
 
-//    public void removerFeedback(Long idFeedback) {
-//        contatoService.excluir(idFeedback);
-//    }
 }

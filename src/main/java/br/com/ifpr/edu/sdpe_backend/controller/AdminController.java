@@ -1,6 +1,7 @@
 package br.com.ifpr.edu.sdpe_backend.controller;
 
 import br.com.ifpr.edu.sdpe_backend.domain.Contato;
+import br.com.ifpr.edu.sdpe_backend.domain.DTO.RejeicaoDTO;
 import br.com.ifpr.edu.sdpe_backend.domain.Participante;
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
 import br.com.ifpr.edu.sdpe_backend.service.AdminService;
@@ -80,8 +81,19 @@ public class AdminController {
     }
 
     @PatchMapping("/projetos/{id}/rejeitar")
-    public ResponseEntity<Void> rejeitarProjeto(@PathVariable Long id, @RequestBody String motivo) {
+    public ResponseEntity<Void> rejeitarProjeto(@PathVariable Long id, @RequestBody Map<String, String> payload) {
+        String motivo = payload.get("motivo");
+
         this.adminService.rejeitarProjeto(id, motivo);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/usuarios/{id}/rejeitar")
+    public ResponseEntity<Void> rejeitarCadastro(
+            @PathVariable Long id,
+            @RequestBody RejeicaoDTO dados) {
+
+        this.adminService.rejeitarCadastro(id, dados);
         return ResponseEntity.ok().build();
     }
 

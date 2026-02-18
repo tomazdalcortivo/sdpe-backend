@@ -1,7 +1,6 @@
 package br.com.ifpr.edu.sdpe_backend.service;
 
 import br.com.ifpr.edu.sdpe_backend.domain.Conta;
-import br.com.ifpr.edu.sdpe_backend.domain.Coordenador;
 import br.com.ifpr.edu.sdpe_backend.domain.DTO.ParticipanteUpdateDTO;
 import br.com.ifpr.edu.sdpe_backend.domain.Participante;
 import br.com.ifpr.edu.sdpe_backend.domain.Projeto;
@@ -54,10 +53,9 @@ public class ParticipanteService {
                 () -> new EntityNotFoundException("Participante não encontrado"));
     }
 
-//    public Participante buscarPorCpf(String cpf) {
-//        return this.participanteRepository.findByCpf(cpf).orElseThrow(
-//                () -> new EntityNotFoundException("Participante não encontrado"));
-//    }
+    public Boolean validarCpfDuplicado(String cpf) {
+        return participanteRepository.existsByCpf(cpf);
+    }
 
     public Page<Participante> listarPorProjeto(Projeto projeto, int numPag, int tamPag) {
         Pageable pageable = PageRequest.of(numPag, tamPag);
@@ -120,15 +118,20 @@ public class ParticipanteService {
         }
     }
 
-    public Participante atualizar(ParticipanteUpdateDTO dadosNovos, Long id) {
+    public Participante atualizar(ParticipanteUpdateDTO dados, Long id) {
         Participante existente = this.participanteRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Participante não encontrado"));
 
-        if (dadosNovos.nome() != null && !dadosNovos.nome().isBlank()) existente.setNome(dadosNovos.nome());
-        if (dadosNovos.cidade() != null) existente.setCidade(dadosNovos.cidade());
-        if (dadosNovos.estado() != null) existente.setEstado(dadosNovos.estado());
-        if (dadosNovos.telefone() != null) existente.setTelefone(dadosNovos.telefone());
-        if (dadosNovos.resumo() != null) existente.setResumo(dadosNovos.resumo());
+        if (dados.nome() != null && !dados.nome().isBlank()) existente.setNome(dados.nome());
+        if (dados.cidade() != null) existente.setCidade(dados.cidade());
+        if (dados.estado() != null) existente.setEstado(dados.estado());
+        if (dados.resumo() != null) existente.setResumo(dados.resumo());
+
+        if (existente instanceof br.com.ifpr.edu.sdpe_backend.domain.Coordenador coord) {
+            if (dados.telefone() != null) {
+                coord.setTelefone(dados.telefone());
+            }
+        }
 
         return this.participanteRepository.save(existente);
     }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class DocumentoController {
 
-
     private final DocumentoService documentoService;
 
     @DeleteMapping("/{id}")

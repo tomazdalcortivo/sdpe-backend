@@ -7,11 +7,9 @@ import java.util.Optional;
 
 public interface InstituicaoEnsinoRepository extends JpaRepository<InstituicaoEnsino, Long> {
 
-    Optional<InstituicaoEnsino> findByNome(String nome);
+    Optional<InstituicaoEnsino> findFirstByNome(String nome);
 
     Optional<InstituicaoEnsino> findByCidade(String cidade);
-
-    Optional<InstituicaoEnsino> findByNomeAndCidade(String nome, String cidade);
 
     Optional<InstituicaoEnsino> findByNomeAndCidadeAndEstado(String nome, String cidade, String estado);
 }

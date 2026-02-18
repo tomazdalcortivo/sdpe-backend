@@ -1,6 +1,7 @@
 package br.com.ifpr.edu.sdpe_backend.controller;
 
 import br.com.ifpr.edu.sdpe_backend.domain.*;
+import br.com.ifpr.edu.sdpe_backend.domain.DTO.FeedbackResponseDTO;
 import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoContato;
 import br.com.ifpr.edu.sdpe_backend.service.CoordenadorService;
 import br.com.ifpr.edu.sdpe_backend.service.ParticipanteService;
@@ -83,7 +84,7 @@ public class ProjetoController {
         if (!arquivo.exists()) return ResponseEntity.notFound().build();
         UrlResource resource = new UrlResource(arquivo.toURI());
         return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG) // ou IMAGE_PNG
+                .contentType(MediaType.IMAGE_JPEG)
                 .body(resource);
     }
 
@@ -191,8 +192,8 @@ public class ProjetoController {
 
 
     @GetMapping("/{id}/feedbacks")
-    public ResponseEntity<List<Contato>> listarFeedbacks(@PathVariable Long id) {
-        List<Contato> feedbacks = projetoService.listarFeedbacks(id);
+    public ResponseEntity<List<FeedbackResponseDTO>> listarFeedbacks(@PathVariable Long id) {
+        List<FeedbackResponseDTO> feedbacks = projetoService.listarFeedbacks(id);
         return ResponseEntity.ok(feedbacks);
     }
 
@@ -217,11 +218,6 @@ public class ProjetoController {
         return ResponseEntity.ok(atualizado);
     }
 
-//    @DeleteMapping("/{id}/feedbacks/{idFeedback}")
-//    public ResponseEntity<Void> removerFeedback(@PathVariable Long id, @PathVariable Long idFeedback) {
-//        projetoService.removerFeedback(idFeedback);
-//        return ResponseEntity.noContent().build();
-//    }
 
     @DeleteMapping("/{id}/feedbacks/{idFeedback}")
     public ResponseEntity<Void> removerFeedback(
