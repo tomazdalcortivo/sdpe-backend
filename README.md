@@ -225,10 +225,10 @@ UPDATE tb_conta SET ativo = true;
 4. Login com o Usuário ADMIN
 
 Após a ativação, utilize as credenciais abaixo para acessar o sistema:
-
+```bash
 Email: admin.sistema@ifpr.edu.br
 Senha: admin123
-
+```
 5. Função do Usuário ADMIN
 
 Após o primeiro login, o usuário ADMIN poderá:
