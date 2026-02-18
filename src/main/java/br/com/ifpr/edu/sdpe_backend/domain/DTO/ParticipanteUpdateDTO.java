@@ -18,5 +18,4 @@ public record ParticipanteUpdateDTO(
         String estado,
 
         String resumo
-) {
-}
+) {}

@@ -43,7 +43,7 @@ public class InstituicaoEnsinoService {
     }
 
     public InstituicaoEnsino buscarPorNome(String nome) {
-        return this.instituicaoEnsinoRepository.findByNome(nome).orElseThrow(
+        return this.instituicaoEnsinoRepository.findFirstByNome(nome).orElseThrow(
                 () -> new EntityNotFoundException("Instituição de Ensino não encontrada"));
     }
 

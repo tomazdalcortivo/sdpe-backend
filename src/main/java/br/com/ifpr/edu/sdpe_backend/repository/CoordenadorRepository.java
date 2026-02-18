@@ -6,18 +6,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CoordenadorRepository extends JpaRepository<Coordenador, Long> {
 
-//    Optional<Coordenador> findByCpf(String cpf);
-
-    Optional<Coordenador> findByNome(String nome);
+    List<Coordenador> findByNomeContainingIgnoreCase(String nome);
 
     Optional<Coordenador> findByContaEmail(String email);
 
     // experimental
-    Page<Projeto> findByProjetos(Coordenador coordenador, Pageable pageable);
+    Page<Projeto> findByMeusProjetosCriados(Coordenador coordenador, Pageable pageable);
 
-    Optional<Coordenador> findByContato(String contato);
 }

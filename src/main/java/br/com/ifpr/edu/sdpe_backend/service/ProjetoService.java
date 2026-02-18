@@ -1,6 +1,7 @@
 package br.com.ifpr.edu.sdpe_backend.service;
 
 import br.com.ifpr.edu.sdpe_backend.domain.*;
+import br.com.ifpr.edu.sdpe_backend.domain.DTO.FeedbackResponseDTO;
 import br.com.ifpr.edu.sdpe_backend.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -114,7 +115,7 @@ public class ProjetoService {
                             input.getEstado()
                     );
                 } else {
-                    busca = instituicaoEnsinoRepository.findByNome(input.getNome());
+                    busca = instituicaoEnsinoRepository.findFirstByNome(input.getNome());
                 }
 
                 if (busca.isPresent()) {
@@ -139,6 +140,7 @@ public class ProjetoService {
         return this.projetoRepository.findByAtivo(true, pageable);
     }
 
+    @Transactional
     public Projeto atualizar(Projeto projeto, Long id, MultipartFile imagem, List<MultipartFile> docs) throws IOException {
         Projeto existente = this.projetoRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Projeto a ser atualizado não encontrado"));
@@ -158,9 +160,8 @@ public class ProjetoService {
 
 
         if (projeto.getInstituicaoEnsino() != null) {
-            InstituicaoEnsino inst = instituicaoEnsinoRepository.findByNome(projeto.getInstituicaoEnsino().getNome())
-                    .orElseGet(() -> instituicaoEnsinoRepository.save(projeto.getInstituicaoEnsino()));
-            existente.setInstituicaoEnsino(inst);
+            tratarInstituicao(projeto);
+            existente.setInstituicaoEnsino(projeto.getInstituicaoEnsino());
         }
 
         if (imagem != null && !imagem.isEmpty()) {
@@ -298,7 +299,7 @@ public class ProjetoService {
         }
     }
 
-    public List<Contato> listarFeedbacks(Long idProjeto) {
+    public List<FeedbackResponseDTO> listarFeedbacks(Long idProjeto) {
         buscarPorId(idProjeto);
         return contatoService.buscarPorProjeto(idProjeto);
     }
@@ -311,7 +312,37 @@ public class ProjetoService {
         return contatoService.salvar(contato);
     }
 
-    public void removerFeedback(Long idFeedback) {
-        contatoService.excluir(idFeedback);
+    @Transactional
+    public Contato editarFeedback(Long idProjeto, Long idFeedback, String novaMensagem, String emailLogado) {
+        buscarPorId(idProjeto);
+        Contato feedback = contatoRepository.findById(idFeedback)
+                .orElseThrow(() -> new EntityNotFoundException("Feedback não encontrado"));
+
+        if (!feedback.getEmail().equals(emailLogado)) {
+            throw new IllegalArgumentException("Você não tem permissão para editar este feedback.");
+        }
+
+        feedback.setMensagem(novaMensagem);
+        return contatoRepository.save(feedback);
     }
+
+    @Transactional
+    public void removerFeedback(Long idProjeto, Long idFeedback, String emailLogado) {
+        Projeto projeto = buscarPorId(idProjeto);
+
+        Contato feedback = contatoRepository.findById(idFeedback)
+                .orElseThrow(() -> new EntityNotFoundException("Feedback não encontrado"));
+
+        boolean Autor = feedback.getEmail().equals(emailLogado);
+
+        boolean Coordenador = projeto.getCoordenadores().stream()
+                .anyMatch(c -> c.getConta().getEmail().equals(emailLogado));
+
+        if (Autor || Coordenador) {
+            contatoService.excluir(idFeedback);
+        } else {
+            throw new IllegalArgumentException("Sem permissão para remover este feedback.");
+        }
+    }
+
 }

@@ -33,6 +33,9 @@ public class Securityconfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.PUT, "/api/projetos/*/feedbacks/*").hasAnyRole("PARTICIPANTE", "COORDENADOR")
+                        .requestMatchers(HttpMethod.DELETE, "/api/projetos/*/feedbacks/*").hasAnyRole("PARTICIPANTE", "COORDENADOR")
+
                         .requestMatchers(HttpMethod.GET,
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",

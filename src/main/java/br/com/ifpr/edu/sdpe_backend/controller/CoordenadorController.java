@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/coordenadores")
@@ -22,17 +24,10 @@ public class CoordenadorController {
     }
 
     @GetMapping("/nome/{nome}")
-    public ResponseEntity<Coordenador> buscarPorNome(@PathVariable String nome) {
-        Coordenador coordenador = this.coordenadorService.buscarPorNome(nome);
-        return ResponseEntity.ok(coordenador);
+    public ResponseEntity<List<Coordenador>> buscarPorNome(@PathVariable String nome) {
+        List<Coordenador> coordenadores = this.coordenadorService.buscarPorNome(nome);
+        return ResponseEntity.ok(coordenadores);
     }
-
-    @GetMapping("/contato/{contato}")
-    public ResponseEntity<Coordenador> buscarPorContato(@PathVariable String contato) {
-        Coordenador coordenador = this.coordenadorService.buscarPorContato(contato);
-        return ResponseEntity.ok(coordenador);
-    }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<Coordenador> atualizar(@RequestBody Coordenador coordenador, @PathVariable Long id) {

@@ -1,6 +1,5 @@
 package br.com.ifpr.edu.sdpe_backend.domain;
 
-import br.com.ifpr.edu.sdpe_backend.domain.enums.FuncaoCoordenador;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,22 +16,14 @@ import java.util.List;
 @Table(name = "tb_coordenador")
 public class Coordenador extends Participante {
 
-    private String cargoInstituicao;
-
-    private String contato;
+    private String telefone;
 
     @ManyToMany(mappedBy = "coordenadores")
     @JsonIgnore
-    private List<Projeto> projetos;
+    private List<Projeto> meusProjetosCriados;
 
-    @Enumerated(EnumType.STRING)
-    private FuncaoCoordenador funcao;
-
-    public Coordenador(){
-        cargoInstituicao = " ";
-        contato = " ";
-        projetos = new ArrayList<>();
-        funcao = FuncaoCoordenador.COORDENADOR_GERAL;
+    public Coordenador() {
+        this.meusProjetosCriados = new ArrayList<>();
     }
 
 }

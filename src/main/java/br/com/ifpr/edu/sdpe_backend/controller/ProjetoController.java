@@ -1,6 +1,7 @@
 package br.com.ifpr.edu.sdpe_backend.controller;
 
 import br.com.ifpr.edu.sdpe_backend.domain.*;
+import br.com.ifpr.edu.sdpe_backend.domain.DTO.FeedbackResponseDTO;
 import br.com.ifpr.edu.sdpe_backend.domain.enums.TipoContato;
 import br.com.ifpr.edu.sdpe_backend.service.CoordenadorService;
 import br.com.ifpr.edu.sdpe_backend.service.ParticipanteService;
@@ -24,6 +25,7 @@ import java.net.MalformedURLException;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -82,7 +84,7 @@ public class ProjetoController {
         if (!arquivo.exists()) return ResponseEntity.notFound().build();
         UrlResource resource = new UrlResource(arquivo.toURI());
         return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG) // ou IMAGE_PNG
+                .contentType(MediaType.IMAGE_JPEG)
                 .body(resource);
     }
 
@@ -160,10 +162,38 @@ public class ProjetoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(post);
     }
 
+    @PutMapping("/{id}/posts/{postId}")
+    public ResponseEntity<Post> editarPost(
+            @PathVariable Long id,
+            @PathVariable Long postId,
+            @RequestBody Map<String, String> payload,
+            Principal principal
+    ) {
+        Coordenador coordenador = coordenadorService.buscarPorEmail(principal.getName());
+
+        String novoConteudo = payload.get("conteudo");
+        Post postAtualizado = postService.atualizarPost(id, postId, novoConteudo, coordenador.getId());
+
+        return ResponseEntity.ok(postAtualizado);
+    }
+
+    @DeleteMapping("/{id}/posts/{postId}")
+    public ResponseEntity<Void> excluirPost(
+            @PathVariable Long id,
+            @PathVariable Long postId,
+            Principal principal
+    ) {
+        Coordenador coordenador = coordenadorService.buscarPorEmail(principal.getName());
+
+        postService.excluirPost(id, postId, coordenador.getId());
+
+        return ResponseEntity.noContent().build();
+    }
+
 
     @GetMapping("/{id}/feedbacks")
-    public ResponseEntity<List<Contato>> listarFeedbacks(@PathVariable Long id) {
-        List<Contato> feedbacks = projetoService.listarFeedbacks(id);
+    public ResponseEntity<List<FeedbackResponseDTO>> listarFeedbacks(@PathVariable Long id) {
+        List<FeedbackResponseDTO> feedbacks = projetoService.listarFeedbacks(id);
         return ResponseEntity.ok(feedbacks);
     }
 
@@ -174,9 +204,29 @@ public class ProjetoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(novoFeedback);
     }
 
+    @PutMapping("/{id}/feedbacks/{idFeedback}")
+    public ResponseEntity<Contato> editarFeedback(
+            @PathVariable Long id,
+            @PathVariable Long idFeedback,
+            @RequestBody Map<String, String> payload,
+            Principal principal
+    ) {
+        String novaMensagem = payload.get("mensagem");
+        String emailLogado = principal.getName();
+        Contato atualizado = projetoService.editarFeedback(id, idFeedback, novaMensagem, emailLogado);
+
+        return ResponseEntity.ok(atualizado);
+    }
+
+
     @DeleteMapping("/{id}/feedbacks/{idFeedback}")
-    public ResponseEntity<Void> removerFeedback(@PathVariable Long id, @PathVariable Long idFeedback) {
-        projetoService.removerFeedback(idFeedback);
+    public ResponseEntity<Void> removerFeedback(
+            @PathVariable Long id,
+            @PathVariable Long idFeedback,
+            Principal principal
+    ) {
+        String emailLogado = principal.getName();
+        projetoService.removerFeedback(id, idFeedback, emailLogado);
         return ResponseEntity.noContent().build();
     }
 }
