@@ -1,6 +1,7 @@
 package br.com.ifpr.edu.sdpe_backend.service;
 
 import br.com.ifpr.edu.sdpe_backend.domain.*;
+import br.com.ifpr.edu.sdpe_backend.domain.DTO.FeedbackResponseDTO;
 import br.com.ifpr.edu.sdpe_backend.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -298,7 +299,7 @@ public class ProjetoService {
         }
     }
 
-    public List<Contato> listarFeedbacks(Long idProjeto) {
+    public List<FeedbackResponseDTO> listarFeedbacks(Long idProjeto) {
         buscarPorId(idProjeto);
         return contatoService.buscarPorProjeto(idProjeto);
     }
