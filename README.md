@@ -178,48 +178,61 @@ src/main/java/br/com/ifpr/edu/sdpe_backend
 │   └── security     # Configuração de Segurança e Filtros JWT
 └── SdpeBackendApplication.java
 ```
-# 🧪 Testes e Configuração Inicial
+# 🔐 Criação do Usuário ADMIN Inicial
 
-Este guia descreve os passos iniciais para validação da API e configuração do acesso administrativo, facilitando o ambiente de desenvolvimento.
+Este documento descreve **apenas o processo de criação do usuário ADMIN inicial** do sistema.  
+Esse usuário será responsável por aprovar outros usuários e realizar cadastros administrativos via interface do sistema.
 
 ---
 
-## 1️⃣ Instalando o Postman CLI
+## 1. Instalação do Postman CLI
 
-Caso queira testar os endpoints diretamente pelo terminal, instale o utilitário do Postman CLI utilizando o npm:
+Para realizar a chamada de registro via terminal, instale o Postman CLI:
 
 ```bash
 npm install -g postman-cli
 ```
+2. Registro do Usuário ADMIN via API
 
-💡 Certifique-se de ter o Node.js instalado em sua máquina antes de executar o comando.
+Execute o comando abaixo para criar o usuário administrador inicial.
 
-2️⃣ Criando um Usuário Coordenador (Exemplo)
-
-Utilize o comando abaixo para simular o registro de um usuário com perfil COORDENADOR, incluindo o upload de um documento comprobatório (PDF):
-
-⚠️ IMPORTANTE
-Ajuste o caminho do arquivo arquivo=@"..." para um PDF existente em sua máquina.
-
+Importante:
+Ajuste o caminho do arquivo PDF em arquivo=@"/C:/Users/seu_arquivo.pdf" para um arquivo existente em sua máquina.
+```
 postman request POST 'http://localhost:8080/auth/registrar' \
-    --form 'dados={
-        "email":"carlos.coordenador@ifpr.edu.br",
-        "senha":"Coord@12345",
-        "perfil":"COORDENADOR",
-        "nome":"Carlos Eduardo Martins",
-        "dataNascimento":"1982-03-18",
-        "cpf":"875.782.370-71",
-        "cidade":"Pato Branco",
-        "ativo":true,
-        "vinculoInstitucional":true
-    }' \
-    --form 'arquivo=@"/C:/Users/pdalc/Downloads/seu_documento.pdf"'
+  --form 'dados={
+    "email":"admin.sistema@ifpr.edu.br",
+    "senha":"admin123",
+    "perfil":"ADMIN",
+    "nome":"Roberto Henrique Lima",
+    "dataNascimento":"1975-06-15",
+    "cpf":"604.059.350-48",
+    "cidade":"Curitiba",
+    "estado":"PR",
+    "ativo":true,
+    "vinculoInstitucional":true
+  }' \
+  --form 'arquivo=@"/C:/Users/seu_arquivo.pdf"'
+```
+3. Ativação Manual do Usuário no Banco de Dados
 
-3️⃣ Ativação Manual de Contas
+Caso o usuário seja criado com o status inativo, ative-o diretamente no banco de dados
+(apenas para ambiente de desenvolvimento):
 
-Dependendo da lógica de aprovação definida no sistema, novos usuários podem ser criados com ativo = false.
-
-Para ambiente de desenvolvimento, é possível ativar manualmente os usuários diretamente no banco de dados MySQL:
-
--- Ativa todos os usuários registrados (uso apenas em desenvolvimento)
+```
 UPDATE tb_conta SET ativo = true;
+```
+4. Login com o Usuário ADMIN
+
+Após a ativação, utilize as credenciais abaixo para acessar o sistema:
+
+Email: admin.sistema@ifpr.edu.br
+Senha: admin123
+
+5. Função do Usuário ADMIN
+
+Após o primeiro login, o usuário ADMIN poderá:
+  - Aprovar usuários cadastrados no sistema
+  - Cadastrar professores, alunos e coordenadores
+  - Aprovar cadastros diretamente pela interface administrativa
+  - Gerenciar acessos e permissões do sistema
