@@ -30,10 +30,10 @@ public class EmailService {
     public void enviarRespostaSuporte(String destinatario, String nomeContato, String mensagemResposta) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(destinatario);
-        message.setSubject("Resposta ao seu contato - SDPE");
+        message.setSubject("Resposta ao seu emailContato - SDPE");
         message.setText(
                 "Olá " + nomeContato + ",\n\n" +
-                        "Recebemos o seu contato através da nossa plataforma.\n\n" +
+                        "Recebemos o seu emailContato através da nossa plataforma.\n\n" +
                         "Resposta da Administração:\n" +
                         mensagemResposta + "\n\n" +
                         "Atenciosamente,\n" +
@@ -63,7 +63,7 @@ public class EmailService {
                         Motivo informado pela administração:
                         "%s"
                         
-                        Caso julgue necessário, você pode realizar um novo cadastro corrigindo as informações apontadas ou entrar em contato conosco.
+                        Caso julgue necessário, você pode realizar um novo cadastro corrigindo as informações apontadas ou entrar em emailContato conosco.
                         
                         Atenciosamente,
                         Equipe SDPE

@@ -85,7 +85,6 @@ public class AuthorizationService implements UserDetailsService {
                     .cpf(data.cpf())
                     .cidade(data.cidade())
                     .estado(data.estado())
-                    .contato(data.email())
                     .conta(novaConta)
                     .documentoUrl(documentoUrl)
                     .build();

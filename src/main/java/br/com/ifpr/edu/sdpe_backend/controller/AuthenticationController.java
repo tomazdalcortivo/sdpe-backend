@@ -94,8 +94,13 @@ public class AuthenticationController {
         String cidade = (participante != null) ? participante.getCidade() : "";
         String estado = (participante != null) ? participante.getEstado() : "";
         String resumo = (participante != null) ? participante.getResumo() : "";
-        String telefone = (participante != null) ? participante.getTelefone() : "";
         String fotoPerfil = (participante != null) ? participante.getFotoPerfil() : null;
+
+        // CORREÇÃO: Verifica se é Coordenador para pegar o telefone
+        String telefone = "";
+        if (participante instanceof br.com.ifpr.edu.sdpe_backend.domain.Coordenador coord) {
+            telefone = coord.getTelefone();
+        }
 
         UsuarioResponseDTO response = new UsuarioResponseDTO(
                 perfilId,

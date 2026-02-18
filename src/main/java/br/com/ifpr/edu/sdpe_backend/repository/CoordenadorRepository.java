@@ -16,7 +16,6 @@ public interface CoordenadorRepository extends JpaRepository<Coordenador, Long> 
     Optional<Coordenador> findByContaEmail(String email);
 
     // experimental
-    Page<Projeto> findByProjetos(Coordenador coordenador, Pageable pageable);
+    Page<Projeto> findByMeusProjetosCriados(Coordenador coordenador, Pageable pageable);
 
-    Optional<Coordenador> findByContato(String contato);
 }

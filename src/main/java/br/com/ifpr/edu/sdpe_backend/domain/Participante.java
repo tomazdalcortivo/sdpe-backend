@@ -49,8 +49,6 @@ public class Participante {
     @Column(columnDefinition = "TEXT")
     private String resumo;
 
-    private String telefone;
-
     private String fotoPerfil;
 
     private String documentoUrl;

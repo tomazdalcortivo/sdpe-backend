@@ -19,7 +19,6 @@ import org.springframework.data.domain.Pageable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -46,10 +45,10 @@ public class CoordenadorService {
                 () -> new EntityNotFoundException("Coordenador não encontrado"));
     }
 
-    public Coordenador buscarPorContato(String contato) {
-        return this.coordenadorRepository.findByContato(contato).orElseThrow(
-                () -> new EntityNotFoundException("Coordenador não encontrado"));
-    }
+//    public Coordenador buscarPorContato(String contato) {
+//        return this.coordenadorRepository.findByEmailContato(contato).orElseThrow(
+//                () -> new EntityNotFoundException("Coordenador não encontrado"));
+//    }
 
     public Coordenador buscarPorId(Long id) {
         return this.coordenadorRepository.findById(id).orElseThrow(
@@ -58,7 +57,7 @@ public class CoordenadorService {
 
     public Page<Projeto> listarProjetos(Coordenador coordenador, int numPag, int tamPag) {
         Pageable pageable = PageRequest.of(numPag, tamPag);
-        return this.coordenadorRepository.findByProjetos(coordenador, pageable);
+        return this.coordenadorRepository.findByMeusProjetosCriados(coordenador, pageable);
     }
 
     @Transactional
