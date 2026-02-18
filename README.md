@@ -178,3 +178,48 @@ src/main/java/br/com/ifpr/edu/sdpe_backend
 │   └── security     # Configuração de Segurança e Filtros JWT
 └── SdpeBackendApplication.java
 ```
+# 🧪 Testes e Configuração Inicial
+
+Este guia descreve os passos iniciais para validação da API e configuração do acesso administrativo, facilitando o ambiente de desenvolvimento.
+
+---
+
+## 1️⃣ Instalando o Postman CLI
+
+Caso queira testar os endpoints diretamente pelo terminal, instale o utilitário do Postman CLI utilizando o npm:
+
+```bash
+npm install -g postman-cli
+```
+
+💡 Certifique-se de ter o Node.js instalado em sua máquina antes de executar o comando.
+
+2️⃣ Criando um Usuário Coordenador (Exemplo)
+
+Utilize o comando abaixo para simular o registro de um usuário com perfil COORDENADOR, incluindo o upload de um documento comprobatório (PDF):
+
+⚠️ IMPORTANTE
+Ajuste o caminho do arquivo arquivo=@"..." para um PDF existente em sua máquina.
+
+postman request POST 'http://localhost:8080/auth/registrar' \
+    --form 'dados={
+        "email":"carlos.coordenador@ifpr.edu.br",
+        "senha":"Coord@12345",
+        "perfil":"COORDENADOR",
+        "nome":"Carlos Eduardo Martins",
+        "dataNascimento":"1982-03-18",
+        "cpf":"875.782.370-71",
+        "cidade":"Pato Branco",
+        "ativo":true,
+        "vinculoInstitucional":true
+    }' \
+    --form 'arquivo=@"/C:/Users/pdalc/Downloads/seu_documento.pdf"'
+
+3️⃣ Ativação Manual de Contas
+
+Dependendo da lógica de aprovação definida no sistema, novos usuários podem ser criados com ativo = false.
+
+Para ambiente de desenvolvimento, é possível ativar manualmente os usuários diretamente no banco de dados MySQL:
+
+-- Ativa todos os usuários registrados (uso apenas em desenvolvimento)
+UPDATE tb_conta SET ativo = true;
