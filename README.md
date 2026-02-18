@@ -198,7 +198,7 @@ Execute o comando abaixo para criar o usuário administrador inicial.
 
 Importante:
 Ajuste o caminho do arquivo PDF em arquivo=@"/C:/Users/seu_arquivo.pdf" para um arquivo existente em sua máquina.
-```
+```bash
 postman request POST 'http://localhost:8080/auth/registrar' \
   --form 'dados={
     "email":"admin.sistema@ifpr.edu.br",
