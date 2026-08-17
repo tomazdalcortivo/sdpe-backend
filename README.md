@@ -17,6 +17,7 @@ O **SDPE (Sistema de Divulgação de Projetos de Extensão)** é uma API RESTful
 * [Instalação e Execução](#-instalação-e-execução)
 * [Documentação da API (Swagger)](#-documentação-da-api-swagger)
 * [Estrutura do Projeto](#-estrutura-do-projeto)
+* [Criação do Usuário ADMIN Inicial](#-criação-do-usuário-admin-inicial)
 
 ---
 
@@ -79,6 +80,7 @@ Antes de iniciar, certifique-se de ter instalado em sua máquina:
 2. **MySQL Server** rodando na porta `3306`
 3. **Maven 3.9+** (opcional, pois o projeto inclui o `mvnw`)
 4. **Git**
+5. **Node.js/NPM** (para instalar o Postman CLI na etapa de criação do ADMIN)
 
 ---
 
@@ -96,7 +98,7 @@ spring:
     password: root   # Ajuste conforme sua senha
 ```
 
-### 3. Variáveis de Ambiente (Recomendado)
+### 2. Variáveis de Ambiente (Recomendado)
 
 Para funcionalidades de e-mail e segurança (Altcha), configure as seguintes variáveis de ambiente ou edite o arquivo `application.yaml` diretamente (não recomendado para produção):
 
@@ -127,7 +129,7 @@ Utilize o Maven Wrapper incluído para garantir a compatibilidade:
 
 > No Windows, utilize:
 >
-> ```bash
+> ```cmd
 > mvnw.cmd clean install
 > ```
 
@@ -141,7 +143,7 @@ Utilize o Maven Wrapper incluído para garantir a compatibilidade:
 
 O servidor iniciará na porta **8080**. Acesse:
 
-```
+```text
 http://localhost:8080
 ```
 
@@ -160,8 +162,8 @@ A API possui documentação interativa gerada automaticamente pelo Swagger. Com 
 | Auth     | POST   | `/auth/login`                   | Realiza login e retorna o Token JWT                       |
 | Auth     | POST   | `/auth/registrar`               | Cria uma nova conta de usuário                            |
 | Projetos | GET    | `/api/projetos`                 | Lista todos os projetos (público)                         |
-| Projetos | POST   | `/api/projetos`                 | Cria um novo projeto requer o coordenador (requer token)  |
-| Admin    | GET    | ` /api/admin/painel-dministrativo ` | Dados para dashboard administrativo                   |
+| Projetos | POST   | `/api/projetos`                 | Cria um novo projeto requer o coordenador (requer token)  |
+| Admin    | GET    | `/api/admin/painel-administrativo`| Dados para dashboard administrativo                       |
 
 ---
 
@@ -178,26 +180,29 @@ src/main/java/br/com/ifpr/edu/sdpe_backend
 │   └── security     # Configuração de Segurança e Filtros JWT
 └── SdpeBackendApplication.java
 ```
-# 🔐 Criação do Usuário ADMIN Inicial
+
+---
+
+## 🔐 Criação do Usuário ADMIN Inicial
 
 Este documento descreve **apenas o processo de criação do usuário ADMIN inicial** do sistema.  
 Esse usuário será responsável por aprovar outros usuários e realizar cadastros administrativos via interface do sistema.
 
----
-
-## 1. Instalação do Postman CLI
+### 1. Instalação do Postman CLI
 
 Para realizar a chamada de registro via terminal, instale o Postman CLI:
 
 ```bash
 npm install -g postman-cli
 ```
-2. Registro do Usuário ADMIN via API
+
+### 2. Registro do Usuário ADMIN via API
 
 Execute o comando abaixo para criar o usuário administrador inicial.
 
-Importante:
-Ajuste o caminho do arquivo PDF em arquivo=@"/C:/Users/seu_arquivo.pdf" para um arquivo existente em sua máquina.
+> **Importante:**
+> Ajuste o caminho do arquivo PDF em `arquivo=@"/C:/Users/seu_arquivo.pdf"` para um arquivo existente em sua máquina.
+
 ```bash
 postman request POST 'http://localhost:8080/auth/registrar' \
   --form 'dados={
@@ -214,25 +219,28 @@ postman request POST 'http://localhost:8080/auth/registrar' \
   }' \
   --form 'arquivo=@"/C:/Users/seu_arquivo.pdf"'
 ```
-3. Ativação Manual do Usuário no Banco de Dados
 
-Caso o usuário seja criado com o status inativo, ative-o diretamente no banco de dados
-(apenas para ambiente de desenvolvimento):
+### 3. Ativação Manual do Usuário no Banco de Dados
 
-```
+Caso o usuário seja criado com o status inativo, ative-o diretamente no banco de dados (apenas para ambiente de desenvolvimento):
+
+```sql
 UPDATE tb_conta SET ativo = true;
 ```
-4. Login com o Usuário ADMIN
+
+### 4. Login com o Usuário ADMIN
 
 Após a ativação, utilize as credenciais abaixo para acessar o sistema:
-```bash
+
+```text
 Email: admin.sistema@ifpr.edu.br
 Senha: admin123
 ```
-5. Função do Usuário ADMIN
+
+### 5. Função do Usuário ADMIN
 
 Após o primeiro login, o usuário ADMIN poderá:
-  - Aprovar usuários cadastrados no sistema
-  - Cadastrar professores, alunos e coordenadores
-  - Aprovar cadastros diretamente pela interface administrativa
-  - Gerenciar acessos e permissões do sistema
+- Aprovar usuários cadastrados no sistema
+- Cadastrar professores, alunos e coordenadores
+- Aprovar cadastros diretamente pela interface administrativa
+- Gerenciar acessos e permissões do sistema
